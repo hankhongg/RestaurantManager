@@ -1,0 +1,73 @@
+﻿<Window x:Class="UI.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UI"
+        xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
+        mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
+         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        Title="Phần mềm Quản lý Nhà hàng" Height="675" Width="1200" DataContext="{StaticResource MainVM}" Background="Transparent"
+        >
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowIsLoaded}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0"></WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Height" Value="70"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <controlbar:ControlBar Tag="{Binding Title, ElementName=mainWindow}"></controlbar:ControlBar>
+
+        <Border CornerRadius="0" Grid.Row="1">
+            <Border.Background>
+                <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
+            </Border.Background>
+        </Border>
+
+        <TabControl Grid.Row="1" SelectedIndex="1">
+            <TabControl.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="SkyBlue" Offset="1.0"></GradientStop>
+                    <GradientStop Color="White" Offset="0.0"></GradientStop>
+                </LinearGradientBrush>
+            </TabControl.Background>
+            <TabItem x:Name="mainMenu">
+                <TabItem.Header>
+                    <Border BorderThickness="0">
+                        <Image Source="Images/menu_black.png">
+                        </Image>
+                    </Border>
+                </TabItem.Header>
+            </TabItem>
+            <TabItem x:Name="currentBill"
+                     Style="{StaticResource TextControl}" VerticalContentAlignment="Center"
+                     FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn"
+                     Padding="30,0">
+            </TabItem>
+            <TabItem x:Name="tableMap"
+                Style="{StaticResource TextControl}" VerticalContentAlignment="Center"
+                FontWeight="SemiBold" FontSize="30" Header="Sơ đồ bàn"
+                Padding="30,0"/>
+        </TabControl>
+        <Border Height="70" Grid.Row="1" VerticalAlignment="Top" 
+               HorizontalAlignment="Right" Background="#EEEEEE">
+            <Image Source="Images/account_black.png">
+
+            </Image>
+        </Border>
+        
+    </Grid>
+
+</Window>

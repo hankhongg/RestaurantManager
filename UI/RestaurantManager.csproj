@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Images\account_black.png" />
+    <None Remove="Views\Images\account_circle.png" />
+    <None Remove="Views\Images\exit.png" />
+    <None Remove="Views\Images\key.png" />
+    <None Remove="Views\Images\login.png" />
+    <None Remove="Views\Images\login_black.png" />
+    <None Remove="Views\Images\menu_black.png" />
+    <None Remove="Views\Images\minimize.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\Images\account_black.png" />
+    <Resource Include="Views\Images\account_circle.png" />
+    <Resource Include="Views\Images\exit.png" />
+    <Resource Include="Views\Images\key.png" />
+    <Resource Include="Views\Images\login.png" />
+    <Resource Include="Views\Images\login_black.png" />
+    <Resource Include="Views\Images\menu_black.png" />
+    <Resource Include="Views\Images\minimize.png" />
+  </ItemGroup>
+
+</Project>
