@@ -53,7 +53,7 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Image Source="C:\Users\Admin\source\repos\RestaurantManager\UI\Images\login.png" Width="100" 
+                <Image Source="Images\login.png" Width="100" 
            VerticalAlignment="Center"></Image>
             </Grid>
         </Border>
@@ -62,14 +62,14 @@
             <StackPanel Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <!--<Label Content="Tài khoản: " VerticalAlignment="Center"></Label>-->
-                    <Image Source="C:\Users\Admin\source\repos\RestaurantManager\UI\Images\account_circle.png"
+                    <Image Source="Images\account_circle.png"
                            Width="35"></Image>
                     
                     <TextBox Margin="10,0,0,0"  Height="30" Width="250"></TextBox>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <!--<Label Content="Mật khẩu: " VerticalAlignment="Center"></Label>-->
-                    <Image  Source="C:\Users\Admin\source\repos\RestaurantManager\UI\Images\key.png"
+                    <Image  Source="Images\key.png"
                            Width="35"></Image>
                     <PasswordBox Margin="10,0,0,0" Height="30" Width="250"></PasswordBox>
                 </StackPanel>
