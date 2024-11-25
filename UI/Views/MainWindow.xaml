@@ -17,20 +17,26 @@
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
-    <Window.Resources>
-        <Style TargetType="TabItem">
-            <Setter Property="Height" Value="70"></Setter>
-        </Style>
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="80"></RowDefinition>
         </Grid.RowDefinitions>
 
         <controlbar:ControlBar Tag="{Binding Title, ElementName=mainWindow}"></controlbar:ControlBar>
+        
+        <DockPanel Grid.Row="2" Height="80" VerticalAlignment="Bottom">
+            <DockPanel.Background>
+                <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
+            </DockPanel.Background>
+            <Border Height="80" Grid.Row="1" HorizontalAlignment="Left" CornerRadius="0,8,8,0"
+                            VerticalAlignment="Center" Background="GhostWhite">
+                <Image Source="Images/house_black.png"></Image>
+            </Border>
+        </DockPanel>
 
-        <Border CornerRadius="0" Grid.Row="1">
+        <Border Grid.Row="1">
             <Border.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </Border.Background>
@@ -43,30 +49,70 @@
                     <GradientStop Color="White" Offset="0.0"></GradientStop>
                 </LinearGradientBrush>
             </TabControl.Background>
-            <TabItem x:Name="mainMenu">
+
+            <TabItem x:Name="mainMenu" Style="{StaticResource TabItemStyle}" Background="GhostWhite">
                 <TabItem.Header>
                     <Border BorderThickness="0">
-                        <Image Source="Images/menu_black.png">
+                        <Image Source="Images/menu_black.png" Height="70">
                         </Image>
                     </Border>
                 </TabItem.Header>
+                <Grid></Grid>
             </TabItem>
-            <TabItem x:Name="currentBill"
-                     Style="{StaticResource TextControl}" VerticalContentAlignment="Center"
-                     FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn"
-                     Padding="30,0">
+            <TabItem x:Name="currentBills" Padding="30,0" Background="GhostWhite" 
+                     Style="{StaticResource TabItemStyle}" 
+                     FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <StackPanel></StackPanel>
+                    </Grid>
+                    
+                    <Grid Grid.Column="1">
+                        <Border BorderThickness="2,0,0,0" BorderBrush="White">
+                            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <StackPanel.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Color="DarkBlue" Offset="2.0"></GradientStop>
+                                        <GradientStop Color="SkyBlue" Offset="0.0"></GradientStop>
+                                    </LinearGradientBrush>
+                                </StackPanel.Background>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
             </TabItem>
-            <TabItem x:Name="tableMap"
-                Style="{StaticResource TextControl}" VerticalContentAlignment="Center"
-                FontWeight="SemiBold" FontSize="30" Header="Sơ đồ bàn"
-                Padding="30,0"/>
+            <TabItem x:Name="tableMap" Padding="30,0" Background="GhostWhite" 
+                    Style="{StaticResource TabItemStyle}" 
+                     FontWeight="SemiBold" FontSize="30" Header="Sơ đồ bàn">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="bookings" Padding="30,0" Background="GhostWhite" 
+                Style="{StaticResource TabItemStyle}" 
+                 FontWeight="SemiBold" FontSize="30" Header="Bookings">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </TabItem>
         </TabControl>
-        <Border Height="70" Grid.Row="1" VerticalAlignment="Top" 
-               HorizontalAlignment="Right" Background="#EEEEEE">
-            <Image Source="Images/account_black.png">
+        <DockPanel Height ="80" VerticalAlignment="Top" Grid.Row="1">
+            <Border Height="80" Grid.Row="1" VerticalAlignment="Center" CornerRadius="8,0,0,8"
+               HorizontalAlignment="Right" Background="GhostWhite">
+                <Image Source="Images/account_black.png"></Image>
+            </Border>
+        </DockPanel>
 
-            </Image>
-        </Border>
         
     </Grid>
 

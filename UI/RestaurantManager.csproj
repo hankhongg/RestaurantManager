@@ -12,6 +12,7 @@
     <None Remove="Views\Images\account_black.png" />
     <None Remove="Views\Images\account_circle.png" />
     <None Remove="Views\Images\exit.png" />
+    <None Remove="Views\Images\house_black.png" />
     <None Remove="Views\Images\key.png" />
     <None Remove="Views\Images\login.png" />
     <None Remove="Views\Images\login_black.png" />
@@ -31,6 +32,7 @@
     <Resource Include="Views\Images\account_black.png" />
     <Resource Include="Views\Images\account_circle.png" />
     <Resource Include="Views\Images\exit.png" />
+    <Resource Include="Views\Images\house_black.png" />
     <Resource Include="Views\Images\key.png" />
     <Resource Include="Views\Images\login.png" />
     <Resource Include="Views\Images\login_black.png" />
