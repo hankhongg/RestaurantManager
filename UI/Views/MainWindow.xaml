@@ -7,7 +7,7 @@
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
          xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        Title="Phần mềm Quản lý Nhà hàng" Height="675" Width="1200" DataContext="{StaticResource MainVM}" Background="Transparent"
+        Title="Phần mềm Quản lý Nhà hàng" Height="768" Width="1366" DataContext="{StaticResource MainVM}" Background="Transparent"
         >
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
