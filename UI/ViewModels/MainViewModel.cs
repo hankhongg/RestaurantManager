@@ -11,6 +11,7 @@ namespace RestaurantManager.ViewModels
     class MainViewModel : BaseViewModel
     {
         public ICommand WindowIsLoadedCommand { get; set; }
+        public ICommand ProfileManagementCommand {  get; set; }
 
         public bool isLoaded = false;
         public MainViewModel() { 
@@ -20,6 +21,13 @@ namespace RestaurantManager.ViewModels
                     isLoaded = true; 
                     LoginWindow loginWindow = new LoginWindow();
                     loginWindow.ShowDialog(); 
+                }
+            );
+
+            ProfileManagementCommand = new RelayCommand<object>( (p) => { return true; }, (p) =>
+                {
+                    ProfileWindow profileWindow = new ProfileWindow();
+                    profileWindow.ShowDialog();
                 }
             );
 

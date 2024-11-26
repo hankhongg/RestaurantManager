@@ -87,7 +87,7 @@
                            TextDecorations="Underline" Foreground="DimGray" HorizontalAlignment="Right">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                        <i:InvokeCommandAction Command="{Binding ForgotPasswordCommand}" />
+                            <i:InvokeCommandAction Command="{Binding ForgotPasswordCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBlock>

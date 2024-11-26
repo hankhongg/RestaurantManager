@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:UI"
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
-         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="Phần mềm Quản lý Nhà hàng" Height="768" Width="1366" DataContext="{StaticResource MainVM}" Background="Transparent"
         >
     <!--Dùng xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" để xài event trigger tránh khởi tạo 2 main window-->
@@ -64,7 +64,8 @@
             <TabItem x:Name="mainMenu" Style="{StaticResource TabItemStyle}" Background="GhostWhite">
                 <TabItem.Header>
                     <Border BorderThickness="0">
-                        <Image Source="Images/menu_black.png" Height="70">
+                        <Image Source="Images/menu_black.png" Height="70" Cursor="Hand">
+                            <!--SAU NÀY ĐỂ EVENT TRIGGER VÀO-->
                         </Image>
                     </Border>
                 </TabItem.Header>
@@ -149,7 +150,13 @@
         <DockPanel Height ="80" VerticalAlignment="Top" Grid.Row="1">
             <Border Height="80" Grid.Row="1" VerticalAlignment="Center" CornerRadius="8,0,0,8"
                HorizontalAlignment="Right" Background="GhostWhite">
-                <Image Source="Images/account_black.png"></Image>
+                <Image Source="Images/account_black.png" Cursor="Hand">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction Command="{Binding ProfileManagementCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Image>
             </Border>
         </DockPanel>
     </Grid>
