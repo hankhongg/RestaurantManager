@@ -32,7 +32,6 @@
         <!--Thêm control bar (Grid.Row = "0" có kích thước 30)
         từ xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" (UserControls)-->
         <controlbar:ControlBar Tag="{Binding Title, ElementName=mainWindow}"></controlbar:ControlBar>
-        
         <!--Thêm thanh điều hướng ở dưới (có hình ngôi nhà)-->
         <DockPanel Grid.Row="2" Height="80" VerticalAlignment="Bottom">
             <DockPanel.Background>

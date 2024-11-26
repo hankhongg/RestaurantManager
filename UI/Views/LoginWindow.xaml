@@ -41,8 +41,8 @@
         </Grid.ColumnDefinitions>
 
         <!--Thêm control bar (Grid.Row = "0" có kích thước 30)
-        từ xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" (UserControls)-->      
-        <controlbar:ControlBar Tag="{Binding Title, ElementName=loginWindow}" Grid.ColumnSpan="2"/>
+        từ xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" (UserControls)-->
+        <controlbar:ControlBar Grid.ColumnSpan="2" Tag="{Binding Title, ElementName=loginWindow}"></controlbar:ControlBar>
 
         <!--Bo tròn form + tô màu cho giao diện đẹp hơn-->
         <Border CornerRadius="10" Grid.ColumnSpan="2" Grid.RowSpan="2" Panel.ZIndex="-1">

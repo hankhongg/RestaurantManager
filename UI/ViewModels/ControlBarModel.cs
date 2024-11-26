@@ -22,11 +22,12 @@ namespace RestaurantManager.ViewModels
                 var w = window as Window;
                 if (w != null)
                 {
-                    MessageBoxResult r = MessageBox.Show("Bạn có chắc muốn thoát?", "Thoát", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (r == MessageBoxResult.Yes)
-                    {
-                        w.Close();
-                    }
+                    //MessageBoxResult r = MessageBox.Show("Bạn có chắc muốn thoát?", "Thoát", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    //if (r == MessageBoxResult.Yes)
+                    //{
+                    //    w.Close();
+                    //}
+                    w.Close(); 
                 }
             });
             MoveByMouse = new RelayCommand<UserControl>((p) => { return true; }, (p) =>
