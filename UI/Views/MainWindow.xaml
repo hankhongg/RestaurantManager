@@ -67,13 +67,53 @@
                         </Image>
                     </Border>
                 </TabItem.Header>
-                <Grid></Grid>
+                
+                <!--Tabview-->
+                <Grid>
+                    <TabControl  BorderThickness="0"
+                                TabStripPlacement="Left">
+                        <TabItem Header="Quản lý doanh thu" Style="{StaticResource TabItemStyle}" 
+                                  FontWeight="SemiBold" FontSize="30" Padding="30"
+                                 Background="Transparent" BorderThickness="0">
+                            <Grid></Grid>
+                        </TabItem>
+                        <TabItem Header="Quản lý tồn kho" Style="{StaticResource TabItemStyle}" 
+                                  FontWeight="SemiBold" FontSize="30" Padding="30"
+                                 Background="Transparent" BorderThickness="0">
+                            <Grid>
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Các món ăn" Width="5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="SL Bán" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="SL Tồn" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Quản lý khách hàng" Style="{StaticResource TabItemStyle}" 
+                                  FontWeight="SemiBold" FontSize="30" Padding="30"
+                                 Background="Transparent" BorderThickness="0">
+                            <Grid>
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Tên khách hàng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Địa chỉ" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="SĐT" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Email" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
             </TabItem>
 
             <!--TabItem thứ 2 (Tất cả đơn)-->
             <TabItem x:Name="currentOrders" Padding="30,0" Background="GhostWhite" 
                      Style="{StaticResource TabItemStyle}" 
-                     FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn">
+                     FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn" HorizontalAlignment="Right" Margin="0,-2,-2,0" Width="207">
                 <!--Chia grid trong tab item để dễ xử lý-->
                 <Grid>
                     <!--Chia grid thành 2 cột-->
@@ -81,7 +121,7 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
                     <Grid Grid.Column="0">
                         <WrapPanel Margin="20" x:Name="tablePanel">

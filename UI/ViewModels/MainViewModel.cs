@@ -30,7 +30,6 @@ namespace RestaurantManager.ViewModels
                     profileWindow.ShowDialog();
                 }
             );
-
         }
     }
 }

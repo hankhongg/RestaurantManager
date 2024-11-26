@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="Styles/LoginButtonStyles.xaml"/>
                 <ResourceDictionary Source="Styles/TitleBarButtonStyles.xaml"/>
                 <ResourceDictionary Source="Styles/TabItemStyles.xaml"/>
+                <ResourceDictionary Source="Styles/DataGridColumnStyles.xaml"/>
                 <ResourceDictionary Source="ResourceXAML/MainResource.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
