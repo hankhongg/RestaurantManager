@@ -45,7 +45,7 @@ namespace RestaurantManager.ViewModels
                 var w = window as Window;
                 if (w != null)
                 {
-                    if (w.WindowState == WindowState.Normal)
+                    if (w.WindowState == WindowState.Normal && w.WindowState == WindowState.Maximized)
                     {
                         w.WindowState = WindowState.Minimized;
                     }
