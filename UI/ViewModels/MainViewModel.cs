@@ -10,12 +10,19 @@ namespace RestaurantManager.ViewModels
 {
     class MainViewModel : BaseViewModel
     {
-        public ICommand WindowIsLoaded { get; set; }
+        public ICommand WindowIsLoadedCommand { get; set; }
 
         public bool isLoaded = false;
         public MainViewModel() { 
 
-            WindowIsLoaded = new RelayCommand<object>((p) => { return true; }, (p) => { isLoaded = true; LoginWindow loginWindow = new LoginWindow(); loginWindow.ShowDialog(); });
+            WindowIsLoadedCommand = new RelayCommand<object>((p) => { return true; }, (p) => 
+                { 
+                    isLoaded = true; 
+                    LoginWindow loginWindow = new LoginWindow();
+                    loginWindow.ShowDialog(); 
+                }
+            );
+
         }
     }
 }

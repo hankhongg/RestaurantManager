@@ -12,15 +12,16 @@
     <!--Dùng xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" để xài event trigger tránh khởi tạo 2 main window-->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding WindowIsLoaded}"/>
+            <i:InvokeCommandAction Command="{Binding WindowIsLoadedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <!--Xóa Window chrome mặc định -->
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0"></WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
     <!--Grid của mainWindow-->
-    <Grid>
+    
+    <Grid Background="Transparent">
         <!--Chia dòng trong form-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
@@ -71,7 +72,7 @@
             </TabItem>
 
             <!--TabItem thứ 2 (Tất cả đơn)-->
-            <TabItem x:Name="currentBills" Padding="30,0" Background="GhostWhite" 
+            <TabItem x:Name="currentOrders" Padding="30,0" Background="GhostWhite" 
                      Style="{StaticResource TabItemStyle}" 
                      FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn">
                 <!--Chia grid trong tab item để dễ xử lý-->
@@ -90,17 +91,29 @@
                     
                     <!--Cột 2 là nút tạo đơn mới-->
                     <Grid Grid.Column="1">
+                        <!--Tô màu cho cột 2-->
+                        <Grid.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Color="DarkBlue" Offset="2.0"></GradientStop>
+                                <GradientStop Color="SkyBlue" Offset="0.0"></GradientStop>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        
                         <!--Dùng border để kẻ đường chia 2 cột-->
                         <Border BorderThickness="2,0,0,0" BorderBrush="White">
                             <!--StackPanel để xếp các nút nếu cần thêm-->
-                            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <!--Tô màu cho StackPanel-->
-                                <StackPanel.Background>
-                                    <LinearGradientBrush>
-                                        <GradientStop Color="DarkBlue" Offset="2.0"></GradientStop>
-                                        <GradientStop Color="SkyBlue" Offset="0.0"></GradientStop>
-                                    </LinearGradientBrush>
-                                </StackPanel.Background>
+                            <StackPanel Margin="20">
+                                <!--Nút thêm đơn mới-->
+                                <Button Content="Thêm đơn mới (+)" Style="{StaticResource LoginButton}" 
+                                        Command="{Binding AddOrderCommand}"
+                                        Padding="0,20" Margin="20,0" Width="Auto" Height="Auto">
+                                    <Button.Background>
+                                        <LinearGradientBrush>
+                                            <GradientStop Color="DarkGreen" Offset="-0.5"></GradientStop>
+                                            <GradientStop Color="LimeGreen" Offset="1.0"></GradientStop>
+                                        </LinearGradientBrush>
+                                    </Button.Background>
+                                </Button>
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -108,7 +121,7 @@
             </TabItem>
 
             <!--TabItem thứ 3 (Sơ đồ bàn)-->
-            <TabItem x:Name="tableMap" Padding="30,0" Background="GhostWhite" 
+            <TabItem x:Name="tableLayout" Padding="30,0" Background="GhostWhite" 
                     Style="{StaticResource TabItemStyle}" 
                      FontWeight="SemiBold" FontSize="30" Header="Sơ đồ bàn">
                 <Grid>

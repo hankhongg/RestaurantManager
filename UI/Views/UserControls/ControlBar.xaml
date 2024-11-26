@@ -16,7 +16,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     
-    <Grid>
+    <Grid Background="Transparent">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="419*"/>
             <ColumnDefinition Width="381*"/>
@@ -46,7 +46,7 @@
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" >
-                <TextBlock VerticalAlignment="Center"  Margin="30,0,0,0" FontFamily="Roboto" FontWeight="SemiBold" Foreground="White" Text="{Binding Tag, ElementName=ucControlBar}"></TextBlock>
+                <TextBlock VerticalAlignment="Center"  Margin="30,0,0,0" FontFamily="Roboto" FontWeight="UltraBold" Foreground="White" Text="{Binding Tag, ElementName=ucControlBar}"></TextBlock>
             </StackPanel>
 
         </DockPanel>

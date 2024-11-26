@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:RestaurantManager.Views"
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d"
-        Name="loginWindow"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        Name="loginWindow" 
         Title="Màn hình đăng nhập" Height="450" Width="800" WindowStyle="None" Background="Transparent"
         DataContext="{StaticResource LoginVM}"
         >
@@ -15,7 +16,7 @@
 
     <!--Xóa Window chrome mặc định -->
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0"></WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" CornerRadius="10"  CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
     
     <!--Thêm vài style default đơn giản-->
@@ -82,9 +83,14 @@
                     <PasswordBox Margin="10,0,0,0" Height="30" Width="250"></PasswordBox>
                 </StackPanel>
 
-                <TextBlock Text="Quên mật khẩu" FontSize="12" Cursor="Hand"
-                           TextDecorations="Underline" Foreground="DimGray" HorizontalAlignment="Right"></TextBlock>
-
+                <TextBlock Text="Quên mật khẩu" FontSize="12" Cursor="Hand" x:Name="forgotPwdTextBlock"
+                           TextDecorations="Underline" Foreground="DimGray" HorizontalAlignment="Right">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding ForgotPasswordCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBlock>
                 <Button x:Name="loginButton" Style="{StaticResource LoginButton}" Content="Đăng nhập" Foreground="White" HorizontalAlignment="Right" Margin="10"></Button>
 
             </StackPanel>

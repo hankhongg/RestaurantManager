@@ -71,8 +71,7 @@ namespace RestaurantManager.ViewModels
                 }
             });
         }
-
-        FrameworkElement getParentWindow(UserControl p)
+        protected FrameworkElement getParentWindow(UserControl p)
         {
             FrameworkElement parentWindow = p;
             while (parentWindow.Parent != null)
@@ -81,5 +80,6 @@ namespace RestaurantManager.ViewModels
             }
             return parentWindow;
         }
+
     }
 }
