@@ -9,17 +9,19 @@
              Name="ucControlBar" 
              
              d:DesignHeight="30" d:DesignWidth="800">
-
+    <!--Dùng xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" để xài event MouseDown => kéo thả form (mặc định k kéo thả đc vì đã xóa window style)-->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="MouseDown">
             <i:InvokeCommandAction Command="{Binding MoveByMouse}" CommandParameter="{Binding ElementName=ucControlBar}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="419*"/>
             <ColumnDefinition Width="381*"/>
         </Grid.ColumnDefinitions>
+        
         <Border CornerRadius="5" Grid.ColumnSpan="2">
             <Border.Background>
                 <LinearGradientBrush>
@@ -30,6 +32,7 @@
         </Border>
 
         <DockPanel Grid.ColumnSpan="2">
+
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                 <Button x:Name="minimizeButton"  Style="{StaticResource TitleBarButton}"  Content="-" Command="{Binding MinimizeCommand}"
                 CommandParameter="{Binding ElementName=ucControlBar}">
@@ -41,11 +44,11 @@
                 CommandParameter="{Binding ElementName=ucControlBar}" Content="x">
                 </Button>
             </StackPanel>
+
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" >
                 <TextBlock VerticalAlignment="Center"  Margin="30,0,0,0" FontFamily="Roboto" FontWeight="SemiBold" Foreground="White" Text="{Binding Tag, ElementName=ucControlBar}"></TextBlock>
             </StackPanel>
 
         </DockPanel>
-
     </Grid>
 </UserControl>

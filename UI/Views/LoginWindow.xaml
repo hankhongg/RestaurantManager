@@ -10,21 +10,26 @@
         Title="Màn hình đăng nhập" Height="450" Width="800" WindowStyle="None" Background="Transparent"
         DataContext="{StaticResource LoginVM}"
         >
+    <!--Giải thích: Bỏ Window Style để dùng Tab Control trong UserControls, DataContext từ ViewModels LoginVM đã khai báo trong
+    MainResource sau đó đc kèm trong App.xaml để thực thi-->
+
+    <!--Xóa Window chrome mặc định -->
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
+    
+    <!--Thêm vài style default đơn giản-->
     <Window.Resources>
         <Style TargetType="Label" BasedOn="{StaticResource TextControl}">
             <Setter Property="FontWeight" Value="DemiBold"></Setter>
         </Style>
         <Style TargetType="TextBox" BasedOn="{StaticResource TextControl}"></Style>
         <Style TargetType="PasswordBox" BasedOn="{StaticResource TextControl}"></Style>
-        <!--<Style TargetType="Button" BasedOn="{StaticResource LoginButtonStyle}">
-            <Setter Property="FontWeight" Value="DemiBold"></Setter>
-        </Style>-->
-    
     </Window.Resources>
+    
+    <!--Grid của loginWindow-->
     <Grid>
+        <!--Chia cột + dòng trong form-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition></RowDefinition>
@@ -34,8 +39,11 @@
             <ColumnDefinition Width="7*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
+        <!--Thêm control bar (Grid.Row = "0" có kích thước 30)
+        từ xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" (UserControls)-->      
         <controlbar:ControlBar Tag="{Binding Title, ElementName=loginWindow}" Grid.ColumnSpan="2"/>
 
+        <!--Bo tròn form + tô màu cho giao diện đẹp hơn-->
         <Border CornerRadius="10" Grid.ColumnSpan="2" Grid.RowSpan="2" Panel.ZIndex="-1">
             <Border.Background>
                 <LinearGradientBrush>
@@ -44,10 +52,10 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-
         
-
+        <!--Kẻ đường tách 2 cột-->
         <Border BorderThickness="0,0,2,0" BorderBrush="White" Grid.RowSpan="2">
+            <!--Chia 2 dòng, để logo cái cửa ở center của dòng trên để đảm bảo ở resolution nào cũng đẹp-->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -57,28 +65,29 @@
            VerticalAlignment="Center"></Image>
             </Grid>
         </Border>
-
+        
+        <!--Grid của cột 2 để thêm textbox đăng nhập, passwordbox mật khẩu,...-->
         <Grid Grid.Column="1" Grid.Row="1">
             <StackPanel Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+
                 <StackPanel Orientation="Horizontal">
-                    <!--<Label Content="Tài khoản: " VerticalAlignment="Center"></Label>-->
                     <Image Source="Images\account_circle.png"
                            Width="35"></Image>
-                    
                     <TextBox Margin="10,0,0,0"  Height="30" Width="250"></TextBox>
                 </StackPanel>
+
                 <StackPanel Orientation="Horizontal">
-                    <!--<Label Content="Mật khẩu: " VerticalAlignment="Center"></Label>-->
                     <Image  Source="Images\key.png"
                            Width="35"></Image>
                     <PasswordBox Margin="10,0,0,0" Height="30" Width="250"></PasswordBox>
                 </StackPanel>
+
                 <TextBlock Text="Quên mật khẩu" FontSize="12" Cursor="Hand"
                            TextDecorations="Underline" Foreground="DimGray" HorizontalAlignment="Right"></TextBlock>
+
                 <Button x:Name="loginButton" Style="{StaticResource LoginButton}" Content="Đăng nhập" Foreground="White" HorizontalAlignment="Right" Margin="10"></Button>
 
             </StackPanel>
-
         </Grid>
     </Grid>
 </Window>

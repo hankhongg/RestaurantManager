@@ -9,23 +9,30 @@
          xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="Phần mềm Quản lý Nhà hàng" Height="768" Width="1366" DataContext="{StaticResource MainVM}" Background="Transparent"
         >
+    <!--Dùng xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" để xài event trigger tránh khởi tạo 2 main window-->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding WindowIsLoaded}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    <!--Xóa Window chrome mặc định -->
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
+    <!--Grid của mainWindow-->
     <Grid>
+        <!--Chia dòng trong form-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="80"></RowDefinition>
         </Grid.RowDefinitions>
 
+        <!--Thêm control bar (Grid.Row = "0" có kích thước 30)
+        từ xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" (UserControls)-->
         <controlbar:ControlBar Tag="{Binding Title, ElementName=mainWindow}"></controlbar:ControlBar>
         
+        <!--Thêm thanh điều hướng ở dưới (có hình ngôi nhà)-->
         <DockPanel Grid.Row="2" Height="80" VerticalAlignment="Bottom">
             <DockPanel.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
@@ -35,21 +42,24 @@
                 <Image Source="Images/house_black.png"></Image>
             </Border>
         </DockPanel>
-
+        
+        <!--Tô màu cho background của form-->
         <Border Grid.Row="1">
             <Border.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </Border.Background>
         </Border>
-
-        <TabControl Grid.Row="1" SelectedIndex="1">
-            <TabControl.Background>
+        
+        <!--Tab control cho form (gồm menu, tất cả đơn, sơ đồ bàn và bookings-->
+        <TabControl Grid.Row="1" SelectedIndex="1"> 
+            <TabControl.Background> <!--Tô màu cho Grid.Row="1" (cũng là khu vực của Tab Control vừa tạo)-->
                 <LinearGradientBrush>
                     <GradientStop Color="SkyBlue" Offset="1.0"></GradientStop>
                     <GradientStop Color="White" Offset="0.0"></GradientStop>
                 </LinearGradientBrush>
             </TabControl.Background>
 
+            <!--TabItem thứ 1 (Menu)-->
             <TabItem x:Name="mainMenu" Style="{StaticResource TabItemStyle}" Background="GhostWhite">
                 <TabItem.Header>
                     <Border BorderThickness="0">
@@ -59,21 +69,32 @@
                 </TabItem.Header>
                 <Grid></Grid>
             </TabItem>
+
+            <!--TabItem thứ 2 (Tất cả đơn)-->
             <TabItem x:Name="currentBills" Padding="30,0" Background="GhostWhite" 
                      Style="{StaticResource TabItemStyle}" 
                      FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn">
+                <!--Chia grid trong tab item để dễ xử lý-->
                 <Grid>
+                    <!--Chia grid thành 2 cột-->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
+                    
+                    <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
                     <Grid Grid.Column="0">
-                        <StackPanel></StackPanel>
+                        <WrapPanel Margin="20" x:Name="tablePanel">
+                        </WrapPanel>
                     </Grid>
                     
+                    <!--Cột 2 là nút tạo đơn mới-->
                     <Grid Grid.Column="1">
+                        <!--Dùng border để kẻ đường chia 2 cột-->
                         <Border BorderThickness="2,0,0,0" BorderBrush="White">
+                            <!--StackPanel để xếp các nút nếu cần thêm-->
                             <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <!--Tô màu cho StackPanel-->
                                 <StackPanel.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="DarkBlue" Offset="2.0"></GradientStop>
@@ -85,6 +106,8 @@
                     </Grid>
                 </Grid>
             </TabItem>
+
+            <!--TabItem thứ 3 (Sơ đồ bàn)-->
             <TabItem x:Name="tableMap" Padding="30,0" Background="GhostWhite" 
                     Style="{StaticResource TabItemStyle}" 
                      FontWeight="SemiBold" FontSize="30" Header="Sơ đồ bàn">
@@ -95,6 +118,8 @@
                     </Grid.ColumnDefinitions>
                 </Grid>
             </TabItem>
+
+            <!--TabItem thứ 4 (Bookings)-->
             <TabItem x:Name="bookings" Padding="30,0" Background="GhostWhite" 
                 Style="{StaticResource TabItemStyle}" 
                  FontWeight="SemiBold" FontSize="30" Header="Bookings">
@@ -106,14 +131,14 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        
+        <!--DockPanel để hiển thị Icon người dùng ở góc trên phải của form-->
         <DockPanel Height ="80" VerticalAlignment="Top" Grid.Row="1">
             <Border Height="80" Grid.Row="1" VerticalAlignment="Center" CornerRadius="8,0,0,8"
                HorizontalAlignment="Right" Background="GhostWhite">
                 <Image Source="Images/account_black.png"></Image>
             </Border>
         </DockPanel>
-
-        
     </Grid>
 
 </Window>
