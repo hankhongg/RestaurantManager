@@ -98,7 +98,7 @@
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="Tên khách hàng" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Tên khách hàng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Địa chỉ" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="SĐT" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Email" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
