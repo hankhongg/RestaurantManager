@@ -87,7 +87,7 @@
                                           IsReadOnly="True">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="Các món ăn" Width="5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Các sản phẩm" Width="5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="SL Bán" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="SL Tồn" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                     </DataGrid.Columns>
