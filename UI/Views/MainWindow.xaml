@@ -173,6 +173,9 @@
                     </Grid.ColumnDefinitions>
                     <WrapPanel Margin="20">
                         <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
+                        <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
+                        <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
+                        <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
                     </WrapPanel>
 
                 </Grid>
