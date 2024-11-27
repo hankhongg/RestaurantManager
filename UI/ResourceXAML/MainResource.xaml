@@ -8,4 +8,5 @@
     <viewmodel:ControlBarModel x:Key="ControlBarVM"></viewmodel:ControlBarModel>
     <viewmodel:MainViewModel x:Key="MainVM"></viewmodel:MainViewModel>
     <viewmodel:TableViewModel x:Key="TableVM"></viewmodel:TableViewModel>
+    <viewmodel:BookingViewModel x:Key="BookingVM"></viewmodel:BookingViewModel>
 </ResourceDictionary>

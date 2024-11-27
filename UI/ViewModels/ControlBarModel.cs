@@ -1,4 +1,5 @@
-﻿using RestaurantManager.Views.UserControls;
+﻿using RestaurantManager.Views;
+using RestaurantManager.Views.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using UI.Views;
 
 namespace RestaurantManager.ViewModels
 {
@@ -16,6 +18,11 @@ namespace RestaurantManager.ViewModels
         public ICommand MoveByMouse {  get; set; }
         public ICommand MinimizeCommand { get; set; }
         public ICommand MaximizeCommand {  get; set; }
+        public ICommand TurnOffMaximize {  get; set; }
+
+        private Visibility _visible = Visibility.Visible;
+        public Visibility Visible {  get { return _visible; } set { _visible = value; OnPropertyChanged(); } }
+
         public ControlBarModel()
         {
             CloseWindowCommand = new RelayCommand<UserControl>((p) => { return true; }, (p) => { FrameworkElement window = getParentWindow(p);
@@ -68,6 +75,18 @@ namespace RestaurantManager.ViewModels
                     else if (w.WindowState == WindowState.Maximized)
                     {
                         w.WindowState = WindowState.Normal;
+                    }
+                }
+            });
+            TurnOffMaximize = new RelayCommand<UserControl>((p) => { return true; }, (p) =>
+            {
+                FrameworkElement window = getParentWindow(p);
+                var w = window as Window;
+                if (w!= null)
+                {
+                    if (w is MainWindow || w is ProfileWindow)
+                    {
+                        Visible = Visibility.Collapsed;
                     }
                 }
             });

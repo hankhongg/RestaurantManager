@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RestaurantManager.ViewModels
 {
-    class TableViewModel : BaseViewModel
+    class BookingViewModel : BaseViewModel
     {
     }
 }

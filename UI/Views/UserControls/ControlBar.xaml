@@ -37,10 +37,15 @@
                 <Button x:Name="minimizeButton"  Style="{StaticResource TitleBarButton}"  Content="-" Command="{Binding MinimizeCommand}"
                 CommandParameter="{Binding ElementName=ucControlBar}">
                 </Button>
-                <Button x:Name="maximizeButton" Style="{StaticResource TitleBarButton}" Content="=" Command="{Binding MaximizeCommand}"
+                <Button x:Name="maximizeButton" Style="{StaticResource TitleBarButton}" Content="=" Command="{Binding MaximizeCommand}" Visibility="{Binding Visible}"
                         CommandParameter="{Binding ElementName=ucControlBar}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Loaded">
+                            <i:InvokeCommandAction Command="{Binding TurnOffMaximize}" CommandParameter="{Binding ElementName=ucControlBar}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </Button>
-                <Button x:Name="exitButton"  Style="{StaticResource TitleBarButton}"  Command="{Binding CloseWindowCommand}"
+                <Button x:Name="exitButton"  Style="{StaticResource TitleBarButton}"  Command="{Binding CloseWindowCommand}" 
                 CommandParameter="{Binding ElementName=ucControlBar}" Content="x">
                 </Button>
             </StackPanel>

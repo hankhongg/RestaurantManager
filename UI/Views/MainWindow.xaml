@@ -8,7 +8,7 @@
         xmlns:tableUC="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:bookingUC="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" WindowState="Maximized"
         Title="Phần mềm Quản lý Nhà hàng" Height="768" Width="1366" DataContext="{StaticResource MainVM}" Background="Transparent"
         >
     <!--Dùng xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" để xài event trigger tránh khởi tạo 2 main window-->
@@ -201,8 +201,6 @@
                             <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
                             <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
                             <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
-
-
                         </WrapPanel>
                     </Grid>
                     
