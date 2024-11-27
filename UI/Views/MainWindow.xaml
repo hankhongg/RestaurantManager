@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
+        xmlns:tableUC="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="Phần mềm Quản lý Nhà hàng" Height="768" Width="1366" DataContext="{StaticResource MainVM}" Background="Transparent"
@@ -20,7 +21,7 @@
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
     <!--Grid của mainWindow-->
-    
+
     <Grid Background="Transparent">
         <!--Chia dòng trong form-->
         <Grid.RowDefinitions>
@@ -42,17 +43,18 @@
                 <Image Source="Images/house_black.png"></Image>
             </Border>
         </DockPanel>
-        
+
         <!--Tô màu cho background của form-->
         <Border Grid.Row="1">
             <Border.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </Border.Background>
         </Border>
-        
+
         <!--Tab control cho form (gồm menu, tất cả đơn, sơ đồ bàn và bookings-->
-        <TabControl Grid.Row="1" SelectedIndex="1"> 
-            <TabControl.Background> <!--Tô màu cho Grid.Row="1" (cũng là khu vực của Tab Control vừa tạo)-->
+        <TabControl Grid.Row="1" SelectedIndex="1">
+            <TabControl.Background>
+                <!--Tô màu cho Grid.Row="1" (cũng là khu vực của Tab Control vừa tạo)-->
                 <LinearGradientBrush>
                     <GradientStop Color="SkyBlue" Offset="1.0"></GradientStop>
                     <GradientStop Color="White" Offset="0.0"></GradientStop>
@@ -67,7 +69,7 @@
                         </Image>
                     </Border>
                 </TabItem.Header>
-                
+
                 <!--Tabview-->
                 <Grid>
                     <TabControl  BorderThickness="0"
@@ -81,7 +83,8 @@
                                   FontWeight="SemiBold" FontSize="30" Padding="30"
                                  Background="Transparent" BorderThickness="0">
                             <Grid>
-                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0"
+                                          IsReadOnly="True">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Các món ăn" Width="5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
@@ -97,10 +100,10 @@
                             <Grid>
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Tên khách hàng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="Địa chỉ" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="SĐT" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Địa chỉ" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="SĐT" Width="1.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Email" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -113,7 +116,7 @@
             <!--TabItem thứ 2 (Tất cả đơn)-->
             <TabItem x:Name="currentOrders" Padding="30,0" Background="GhostWhite" 
                      Style="{StaticResource TabItemStyle}" 
-                     FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn" HorizontalAlignment="Right" Margin="0,-2,-2,0" Width="207">
+                     FontWeight="SemiBold" FontSize="30" Header="Tất cả đơn" Margin="2,-2,-2,0">
                 <!--Chia grid trong tab item để dễ xử lý-->
                 <Grid>
                     <!--Chia grid thành 2 cột-->
@@ -127,7 +130,7 @@
                         <WrapPanel Margin="20" x:Name="tablePanel">
                         </WrapPanel>
                     </Grid>
-                    
+
                     <!--Cột 2 là nút tạo đơn mới-->
                     <Grid Grid.Column="1">
                         <!--Tô màu cho cột 2-->
@@ -137,7 +140,7 @@
                                 <GradientStop Color="SkyBlue" Offset="0.0"></GradientStop>
                             </LinearGradientBrush>
                         </Grid.Background>
-                        
+
                         <!--Dùng border để kẻ đường chia 2 cột-->
                         <Border BorderThickness="2,0,0,0" BorderBrush="White">
                             <!--StackPanel để xếp các nút nếu cần thêm-->
@@ -168,6 +171,10 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
+                    <WrapPanel Margin="20">
+                        <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
+                    </WrapPanel>
+
                 </Grid>
             </TabItem>
 
@@ -215,13 +222,13 @@
                                 </Button>
                             </StackPanel>
                         </Border>
-                        
+
                     </Grid>
                 </Grid>
-                
+
             </TabItem>
         </TabControl>
-        
+
         <!--DockPanel để hiển thị Icon người dùng ở góc trên phải của form-->
         <DockPanel Height ="80" VerticalAlignment="Top" Grid.Row="1">
             <Border Height="80" Grid.Row="1" VerticalAlignment="Center" CornerRadius="8,0,0,8"

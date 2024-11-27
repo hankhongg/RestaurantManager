@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="RestaurantManager.Views.UserControls.TableUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="120">
+
+    <UserControl.Resources>
+        <Style x:Key="tbTableUC" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="DarkSlateBlue"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <!--Grid.RowDefinitions-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+        <!--</Grid.RowDefinitions>-->
+
+        <Border BorderBrush="DarkGray" BorderThickness="0" CornerRadius="10" Grid.RowSpan="2">
+            <Border.Background>
+                <LinearGradientBrush>
+                    <!-- Màu bạc sáng -->
+                    <!-- Màu trắng sáng gần như bạc -->
+                    <GradientStop Color="SkyBlue" Offset="1" />
+                    <GradientStop Color="Blue" Offset="-1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Border Grid.Row="0" BorderThickness="0,0,0,0.25" BorderBrush="White">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="1"
+                       Style="{StaticResource tbTableUC}"/>
+        </Border>
+
+        <Border Grid.Row="1" BorderThickness="0,0.25,0,0" BorderBrush="white">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Bàn trống"
+                       Style="{StaticResource tbTableUC}"/>
+        </Border>
+    </Grid>
+
+
+</UserControl>
