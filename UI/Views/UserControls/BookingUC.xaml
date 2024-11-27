@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="RestaurantManager.Views.UserControls.BookingUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="190">
+    <Grid>
+        <!--3 main sections-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="2.5*"/>
+        </Grid.RowDefinitions>
+        
+        <!--Background UC-->
+        <Border CornerRadius="5" Grid.RowSpan="3">
+            <Border.Background>
+                <LinearGradientBrush Opacity="0.9">
+                    <GradientStop Color="SkyBlue"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <Border Grid.Row="1">
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightBlue" Offset="0.75" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        
+        <!--TextBlock at Main Row 0-->
+        <TextBlock Name="tbNameNPhone" Grid.Row="0" VerticalAlignment="Center"
+                   HorizontalAlignment="Center" Margin="3,0"
+                   Text="Nguyen Van A - 0123456789" FontSize="13"/>
+
+        <!--Grid at Row 1-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition Width="6.5*"/>
+            </Grid.ColumnDefinitions>
+        
+            <TextBlock Name="tbTableNumber" Grid.Row="0" VerticalAlignment="Center"
+                       HorizontalAlignment="Center" FontSize="28" Text="?"/>
+            
+            <!--Grid at Row 1 -> Column 1 -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="5*"/>
+                </Grid.RowDefinitions>
+
+                <!--Grid at Row 1 -> Column 1 -> Row 0 -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Timer-->
+                    <TextBlock Name="tbTimer" Grid.Column="0" VerticalAlignment="Center"
+                               Margin="5,0,0,0" FontSize="15" Text="00:00"/>
+                    <!--Number of people-->
+                    <TextBlock Name="tbNumOfPeople" Grid.Column="1" VerticalAlignment="Center"
+                               Margin="5,0,0,0" FontSize="15" Text="0"/>
+                </Grid>
+
+                <!--Total price-->
+                <TextBlock Name="tbTotalPrice" Grid.Row="1" VerticalAlignment="Center"
+                           Margin="5,0,0,0" FontSize="15" Text="0đ">
+
+                </TextBlock>
+            </Grid>
+        </Grid>
+        <!--Grid at Row 2-->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition Width="6.5*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!--More ComboBox-->
+
+            <!--ClaimOrder Button-->
+            <Button Name="btnClaimOrder" Grid.Column="1" VerticalAlignment="Center"
+                    HorizontalAlignment="Center" Margin="5,0" Content="Khách nhận bàn"
+                    FontSize= "12" Background="Transparent" BorderThickness="0"/>
+        </Grid>
+        
+    </Grid>
+</UserControl>

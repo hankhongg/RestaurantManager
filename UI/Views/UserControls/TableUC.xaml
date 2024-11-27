@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
         <!--</Grid.RowDefinitions>-->
 
-        <Border BorderBrush="DarkGray" BorderThickness="0" CornerRadius="10" Grid.RowSpan="2">
+        <Border BorderBrush="DarkGray" BorderThickness="0" CornerRadius="5" Grid.RowSpan="2">
             <Border.Background>
                 <LinearGradientBrush>
                     <!-- Màu bạc sáng -->

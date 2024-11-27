@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:UI"
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:tableUC="clr-namespace:RestaurantManager.Views.UserControls"
+        xmlns:bookingUC="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="Phần mềm Quản lý Nhà hàng" Height="768" Width="1366" DataContext="{StaticResource MainVM}" Background="Transparent"
@@ -167,16 +168,17 @@
                     Style="{StaticResource TabItemStyle}" 
                      FontWeight="SemiBold" FontSize="30" Header="Sơ đồ bàn">
                 <Grid>
-                    <Grid.ColumnDefinitions>
+                    <!--<Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
-                    <WrapPanel Margin="20">
-                        <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
-                        <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
-                        <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
-                        <tableUC:TableUC Margin="10,10" Width="150" Height="120"/>
-                    </WrapPanel>
+                    </Grid.ColumnDefinitions>-->
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                        <WrapPanel Margin="10">
+                            <tableUC:TableUC Margin="35, 5" Width="150" Height="120"/>
+
+                        </WrapPanel>
+                    </ScrollViewer>
+                    
 
                 </Grid>
             </TabItem>
@@ -190,6 +192,20 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
+                    
+                    <!--Booking UC-->
+                    <Grid Grid.Column="0">
+                        <WrapPanel Margin="10">
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
+
+
+                        </WrapPanel>
+                    </Grid>
+                    
                     <Grid Grid.Column="1">
                         <!--Background của button-->
                         <Grid.Background>
@@ -225,7 +241,6 @@
                                 </Button>
                             </StackPanel>
                         </Border>
-
                     </Grid>
                 </Grid>
 
