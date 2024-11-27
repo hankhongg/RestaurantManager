@@ -153,7 +153,6 @@
                                         </LinearGradientBrush>
                                     </Button.Background>
                                 </Button>
-                                
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -181,7 +180,45 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <!--Background của button-->
+                        <Grid.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Color="DarkBlue" Offset="2.0"></GradientStop>
+                                <GradientStop Color="SkyBlue" Offset="0.0"></GradientStop>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <!--Điều chỉnh border-->
+                        <Border BorderThickness="2,0,0,0" BorderBrush="GhostWhite">
+                            <StackPanel Margin="20">
+                                <!--Tạo booking mới-->
+                                <Button Content="Tạo booking (+)" Style="{StaticResource LoginButton}"
+                                        Padding="0,20" Margin="20,0,20,10" Width="Auto" Height="Auto"
+                                        Command="{Binding AddNewBooking}">
+                                    <Button.Background>
+                                        <LinearGradientBrush>
+                                            <GradientStop Color="DarkGreen" Offset="-0.5"/>
+                                            <GradientStop Color="LimeGreen" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Button.Background>
+                                </Button>
+                                <!--Booking hiện có-->
+                                <Button Content="Booking hiện có (X)" Style="{StaticResource LoginButton}"
+                                        Padding="0,20" Margin="20,10,20,10" Width="Auto" Height="Auto"
+                                        Command="{Binding ExistingBooking}">
+                                    <Button.Background>
+                                        <LinearGradientBrush>
+                                            <GradientStop Color="DarkGreen" Offset="-0.5"/>
+                                            <GradientStop Color="LimeGreen" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                        
+                    </Grid>
                 </Grid>
+                
             </TabItem>
         </TabControl>
         

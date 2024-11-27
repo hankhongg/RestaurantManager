@@ -8,5 +8,6 @@ namespace RestaurantManager.ViewModels
 {
     class ForgotPasswordViewModel : BaseViewModel
     {
+        
     }
 }
