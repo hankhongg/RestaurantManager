@@ -92,7 +92,7 @@
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseLeftButtonDown">
                 <i:InvokeCommandAction Command="{Binding BookingInfo}"
-                                       CommandParameter="{Binding ElementName=mainWindow}"/>
+                                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
     </Grid>

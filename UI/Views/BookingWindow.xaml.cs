@@ -25,7 +25,7 @@ namespace RestaurantManager.Views
         }
         public BookingWindow(Window parentWindow)
         {
-            Owner = parentWindow;
+            this.Owner = parentWindow;
             InitializeComponent();
         }
     }
