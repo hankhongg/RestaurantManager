@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
              DataContext="{StaticResource TableVM}"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="120">
+             d:DesignHeight="190" d:DesignWidth="150">
 
     <UserControl.Resources>
         <Style x:Key="tbTableUC" TargetType="TextBlock">

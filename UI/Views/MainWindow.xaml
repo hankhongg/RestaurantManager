@@ -174,7 +174,14 @@
                     </Grid.ColumnDefinitions>-->
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <WrapPanel Margin="10">
-                            <tableUC:TableUC Margin="35, 5" Width="150" Height="120"/>
+                            <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
+                            <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
+                            <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
+                            <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
+                            <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
+                            <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
+                            <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
+                            <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
 
                         </WrapPanel>
                     </ScrollViewer>
@@ -196,11 +203,15 @@
                     <!--Booking UC-->
                     <Grid Grid.Column="0">
                         <WrapPanel Margin="10">
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="28, 5"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
                         </WrapPanel>
                     </Grid>
                     

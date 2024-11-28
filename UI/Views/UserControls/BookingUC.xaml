@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" DataContext="{StaticResource BookingVM}"
              d:DesignHeight="150" d:DesignWidth="190">
     <Grid>
@@ -88,6 +89,10 @@
                     HorizontalAlignment="Center" Margin="5,0" Content="Khách nhận bàn"
                     FontSize= "12" Background="Transparent" BorderThickness="0"/>
         </Grid>
-        
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding BookingInfo}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
     </Grid>
 </UserControl>
