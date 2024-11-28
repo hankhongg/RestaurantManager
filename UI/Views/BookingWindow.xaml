@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views"
-        mc:Ignorable="d" WindowStyle="None"
-        Title="BookingWindow" Height="550" Width="800">
+        mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterOwner"
+        Title="BookingWindow" Height="800" Width="1100">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
@@ -19,7 +19,7 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        
+
 
     </Grid>
 </Window>

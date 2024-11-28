@@ -14,9 +14,9 @@ namespace RestaurantManager.ViewModels
         public ICommand BookingInfo {  get; set; }
         public BookingViewModel()
         {
-            BookingInfo = new RelayCommand<object>((p) => { return true; }, (p) =>
+            BookingInfo = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {
-                    BookingWindow bookingWindow = new BookingWindow();
+                    BookingWindow bookingWindow = new BookingWindow(p);
                     bookingWindow.ShowDialog();
                 }
             );
