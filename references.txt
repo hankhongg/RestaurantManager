@@ -1,0 +1,5 @@
+https://stackoverflow.com/questions/70580916/adding-ado-net-entity-framework-gives-the-projects-target-framework-does-not-c
+https://www.youtube.com/playlist?list=PL33lvabfss1zfGxCcTIYr5IjsyweWWtAO (Phần mềm Quản lý Kho WPF - MVVM của HowKTeam)
+chatgpt
+https://www.sapo.vn
+https://www.connectionstrings.com/sql-server/
