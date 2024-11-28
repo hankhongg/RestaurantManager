@@ -8,7 +8,7 @@
         Height="450" Width="800" 
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
          Title="Màn hình đặt món"
-         Name="FoodLayoutWindow" Background="#FF040533">        
+         Name="foodLayoutWindow" Background="#FF040533">        
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0"></RowDefinition>
@@ -31,12 +31,11 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Background="White">
                     <TextBox Text="Nhập tên mặt hàng(F4)"  
-       Padding= "2"
-       Foreground="DimGray"
-       Width="350"
-       Height="25" FontStyle="Italic" TextAlignment="Center" VerticalAlignment="Center"                        
-        
-       />
+                       Padding= "2"
+                       Foreground="DimGray"
+                       Width="350"
+                       Height="25" FontStyle="Italic" TextAlignment="Center" VerticalAlignment="Center"                        
+                    />
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>

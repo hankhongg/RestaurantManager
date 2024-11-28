@@ -15,6 +15,7 @@ namespace RestaurantManager.ViewModels
     {
         public ICommand WindowIsLoadedCommand { get; set; }
         public ICommand ProfileManagementCommand {  get; set; }
+        public ICommand AddOrderCommand { get; set; }
 
         public MainViewModel() {
 
@@ -32,14 +33,18 @@ namespace RestaurantManager.ViewModels
                     }
                 }
             );
-
             ProfileManagementCommand = new RelayCommand<object>( (p) => { return true; }, (p) =>
                 {
                     ProfileWindow profileWindow = new ProfileWindow();
                     profileWindow.ShowDialog();
                 }
             );
-            
+            AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+                {
+                    FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
+                    foodLayoutWindow.ShowDialog();
+                }
+            );
         }
     }
 }
