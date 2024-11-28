@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="Styles/TabItemStyles.xaml"/>
                 <ResourceDictionary Source="Styles/DataGridColumnStyles.xaml"/>
                 <ResourceDictionary Source="Styles/TableButtonStyles.xaml"/>
+                <ResourceDictionary Source="Styles/BookingWindowStyles.xaml"/>
                 <ResourceDictionary Source="ResourceXAML/MainResource.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
