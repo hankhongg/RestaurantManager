@@ -5,8 +5,160 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d"
-        Title="FoodLayoutWindow" Height="450" Width="800">
+        Height="450" Width="800" 
+        xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
+         Title="Màn hình đặt món"
+         Name="FoodLayoutWindow" Background="#FF040533">        
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition ></ColumnDefinition>
+                <ColumnDefinition Width="250"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35*"></RowDefinition>
+                    <RowDefinition Height="280*"></RowDefinition>
+                    <RowDefinition Height="70*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Background="White">
+                    <TextBox Text="Nhập tên mặt hàng(F4)"  
+       Padding= "2"
+       Foreground="DimGray"
+       Width="350"
+       Height="25" FontStyle="Italic" TextAlignment="Center" VerticalAlignment="Center"                        
         
+       />
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Button Content="Thêm món ăn"  Style="{StaticResource btnAddFoodStyle}"/>
+                    </Grid>
+                    <Grid Grid.Column="1" >
+                        <Button Content="Xóa món ăn"  Style="{StaticResource btnAddFoodStyle}" />
+                    </Grid>
+                    <Grid Grid.Column="2">
+                        <Button Content="Sửa món ăn"  Style="{StaticResource btnAddFoodStyle}"/>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <TextBlock Text="Danh sách món ăn" Foreground="White" Width="100" Height="25" FontStyle="Italic" ></TextBlock>
+                    <Button Content="End" Width="30" Height="20" HorizontalAlignment="Center" VerticalAlignment="Bottom"></Button>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel HorizontalAlignment="Left">
+                            <Button  Width="80" Height="80"></Button>
+                            <Button Width="80" Height="80"></Button>
+                            <Button Width="80" Height="80"></Button>
+                            <Button  Width="80" Height="80"></Button>
+                            <Button Width="80" Height="80"></Button>
+                            <Button Width="80" Height="80"></Button>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="37*"></RowDefinition>
+                    <RowDefinition Height="369*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Background="White">
+                    <TextBlock x:Name="menutextblock" Text="^^" HorizontalAlignment="Center" VerticalAlignment="Center"
+                 FontSize="25"   Foreground="DimGray"/>
+
+                </Grid>
+                <Grid Grid.Row="1" >
+                    <StackPanel>
+                        <Button Content="Món ăn" Height="80" FontSize="15"  Foreground="White"
+                       BorderThickness="1" BorderBrush="#FF040533" Background="#0088FE"/>
+                        <Button Content="Đồ uống" FontSize="15" Height="80"  Foreground="DimGray"
+                       BorderThickness="1" BorderBrush="#FF040533" Background="White"/>
+                        <Button Content="Khác" FontSize="15" Height="80"  Foreground="DimGray"
+                       BorderThickness="1" BorderBrush="#FF040533" Background="White"/>
+                    </StackPanel>
+                </Grid>
+
+            </Grid>
+            <Grid Grid.Column="2" Width="246" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="37*"></RowDefinition>
+                    <RowDefinition Height="233*"></RowDefinition>
+                    <RowDefinition Height="60*"></RowDefinition>
+                    <RowDefinition Height="74*" ></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1" Background="White">
+                    <StackPanel Height="230">
+                        <TextBlock Text="Hóa đơn" Style="{StaticResource ResourceKey=txtReceiptStyle}"></TextBlock>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="2"  Background="#FFE4E6E9">
+                    <TextBlock Text="" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" Foreground="DimGray">                 
+    <Bold>Tổng tiền </Bold>
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Row="3" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition ></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" >
+                        <Button Style="{StaticResource btnExistFoodStyle}" Background="#FFED4C4C">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Thoát" HorizontalAlignment="Center" />
+                                <TextBlock Text="(ESC)" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Column="1" >
+                        <Button Style="{StaticResource btnExistFoodStyle}" Background="#FF327532">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Lưu đơn" HorizontalAlignment="Center"/>
+                                <TextBlock Text="(F3)" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Column="2">
+                        <Button Style="{StaticResource btnExistFoodStyle}" Background="#FF3ACCD7">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Lưu và" HorizontalAlignment="Center" FontSize="10"/>
+                                <TextBlock Text="Tạm tính" HorizontalAlignment="Center" FontSize="10"/>
+                                <TextBlock Text="(F2)" HorizontalAlignment="Center" FontSize="10"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Column="3" >
+                        <Button BorderThickness="1" BorderBrush="#FF040533" Background="#0088FE">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Thanh toán" HorizontalAlignment="Center" FontSize="10" Foreground="White" />
+                                <TextBlock Text="(F1)" HorizontalAlignment="Center" FontSize="10" Foreground="White"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="0" >
+                    <ComboBox x:Name="ComboBoxBan" Style="{StaticResource cmbTableStyle}">
+                        <ComboBoxItem Content="Bàn 1" />
+                        <ComboBoxItem Content="Bàn 2" />
+                        <ComboBoxItem Content="Bàn 3" />
+                    </ComboBox>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
