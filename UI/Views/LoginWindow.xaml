@@ -11,6 +11,10 @@
         Title="Màn hình đăng nhập" Height="450" Width="800" WindowStyle="None" Background="Transparent"
         DataContext="{StaticResource LoginVM}"
         >
+    <!--    Thông tin đăng nhập
+    (ADMIN) tK: admin mk: han2005
+    (NHANVIEN) tk: vanannguyen mk:vanan123  -->
+    
     <!--Giải thích: Bỏ Window Style để dùng Tab Control trong UserControls, DataContext từ ViewModels LoginVM đã khai báo trong
     MainResource sau đó đc kèm trong App.xaml để thực thi-->
 
@@ -97,7 +101,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBlock>
-                <Button x:Name="loginButton" Style="{StaticResource LoginButton}" 
+                <Button x:Name="loginButton" Style="{StaticResource LoginButton}" IsDefault="true" 
                         Content="Đăng nhập" Foreground="White" HorizontalAlignment="Right" 
                         Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=loginWindow}" Margin="10"></Button>
 

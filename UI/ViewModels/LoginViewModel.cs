@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using XSystem.Security.Cryptography;
 
 namespace RestaurantManager.ViewModels
 {
@@ -67,7 +68,8 @@ namespace RestaurantManager.ViewModels
 
         public void Login(Window p)
         {
-            var account = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == Username && x.AccPassword == Password).Count();
+            string passwordEncode = MD5Hash(Base64Encode(Password));
+            var account = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == Username && x.AccPassword == passwordEncode).Count();
 
             if (account > 0)
             {
@@ -79,8 +81,23 @@ namespace RestaurantManager.ViewModels
                 isLogin = false;
                 MessageBox.Show("Sai tài khoản hoặc mật khẩu!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
+        }
 
-
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string MD5Hash(string input)
+        {
+            StringBuilder sb = new StringBuilder();
+            MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider();
+            byte[] bytes = md5Provider.ComputeHash(new UTF8Encoding().GetBytes(input));
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                sb.Append(bytes[i].ToString("x2"));
+            }
+            return sb.ToString();
         }
     }
 }

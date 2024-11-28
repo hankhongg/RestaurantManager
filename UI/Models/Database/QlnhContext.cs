@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace RestaurantManager.Models;
+namespace RestaurantManager.Models.Database;
 
 public partial class QlnhContext : DbContext
 {
