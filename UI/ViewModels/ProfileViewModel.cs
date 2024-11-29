@@ -44,7 +44,7 @@ namespace RestaurantManager.ViewModels
 
         public void LoadAccounts()
         {
-            using (var context = new Models.QlnhContext())
+            using (var context = new Models.Database.QlnhContext())
             {
                 var accountsList = context.Accounts.ToList();
                 Accounts = new ObservableCollection<Account>(accountsList);
