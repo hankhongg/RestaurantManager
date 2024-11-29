@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RestaurantManager.Views"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterOwner" Background="Transparent"
-        Title="BookingWindow" Height="700" Width="1000" Name="bkWindow"
+        Title="BookingWindow" Height="700" Width="1000" Name="bookWingindow"
         DataContext="{StaticResource BookingVM}">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
@@ -107,8 +107,8 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
                         Content="Số điện thoại" Style="{StaticResource labelStyle}"/>
-                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                    <Border Grid.Row="1" Grid.Column="1" Margin="10,0,10,15" CornerRadius="10">
+                        <TextBox Style="{StaticResource txtStyle}"/>
                     </Border>
                 </Grid>
                 
