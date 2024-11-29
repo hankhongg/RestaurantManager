@@ -11,6 +11,10 @@
         Title="Màn hình đăng nhập" Height="450" Width="800" WindowStyle="None" Background="Transparent"
         DataContext="{StaticResource LoginVM}"
         >
+    <!--    Thông tin đăng nhập
+    (ADMIN) tK: admin mk: han2005
+    (NHANVIEN) tk: vanannguyen mk:vanan123  -->
+    
     <!--Giải thích: Bỏ Window Style để dùng Tab Control trong UserControls, DataContext từ ViewModels LoginVM đã khai báo trong
     MainResource sau đó đc kèm trong App.xaml để thực thi-->
 
@@ -74,13 +78,19 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images\account_circle.png"
                            Width="35"></Image>
-                    <TextBox Margin="10,0,0,0"  Height="30" Width="250"></TextBox>
+                    <TextBox Margin="10,0,0,0"  Height="30" Width="250" Text="{Binding Username}"></TextBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Image  Source="Images\key.png"
                            Width="35"></Image>
-                    <PasswordBox Margin="10,0,0,0" Height="30" Width="250"></PasswordBox>
+                    <PasswordBox x:Name="passwordBox" Margin="10,0,0,0" Height="30" Width="250">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PasswordChanged">
+                                <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding ElementName=passwordBox}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </PasswordBox>
                 </StackPanel>
 
                 <TextBlock Text="Quên mật khẩu" FontSize="12" Cursor="Hand" x:Name="forgotPwdTextBlock"
@@ -91,7 +101,9 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBlock>
-                <Button x:Name="loginButton" Style="{StaticResource LoginButton}" Content="Đăng nhập" Foreground="White" HorizontalAlignment="Right" Margin="10"></Button>
+                <Button x:Name="loginButton" Style="{StaticResource LoginButton}" IsDefault="true" 
+                        Content="Đăng nhập" Foreground="White" HorizontalAlignment="Right" 
+                        Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=loginWindow}" Margin="10"></Button>
 
             </StackPanel>
         </Grid>

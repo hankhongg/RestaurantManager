@@ -89,7 +89,7 @@
                         <StackPanel Style="{StaticResource stackPanelStyle}">
                             <TextBlock Text="Họ tên: " Width="100"/>
                             <TextBox Width="250" 
-                                     Text="{Binding ProfileName}"
+                                     Text="{Binding AccountName}"
                                      IsEnabled="{Binding IsButtonPressed}"/>
                         </StackPanel>
                         <StackPanel Style="{StaticResource stackPanelStyle}">

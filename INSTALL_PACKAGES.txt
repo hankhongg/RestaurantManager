@@ -1,0 +1,31 @@
+Project -> Manage NuGet Packages... -> Browse:
+EntityFramework 6.5.1
+Microsoft.EntityFrameworkCore.DesignMicrosoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Tools
+
+
+--
+Command Prompt -> cd [đường dẫn đến solution] (vd: cd C:\Users\Admin\Downloads\KTPM\3rd Semester\VP\BCCK\RestaurantManager-master)
+
+
+dotnet ef migrations list
+
+dotnet tool install --global dotnet-ef
+
+
+--
+Command Prompt -> cd [đường dẫn đến project(UI)] (vd: cd C:\Users\Admin\Downloads\KTPM\3rd Semester\VP\BCCK\RestaurantManager-master\UI)
+
+
+dotnet ef dbcontext scaffold "Server=localhost;Database=QLNH;Trusted_Connection=True; TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models --force 
+
+(trong "Server=localhost;Database=QLNH;Trusted_Connection=True; TrustServerCertificate=True;", Server và Database tùy mỗi người)
+
+
+--
+Thành công thì cmd sẽ hiển thị:
+
+Build started...
+Build succeeded.
+To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
