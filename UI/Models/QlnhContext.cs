@@ -47,7 +47,7 @@ public partial class QlnhContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=hankhongg-LAPTOP;Database=QLNH;Trusted_Connection=True;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=QLNH;Trusted_Connection=True; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -176,7 +176,7 @@ public partial class QlnhContext : DbContext
 
             entity.ToTable("DINING_TABLE");
 
-            entity.HasIndex(e => e.TabNum, "UQ__DINING_T__0E575E16E0578BA0").IsUnique();
+            entity.HasIndex(e => e.TabNum, "UQ__DINING_T__0E575E16B26E4511").IsUnique();
 
             entity.Property(e => e.TabId).HasColumnName("TAB_ID");
             entity.Property(e => e.Isdeleted).HasColumnName("ISDELETED");
@@ -221,7 +221,7 @@ public partial class QlnhContext : DbContext
 
         modelBuilder.Entity<FinancialHistory>(entity =>
         {
-            entity.HasKey(e => e.FinId).HasName("PK__FINANCIA__20636AD9D4BC95B6");
+            entity.HasKey(e => e.FinId).HasName("PK__FINANCIA__20636AD95B0BCE7A");
 
             entity.ToTable("FINANCIAL_HISTORY");
 
@@ -331,7 +331,7 @@ public partial class QlnhContext : DbContext
 
         modelBuilder.Entity<ReceiptDetail>(entity =>
         {
-            entity.HasKey(e => new { e.RecId, e.ItemId }).HasName("PK__RECEIPT___396D79007ABBEB3C");
+            entity.HasKey(e => new { e.RecId, e.ItemId }).HasName("PK__RECEIPT___396D790008F9C96B");
 
             entity.ToTable("RECEIPT_DETAILS");
 
@@ -354,7 +354,7 @@ public partial class QlnhContext : DbContext
 
         modelBuilder.Entity<Recipe>(entity =>
         {
-            entity.HasKey(e => new { e.ItemId, e.IngreId }).HasName("PK__RECIPES__51D2FEEFD3FF8CE5");
+            entity.HasKey(e => new { e.ItemId, e.IngreId }).HasName("PK__RECIPES__51D2FEEFEE836042");
 
             entity.ToTable("RECIPES");
 
@@ -394,7 +394,7 @@ public partial class QlnhContext : DbContext
 
         modelBuilder.Entity<StockinDetailsDrinkOther>(entity =>
         {
-            entity.HasKey(e => new { e.StoId, e.ItemId }).HasName("PK__STOCKIN___E3A93569E53CA331");
+            entity.HasKey(e => new { e.StoId, e.ItemId }).HasName("PK__STOCKIN___E3A93569A4A8988C");
 
             entity.ToTable("STOCKIN_DETAILS_DRINK_OTHER");
 
@@ -417,7 +417,7 @@ public partial class QlnhContext : DbContext
 
         modelBuilder.Entity<StockinDetailsIngre>(entity =>
         {
-            entity.HasKey(e => new { e.StoId, e.IngreId }).HasName("PK__STOCKIN___05599ABCBA6C2305");
+            entity.HasKey(e => new { e.StoId, e.IngreId }).HasName("PK__STOCKIN___05599ABC1C73EEA3");
 
             entity.ToTable("STOCKIN_DETAILS_INGRE");
 

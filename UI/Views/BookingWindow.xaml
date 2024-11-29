@@ -48,26 +48,152 @@
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Margin="10">
-                <Label Content="Thời gian nhận bàn" Style="{StaticResource labelStyle}"/>
-                <TextBox Margin="10,0,10,15" FontSize="35"/>
-                <Label Content="Số điện thoại" Margin="10,0" Style="{StaticResource labelStyle}"/>
-                <TextBox Margin="10,0,10,15" FontSize="35"/>
-                <Label Content="Chọn bàn" Margin="10,0" Style="{StaticResource labelStyle}"/>
-                <TextBox Margin="10,0,10,15" FontSize="35"/>
-                <Label Content="Đặt cọc trước" Margin="10,0" Style="{StaticResource labelStyle}"/>
-                <TextBox Margin="10,0,10,15" FontSize="35"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1" Margin="10">
-                <Label Content="Số khách" Style="{StaticResource labelStyle}"/>
-                <TextBox Margin="10,0,10,15" FontSize="35"/>
-                <Label Content="Tên khách hàng" Margin="10,0" Style="{StaticResource labelStyle}"/>
-                <TextBox Margin="10,0,10,15" FontSize="35"/>
-                <Label Content="Đặt trước món" Margin="10,0" Style="{StaticResource labelStyle}"/>
-                <TextBox Margin="10,0,10,15" FontSize="35"/>
-                <Label Content="Ghi chú" Margin="10,0" Style="{StaticResource labelStyle}"/>
-                <TextBox Margin="10,0,10,15" FontSize="35"/>
-            </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <!--Sub Content-->
+                <!--Thời gian nhận bàn-->
+                <Grid Grid.Row="0" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                        Content="Thời gian nhận bàn" Style="{StaticResource labelStyle}"/>
+                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                </Grid>
+                
+                <!--Số điện thoại-->
+                <Grid Grid.Row="1" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                        Content="Số điện thoại" Style="{StaticResource labelStyle}"/>
+                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                </Grid>
+                
+                <!--Chọn bàn-->
+                <Grid Grid.Row="2" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                        Content="Chọn bàn" Style="{StaticResource labelStyle}"/>
+                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>     
+                </Grid>
+                
+                <!--Đặt cọc trước-->
+                <Grid Grid.Row="3" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                        Content="Đặt cọc trước" Style="{StaticResource labelStyle}"/>
+                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                </Grid>
+            </Grid>
+            
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <!--Sub Content-->
+                <!--Số khách, thời gian dự kiến hoàn tất-->
+                <Grid Grid.Row="0" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Số khách-->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="6*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Margin="0,0,0,5"
+                            Content="Số khách" Style="{StaticResource labelStyle}"/>
+                        <Border Grid.Row="1" Margin="5,0,0,15" CornerRadius="5">
+                            <StackPanel Grid.Row="1" Orientation="Horizontal"
+                                        HorizontalAlignment="Left"
+                                        Width="auto" >
+                                <Button Content="-" Width="75" Style="{StaticResource configGuestNumber}"
+                                        Foreground="Red"/>
+                                <TextBox Text="{Binding cusNumber}" Width="70" Style="{StaticResource txtStyle}"/>
+                                <Button Content="+" Width="75" Style="{StaticResource configGuestNumber}"
+                                        Foreground="DarkBlue"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <!--Thời gian dự kiến hoàn tất-->
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="6*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Margin="0,0,0,5" HorizontalAlignment="Right"
+                                Content="Thời gian dự kiến hoàn tất" Style="{StaticResource labelStyle}"/>
+                            <Border Grid.Row="1" Margin="0,0,5,15" CornerRadius="5">
+                                <StackPanel Grid.Row="1" Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                Width="auto">
+                                <TextBox Text="{Binding cusNumber}" Width="110" Style="{StaticResource txtStyle}"/>
+                                <ComboBox SelectedIndex="0" Width="110" FontSize="18" Background="Transparent" FontWeight="SemiBold"
+                                          VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                    <ComboBoxItem Content="Phút" FontSize="15"/>
+                                    <ComboBoxItem Content="Giờ" FontSize="15"/>
+                                    <ComboBoxItem Content="Giây" FontSize="15"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+                <!--Khách hàng-->
+                <Grid Grid.Row="1" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                        Content="Khách hàng" Style="{StaticResource labelStyle}"/>
+                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                </Grid>
+                
+                <!--Đặt trước món-->
+                <Grid Grid.Row="2" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                        Content="Đặt trước món" Style="{StaticResource labelStyle}"/>
+                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                </Grid>
+
+                <!--Ghi chú-->
+                <Grid Grid.Row="3" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                        Content="Ghi chú" Style="{StaticResource labelStyle}"/>
+                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                </Grid>
+
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="2">
