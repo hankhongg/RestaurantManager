@@ -4,8 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterOwner" Background="Transparent"
-        Title="BookingWindow" Height="700" Width="1000">
+        Title="BookingWindow" Height="700" Width="1000" Name="bkWindow"
+        DataContext="{StaticResource BookingVM}">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
@@ -19,7 +21,7 @@
         </Grid.RowDefinitions>
         
         <!--Background-->
-        <Border Grid.RowSpan="3" CornerRadius="20">
+        <Border Grid.RowSpan="3" CornerRadius="10">
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="LightSteelBlue" Offset="0.25"/>
@@ -65,7 +67,36 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
                         Content="Thời gian nhận bàn" Style="{StaticResource labelStyle}"/>
-                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                    <Border Grid.Row="1" BorderThickness="0" CornerRadius="5" Margin="10,0,0,15">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Border Grid.Column="0" CornerRadius="5,0,0,5">
+                                <TextBox  Style="{StaticResource txtStyle}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                            <i:InvokeCommandAction Command="{Binding setDate}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                            </Border>
+                            
+
+                            <!--<Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBox Grid.Column="1" Margin="0,0,10,15" Style="{StaticResource txtStyle}"/>
+                            </Grid>-->
+                            
+                            
+                        </Grid>
+                    </Border>
+                    
                 </Grid>
                 
                 <!--Số điện thoại-->
@@ -76,7 +107,9 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
                         Content="Số điện thoại" Style="{StaticResource labelStyle}"/>
-                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
+                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                    </Border>
                 </Grid>
                 
                 <!--Chọn bàn-->
@@ -87,7 +120,9 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
                         Content="Chọn bàn" Style="{StaticResource labelStyle}"/>
-                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>     
+                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
+                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                    </Border>
                 </Grid>
                 
                 <!--Đặt cọc trước-->
@@ -98,7 +133,9 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
                         Content="Đặt cọc trước" Style="{StaticResource labelStyle}"/>
-                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
+                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                    </Border>
                 </Grid>
             </Grid>
             
@@ -133,7 +170,7 @@
                                         Foreground="Red"/>
                                 <TextBox Text="{Binding cusNumber}" Width="70" Style="{StaticResource txtStyle}"/>
                                 <Button Content="+" Width="75" Style="{StaticResource configGuestNumber}"
-                                        Foreground="DarkBlue"/>
+                                        Foreground="DarkBlue" HorizontalContentAlignment="Center"/>
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -149,7 +186,7 @@
                                 <StackPanel Grid.Row="1" Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
                                                 Width="auto">
-                                <TextBox Text="{Binding cusNumber}" Width="110" Style="{StaticResource txtStyle}"/>
+                                <TextBox Text="{Binding cusNumber}" Width="110" Style="{StaticResource txtStyle}" HorizontalContentAlignment="Center"/>
                                 <ComboBox SelectedIndex="0" Width="110" FontSize="18" Background="Transparent" FontWeight="SemiBold"
                                           VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
                                     <ComboBoxItem Content="Phút" FontSize="15"/>
@@ -168,7 +205,9 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
                         Content="Khách hàng" Style="{StaticResource labelStyle}"/>
-                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
+                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                    </Border>
                 </Grid>
                 
                 <!--Đặt trước món-->
@@ -179,7 +218,9 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
                         Content="Đặt trước món" Style="{StaticResource labelStyle}"/>
-                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
+                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                    </Border>
                 </Grid>
 
                 <!--Ghi chú-->
@@ -190,7 +231,9 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
                         Content="Ghi chú" Style="{StaticResource labelStyle}"/>
-                    <TextBox Grid.Row="1" Margin="10,0,10,15" Style="{StaticResource txtStyle}"/>
+                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
+                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                    </Border>
                 </Grid>
 
             </Grid>
@@ -202,8 +245,8 @@
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Style="{StaticResource buttonStyle}"
-                    Content="HỦY ĐƠN HÀNG"/>
+            <Button Style="{StaticResource buttonStyle}" CommandParameter="{Binding ElementName=bkWindow}"
+                    Content="HỦY ĐƠN HÀNG" Command="{Binding cancelOrder}"/>
             <Button Grid.Column="1" Style="{StaticResource buttonStyle}"
                     Content="XÁC NHẬN"/>
         </Grid>

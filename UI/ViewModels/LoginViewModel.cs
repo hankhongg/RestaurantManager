@@ -85,11 +85,15 @@ namespace RestaurantManager.ViewModels
 
         public static string Base64Encode(string plainText)
         {
+            if (string.IsNullOrEmpty(plainText))
+                return plainText;
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
         }
         public static string MD5Hash(string input)
         {
+            if (string.IsNullOrEmpty(input))
+                return input;
             StringBuilder sb = new StringBuilder();
             MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider();
             byte[] bytes = md5Provider.ComputeHash(new UTF8Encoding().GetBytes(input));
