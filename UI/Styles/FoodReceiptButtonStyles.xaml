@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="NeumorphicButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="#E0E5EC" />
+        <Setter Property="Foreground" Value="#555" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="10"
+                 Padding="{TemplateBinding Padding}">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#FFFFFF" Direction="-45" ShadowDepth="4" BlurRadius="10" />
+                        </Border.Effect>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="NeumorphicInputStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="#E0E5EC" />
+        <Setter Property="Foreground" Value="#555" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="BorderBrush" Value="#E0E5EC" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#FFFFFF" Direction="-45" ShadowDepth="4" BlurRadius="10" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <SolidColorBrush x:Key="hoadonstyle" Color="#0088FE"/>
+</ResourceDictionary>
