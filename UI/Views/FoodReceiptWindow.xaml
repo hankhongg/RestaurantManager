@@ -23,35 +23,33 @@
         <!-- Phần Giới thiệu Giá bán -->
         <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400*"/>
-                <ColumnDefinition Width="113*"/>
+                <ColumnDefinition Width="781*"/>
+                <ColumnDefinition Width="19*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Giá bán" FontSize="20" FontWeight="Bold" Foreground="{StaticResource DarkBlue}" Margin="20,60,0,20" Grid.ColumnSpan="2"/>
-            <TextBox Text="30000" Height="40" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="2" Margin="20,111,20,31" Grid.ColumnSpan="2"/>
-            <TextBlock Text="Rau muống luộc" FontSize="22" FontWeight="Bold" HorizontalAlignment="Left" Foreground="{StaticResource DarkBlue}" Margin="20,10,0,132" RenderTransformOrigin="0.492,-3.409" Width="182"/>
+            <TextBlock Text="Giá bán" FontSize="20" FontWeight="Bold" Foreground="{StaticResource DarkBlue}" Margin="20,60,0,10"/>
+            <TextBox Text="30000" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="2" Margin="20,103,5,28"  FontSize="16" TextWrapping="Wrap"/>
+            <TextBlock Text="Rau muống luộc" FontSize="22" FontWeight="Bold" HorizontalAlignment="Left" Foreground="{StaticResource DarkBlue}" Margin="20,10,0,132"  Width="182"/>
         </Grid>
 
         <!-- Phần nhập số lượng và ghi chú -->
         <Grid Grid.Row="2">
-            <TextBlock Text="Số lượng - Địa" FontSize="14" VerticalAlignment="Top" Foreground="{StaticResource DarkBlue}" Margin="20,58,0,0"/>
-            <TextBlock Text="Ghi chú" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Right" Foreground="{StaticResource DarkBlue}" Margin="0,58,448,0"/>
-
-            <!-- Nút giảm và tăng số lượng -->
-            <Button Content="-" Width="40" Height="40" HorizontalAlignment="Left" Background="{StaticResource DarkBlue}" Foreground="White" BorderBrush="Transparent" BorderThickness="0" Margin="20,86,0,56"/>
-            <Button Content="+" Width="40" Height="40" HorizontalAlignment="Right" Background="{StaticResource DarkBlue}" Foreground="White" BorderBrush="Transparent" BorderThickness="0" Margin="0,86,640,56"/>
+            <TextBlock Text="Số lượng - Địa" FontSize="16" VerticalAlignment="Top" Foreground="{StaticResource DarkBlue}" Margin="20,58,0,0"/>
+            <TextBlock Text="Ghi chú" FontSize="16" VerticalAlignment="Top" Foreground="{StaticResource DarkBlue}" Margin="305,58,407,0"/>
 
             <!-- TextBox số lượng và ghi chú -->
-            <TextBox Text="1" Width="60" Height="40" HorizontalAlignment="Right" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="2" Margin="0,86,680,56" TextAlignment="Center"
-              Padding="10" />
-            <TextBox Text="Ghi chú" Width="300" Height="40" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="1" Margin="110,86,0,56" Padding="10" FontStyle="Italic" />
-
+            <TextBox Text="Ghi chú"  Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="1" Margin="305,86,195,44" Padding="10" FontStyle="Italic" />
+            <StackPanel Orientation="Horizontal" Width="170" HorizontalAlignment="Left" Margin="20,43,0,0">
+                <Button Content="-" Width="40" Height="40" HorizontalAlignment="Left" Background="{StaticResource DarkBlue}" Foreground="White" BorderBrush="Transparent" BorderThickness="0" />
+                <TextBox Text="1" Width="60" Height="40" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="2" TextAlignment="Center"  Padding="10" />
+                <Button Content="+" Width="40" Height="40"  Background="{StaticResource DarkBlue}" Foreground="White" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Left"/>
+            </StackPanel>
             <!-- Nút xóa -->
-            <Button Content="Xóa" Width="40" Height="40" HorizontalAlignment="Right" Background="White" Foreground="#FFFF0505" BorderBrush="{StaticResource DarkBlue}" BorderThickness="1" Margin="0,86,150,56"/>
+            <Button Content="Xóa" Width="48" HorizontalAlignment="Right" Background="White" Foreground="#FFFF0505" BorderBrush="{StaticResource DarkBlue}" BorderThickness="1" Margin="0,86,147,44"/>
         </Grid>
 
         <!-- Phần Xác nhận -->
-        <Grid Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Xác nhận" Width="800" Height="50" Background="{StaticResource DarkBlue}" Foreground="White" FontWeight="Bold" BorderBrush="Transparent" FontSize="25"/>
+        <Grid Grid.Row="3" >
+            <Button Content="Xác nhận" Height="50" Background="{StaticResource DarkBlue}" Foreground="White" FontWeight="Bold" BorderBrush="Transparent" FontSize="25"/>
         </Grid>
     </Grid>
 </Window>
