@@ -95,25 +95,32 @@
                         <StackPanel Style="{StaticResource stackPanelStyle}">
                             <TextBlock Text="Email: "  Width="100"/>
                             <TextBox Width="250" 
-                                     Text="{Binding ProfileEmail}"
+                                     Text="{Binding AccountEmail}"
                                      IsEnabled="{Binding IsButtonPressed}"/>
                         </StackPanel>
                         <StackPanel Style="{StaticResource stackPanelStyle}">
                             <TextBlock Text="SĐT: "  Width="100"/>
                             <TextBox Width="250" 
-                                     Text="{Binding ProfilePhoneNumber}"
+                                     Text="{Binding AccountPhoneNumber}"
                                      IsEnabled="{Binding IsButtonPressed}"/>
                         </StackPanel>
                         <StackPanel Style="{StaticResource stackPanelStyle}">
                             <TextBlock Text="Tài khoản: "  Width="100"/>
                             <TextBox Width="250" 
-                                     Text="{Binding ProfileAccount}"
+                                     Text="{Binding AccountID}"
                                      IsEnabled="{Binding IsButtonPressed}"/>
                         </StackPanel>
                         <StackPanel Style="{StaticResource stackPanelStyle}">
                             <TextBlock Text="Mật khẩu: "  Width="100"/>
-                            <PasswordBox Width="250"
-                                         IsEnabled="{Binding IsButtonPressed}"/>
+                            <PasswordBox Width="250" PasswordChar="•" x:Name="passwordBox"
+                                         IsEnabled="{Binding IsButtonPressed}">
+                                <!--Fix bux password box later-->
+                                <!--<i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Loaded">
+                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding Password, ElementName=passwordBox}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>-->
+                            </PasswordBox>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,30">

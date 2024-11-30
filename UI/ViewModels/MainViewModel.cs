@@ -17,6 +17,8 @@ namespace RestaurantManager.ViewModels
         public ICommand ProfileManagementCommand {  get; set; }
         public ICommand AddOrderCommand { get; set; }
 
+        private string username;
+
         public MainViewModel() {
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
@@ -28,7 +30,10 @@ namespace RestaurantManager.ViewModels
                     if (loginVM != null)
                     {
                         if (loginVM.isLogin)
+                        {
                             p.Show();
+                            username = loginVM.Username;
+                        }
                         else p.Close();
                     }
                 }
@@ -36,7 +41,13 @@ namespace RestaurantManager.ViewModels
             ProfileManagementCommand = new RelayCommand<object>( (p) => { return true; }, (p) =>
                 {
                     ProfileWindow profileWindow = new ProfileWindow();
-                    profileWindow.ShowDialog();
+                    var profileVM = profileWindow.DataContext as ProfileViewModel;
+                    if (profileVM != null)
+                    {
+                        profileVM.AccountName = username;
+                        profileWindow.DataContext = profileVM;
+                        profileWindow.ShowDialog();
+                    }
                 }
             );
             AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
@@ -46,5 +57,6 @@ namespace RestaurantManager.ViewModels
                 }
             );
         }
+
     }
 }

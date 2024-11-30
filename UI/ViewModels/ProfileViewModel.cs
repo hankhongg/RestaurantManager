@@ -1,5 +1,6 @@
 ﻿using RestaurantManager.Models;
 using RestaurantManager.Models.Database;
+using RestaurantManager.Models.DataProvider;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,14 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RestaurantManager.ViewModels
 {
     internal class ProfileViewModel : BaseViewModel
     {
-        private ObservableCollection<Account> accounts;
-        public ObservableCollection<Account> Accounts { get { return accounts; } set { if (accounts != value) accounts = value; OnPropertyChanged(); } }
+       // private ObservableCollection<Account> accounts;
+        //public ObservableCollection<Account> Accounts { get { return accounts; } set { if (accounts != value) accounts = value; OnPropertyChanged(); } }
 
 
         private bool isButtonPressed;
@@ -22,7 +24,7 @@ namespace RestaurantManager.ViewModels
         {
             get => isButtonPressed; set
             {
-                AccountName = accounts[0].AccDisplayname;
+               
                 isButtonPressed = value;
                 OnPropertyChanged();
             }
@@ -36,28 +38,90 @@ namespace RestaurantManager.ViewModels
             {
                 if (accountName != value)
                 {
+
                     accountName = value;
+                    OnPropertyChanged();  // Notify the UI that AccountName has changed
+                    LoadAccount();
+                }
+            }
+        }
+
+        private string accountEmail;
+        public string AccountEmail
+        {
+            get { return accountEmail; }
+            set
+            {
+                if (accountEmail != value)
+                {
+                    accountEmail = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
                 }
             }
         }
 
-        public void LoadAccounts()
+        private string accountPhoneNumber;
+        public string AccountPhoneNumber
         {
-            using (var context = new Models.Database.QlnhContext())
+            get { return accountPhoneNumber; }
+            set
             {
-                var accountsList = context.Accounts.ToList();
-                Accounts = new ObservableCollection<Account>(accountsList);
+                if (accountPhoneNumber != value)
+                {
+                    accountPhoneNumber = value;
+                    OnPropertyChanged();  // Notify the UI that AccountName has changed
+                }
             }
-            
         }
 
+        private string accountID;
+        public string AccountID
+        {
+            get { return accountID; }
+            set
+            {
+                if (accountID != value)
+                {
+                    accountID = value;
+                    OnPropertyChanged();  // Notify the UI that AccountName has changed
+                }
+            }
+        }
+
+        private string accountPassword;
+        public string AccountPassword
+        {
+            get { return accountPassword; }
+            set
+            {
+                if (accountPassword != value)
+                {
+                    accountPassword = value;
+                    OnPropertyChanged();  // Notify the UI that AccountName has changed
+                }
+            }
+        }
+
+        public void LoadAccount()
+        {
+            var acc = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == AccountName).FirstOrDefault();
+            if (acc != null)
+            {
+                AccountName = acc.AccDisplayname;
+                AccountEmail = acc.AccEmail;
+                AccountPhoneNumber = acc.AccPhone;
+                AccountID = acc.AccUsername;
+                AccountPassword = acc.AccPassword;
+            }
+
+        }
+
+
+        public ICommand PasswordChangedCommand { get; set; }
         public ICommand IsButtonPressedCommand { get; set; }
         public ICommand SaveButtonPressedCommand { get; set; }
         public ProfileViewModel()
         {
-
-            LoadAccounts();
             IsButtonPressedCommand = new RelayCommand<object>((p) =>
                 {
                     return !IsButtonPressed;
@@ -81,7 +145,11 @@ namespace RestaurantManager.ViewModels
                     }
                 }
             );
-            
+            //PasswordChangedCommand = new RelayCommand<PasswordBox>((p) => { return true; }, (p) =>
+            //{
+            //    p.Password = AccountPassword;
+            //});
+
         }
     }
 }

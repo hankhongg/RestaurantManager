@@ -14,7 +14,7 @@ namespace RestaurantManager.ViewModels
 {
     class LoginViewModel : BaseViewModel
     {
-        public bool isLogin {  get; set; }
+    public bool isLogin {  get; set; }
 
         private string username;
         public string Username
