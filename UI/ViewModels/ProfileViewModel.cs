@@ -43,7 +43,8 @@ namespace RestaurantManager.ViewModels
 
                     accountName = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    
+                    LoadAccountInformation();
+
                 }
             }
         }
@@ -58,6 +59,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountEmail = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
+                    LoadAccountInformation();
                 }
             }
         }
@@ -72,6 +74,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountPhoneNumber = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
+                    LoadAccountInformation();
                 }
             }
         }
@@ -101,6 +104,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountPassword = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
+                    LoadAccountInformation();
                 }
             }
         }
@@ -110,7 +114,7 @@ namespace RestaurantManager.ViewModels
 
         public void LoadAccountInformation()
         {
-            var acc = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == AccountID).FirstOrDefault();
+            var acc = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == AccountID || x.AccEmail == AccountEmail).FirstOrDefault();
             if (acc != null)
             {
                 AccountName = acc.AccDisplayname;

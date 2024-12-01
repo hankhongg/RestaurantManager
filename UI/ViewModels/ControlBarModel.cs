@@ -84,7 +84,7 @@ namespace RestaurantManager.ViewModels
                 var w = window as Window;
                 if (w!= null)
                 {
-                    if (w is MainWindow || w is ProfileWindow || w is ForgotPasswordWindow)
+                    if (w is MainWindow || w is ProfileWindow || w is ForgotPasswordWindow || w is RecoveryPasswordWindow)
                     {
                         Visible = Visibility.Collapsed;
                     }
