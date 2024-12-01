@@ -40,8 +40,14 @@
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </DockPanel.Background>
             <Border Height="80" Grid.Row="1" HorizontalAlignment="Left" CornerRadius="0,8,8,0"
-                            VerticalAlignment="Center" Background="GhostWhite">
-                <Image Source="Images/house_black.png"></Image>
+                            VerticalAlignment="Center" Background="GhostWhite" Cursor="Hand">
+                <Image Source="Images/house_black.png">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction Command="{Binding WindowIsLoadedCommand}" CommandParameter="{Binding ElementName=mainWindow}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Image>
             </Border>
         </DockPanel>
 
@@ -67,6 +73,7 @@
                 <TabItem.Header>
                     <Border BorderThickness="0">
                         <Image Source="Images/menu_black.png" Height="70" Cursor="Hand">
+                            
                         </Image>
                     </Border>
                 </TabItem.Header>
@@ -99,14 +106,14 @@
                                   FontWeight="SemiBold" FontSize="30" Padding="30"
                                  Background="Transparent" BorderThickness="0">
                             <Grid>
-                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
-                                    <DataGrid.Columns>
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0" ItemsSource="{Binding CustomerList}">
+                                    <!--<DataGrid.Columns>
                                         <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Tên khách hàng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Địa chỉ" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="SĐT" Width="1.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Email" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                    </DataGrid.Columns>
+                                    </DataGrid.Columns>-->
                                 </DataGrid>
                             </Grid>
                         </TabItem>
