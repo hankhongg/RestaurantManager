@@ -222,9 +222,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="border" Background="{TemplateBinding Background}" 
-                BorderBrush="{TemplateBinding BorderBrush}" 
-                BorderThickness="{TemplateBinding BorderThickness}" 
-                CornerRadius="0,5,5,0">
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            CornerRadius="0,5,5,0">     
                         <!-- Sử dụng ContentPresenter để hiển thị nội dung -->
                         <!-- Đảm bảo ContentPresenter hoạt động đúng -->
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 

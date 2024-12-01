@@ -87,54 +87,173 @@
                                  Background="Transparent" BorderThickness="0">
                             <Grid></Grid>
                         </TabItem>
+                        
+                        <!--Stock-in Management-->
                         <TabItem Header="Quản lý tồn kho" Style="{StaticResource TabItemStyle}" 
-                                  FontWeight="SemiBold" FontSize="30" Padding="30"
-                                 Background="Transparent" BorderThickness="0">
+                                 FontWeight="SemiBold" FontSize="30" Padding="30"
+                                 Background="Transparent" BorderThickness="0">          
                             <Grid>
-                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0"
-                                          IsReadOnly="True">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="9*"></RowDefinition>
+                                    <RowDefinition Height="1*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
+                                          BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding StockinList}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="Các sản phẩm" Width="5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="SL Bán" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="SL Tồn" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <!--STT-->
+                                        <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding StoId}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="20"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <!--Mã tồn kho-->
+                                        <DataGridTextColumn Header="Mã tồn kho" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding StoCode}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="20"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <!--Ngày tồn kho-->
+                                        <DataGridTextColumn Header="Ngày tồn kho" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding StoDate}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>             
+                                        <!--Giá tồn kho-->
+                                        <DataGridTextColumn Header="Giá tồn kho" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding StoPrice}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>                 
                                     </DataGrid.Columns>
                                 </DataGrid>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
+                                    <Button Content="Thêm" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Xóa" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Sửa" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Lưu" Style="{StaticResource configureDataButton}"/>
+                                </StackPanel>
                             </Grid>
                         </TabItem>
+
+                        <!--Customer Management-->
                         <TabItem Header="Quản lý khách hàng" Style="{StaticResource TabItemStyle}" 
                                   FontWeight="SemiBold" FontSize="30" Padding="30"
                                  Background="Transparent" BorderThickness="0">
                             <Grid>
-                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" CanUserResizeColumns="False"
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="9*"></RowDefinition>
+                                    <RowDefinition Height="1*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
                                           BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding CustomerList}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding CusId}"/>
-                                        <DataGridTextColumn Header="Tên khách hàng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding CusName}"/>
-                                        <DataGridTextColumn Header="Địa chỉ" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding CusAddr}"/>
-                                        <DataGridTextColumn Header="SĐT" Width="1.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding CusPhone}"/>
-                                        <DataGridTextColumn Header="Email" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding CusEmail}"/>
+                                        <!--STT-->
+                                        <DataGridTextColumn Header="STT" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding CusId}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="20"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <!--Mã khách hàng-->
+                                        <DataGridTextColumn Header="Mã KH" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding CusCode}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="20"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <!--Tên khách hàng-->
+                                        <DataGridTextColumn Header="Tên KH" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding CusName}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
+                                        <!--Địa chỉ-->
+                                        <DataGridTextColumn Header="Địa chỉ" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding CusAddr}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
+                                        <!--SĐT-->
+                                        <DataGridTextColumn Header="SĐT" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding CusPhone}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
+                                        <!--Email-->
+                                        <DataGridTextColumn Header="Email" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding CusEmail}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
+                                    <Button Content="Thêm" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Xóa" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Sửa" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Lưu" Style="{StaticResource configureDataButton}"/>
+                                </StackPanel>
                             </Grid>
                         </TabItem>
+                        
+                        <!--Employee Management-->
                         <TabItem Header="Quản lý nhân viên" Style="{StaticResource TabItemStyle}" 
                                  FontWeight="SemiBold" FontSize="30" Padding="30"
                                  Background="Transparent" BorderThickness="0">
                             <Grid>
-                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="9*"></RowDefinition>
+                                    <RowDefinition Height="1*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
+                                          BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding EmployeeList}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="Tên nhân viên" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="SĐT" Width="2.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                        <DataGridTextColumn Header="Email" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <!--STT-->
+                                        <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding EmpId}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="20"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <!--Mã NV-->
+                                        <DataGridTextColumn Header="Mã NV" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding EmpCode}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="20"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <!--Tên nhân viên-->
+                                        <DataGridTextColumn Header="Tên nhân viên" Width="2.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding EmpName}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
+                                        <!--Địa chỉ-->
+                                        <DataGridTextColumn Header="Địa chỉ" Width="3.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding EmpAddr}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
+                                        <!--SĐT-->
+                                        <DataGridTextColumn Header="SĐT" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding EmpPhone}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
+                                        <!--Vị trí nhân viên-->
+                                        <DataGridTextColumn Header="Vị trí" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding EmpRole}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
+                                    <Button Content="Thêm" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Xóa" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Sửa" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Lưu" Style="{StaticResource configureDataButton}"/>
+                                </StackPanel>
                             </Grid>
                         </TabItem>
                     </TabControl>
