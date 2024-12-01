@@ -115,11 +115,11 @@
                             <PasswordBox Width="250" PasswordChar="•" x:Name="passwordBox"
                                          IsEnabled="{Binding IsButtonPressed}">
                                 <!--Fix bux password box later-->
-                                <!--<i:Interaction.Triggers>
+                                <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Loaded">
-                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding Password, ElementName=passwordBox}"/>
+                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding ElementName=profileWindow}"/>
                                     </i:EventTrigger>
-                                </i:Interaction.Triggers>-->
+                                </i:Interaction.Triggers>
                             </PasswordBox>
                         </StackPanel>
 

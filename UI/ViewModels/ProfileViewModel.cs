@@ -1,6 +1,7 @@
 ﻿using RestaurantManager.Models;
 using RestaurantManager.Models.Database;
 using RestaurantManager.Models.DataProvider;
+using RestaurantManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using XSystem.Security.Cryptography;
 
 namespace RestaurantManager.ViewModels
 {
@@ -145,11 +147,10 @@ namespace RestaurantManager.ViewModels
                     }
                 }
             );
-            //PasswordChangedCommand = new RelayCommand<PasswordBox>((p) => { return true; }, (p) =>
-            //{
-            //    p.Password = AccountPassword;
-            //});
-
+            PasswordChangedCommand = new RelayCommand<ProfileWindow>((p) => { return true; }, (p) =>
+            {
+                p.passwordBox.Password = AccountPassword;
+            });
         }
     }
 }

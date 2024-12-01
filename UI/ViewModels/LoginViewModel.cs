@@ -70,7 +70,6 @@ namespace RestaurantManager.ViewModels
         {
             string passwordEncode = MD5Hash(Base64Encode(Password));
             var account = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == Username && x.AccPassword == passwordEncode).Count();
-
             if (account > 0)
             {
                 MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
