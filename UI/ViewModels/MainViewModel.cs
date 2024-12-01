@@ -45,7 +45,7 @@ namespace RestaurantManager.ViewModels
                     var profileVM = profileWindow.DataContext as ProfileViewModel;
                     if (profileVM != null)
                     {
-                        profileVM.AccountName = usernameForProfileWindow;
+                        profileVM.AccountID = usernameForProfileWindow;
                         profileWindow.DataContext = profileVM;
                         profileWindow.ShowDialog();
                     }

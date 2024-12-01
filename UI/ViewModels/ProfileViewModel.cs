@@ -43,7 +43,7 @@ namespace RestaurantManager.ViewModels
 
                     accountName = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    LoadAccount();
+                    
                 }
             }
         }
@@ -86,6 +86,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountID = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
+                    LoadAccountInformation();
                 }
             }
         }
@@ -104,9 +105,9 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        public void LoadAccount()
+        public void LoadAccountInformation()
         {
-            var acc = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == AccountName).FirstOrDefault();
+            var acc = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == AccountID).FirstOrDefault();
             if (acc != null)
             {
                 AccountName = acc.AccDisplayname;
@@ -118,10 +119,25 @@ namespace RestaurantManager.ViewModels
 
         }
 
+        public void SaveAccountInformation()
+        {
+            var acc = DataProvider.Instance.DB.Accounts.Where(y => y.AccUsername == AccountID).FirstOrDefault();
+            if (acc != null)
+            { 
+                acc.AccDisplayname = AccountName;
+                acc.AccEmail = AccountEmail;
+                acc.AccPhone = AccountPhoneNumber;
+                acc.AccUsername = AccountID;
+                if (beforeHandPassword != AccountPassword)
+                    acc.AccPassword = MD5Hash(Base64Encode(AccountPassword));
+                DataProvider.Instance.DB.SaveChanges();
+            }
+        }
 
         public ICommand PasswordChangedCommand { get; set; }
         public ICommand IsButtonPressedCommand { get; set; }
         public ICommand SaveButtonPressedCommand { get; set; }
+        private string beforeHandPassword;
         public ProfileViewModel()
         {
             IsButtonPressedCommand = new RelayCommand<object>((p) =>
@@ -130,6 +146,7 @@ namespace RestaurantManager.ViewModels
                 },
                 (p) =>
                 {
+                    beforeHandPassword = AccountPassword;
                     IsButtonPressed = !IsButtonPressed;
                 }
             );
@@ -142,7 +159,7 @@ namespace RestaurantManager.ViewModels
                     MessageBoxResult r = MessageBox.Show("Bấm Yes để xác nhận lưu thông tin!", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Asterisk);
                     if (r == MessageBoxResult.Yes)
                     {
-                        // lưu vào database! <=
+                        SaveAccountInformation();
                         IsButtonPressed = false;
                     }
                 }
@@ -151,6 +168,26 @@ namespace RestaurantManager.ViewModels
             {
                 p.passwordBox.Password = AccountPassword;
             });
+        }
+        public static string Base64Encode(string plainText)
+        {
+            if (string.IsNullOrEmpty(plainText))
+                return plainText;
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string MD5Hash(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+            StringBuilder sb = new StringBuilder();
+            MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider();
+            byte[] bytes = md5Provider.ComputeHash(new UTF8Encoding().GetBytes(input));
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                sb.Append(bytes[i].ToString("x2"));
+            }
+            return sb.ToString();
         }
     }
 }
