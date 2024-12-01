@@ -17,7 +17,7 @@ namespace RestaurantManager.ViewModels
         public ICommand ProfileManagementCommand {  get; set; }
         public ICommand AddOrderCommand { get; set; }
 
-        private string username;
+        private string usernameForProfileWindow;
 
         public MainViewModel() {
 
@@ -31,8 +31,9 @@ namespace RestaurantManager.ViewModels
                     {
                         if (loginVM.isLogin)
                         {
+                            loginVM.isLogin = false;
                             p.Show();
-                            username = loginVM.Username;
+                            usernameForProfileWindow = loginVM.Username;
                         }
                         else p.Close();
                     }
@@ -44,7 +45,7 @@ namespace RestaurantManager.ViewModels
                     var profileVM = profileWindow.DataContext as ProfileViewModel;
                     if (profileVM != null)
                     {
-                        profileVM.AccountName = username;
+                        profileVM.AccountName = usernameForProfileWindow;
                         profileWindow.DataContext = profileVM;
                         profileWindow.ShowDialog();
                     }
