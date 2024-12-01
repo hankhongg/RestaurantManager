@@ -110,6 +110,20 @@
                                 </DataGrid>
                             </Grid>
                         </TabItem>
+                        <TabItem Header="Quản lý nhân viên" Style="{StaticResource TabItemStyle}" 
+                                 FontWeight="SemiBold" FontSize="30" Padding="30"
+                                 Background="Transparent" BorderThickness="0">
+                            <Grid>
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Tên nhân viên" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="SĐT" Width="2.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Email" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
                     </TabControl>
                 </Grid>
             </TabItem>

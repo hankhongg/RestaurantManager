@@ -60,7 +60,7 @@
                 </Grid.RowDefinitions>
                 <!--Sub Content-->
                 <!--Thời gian nhận bàn-->
-                <Grid Grid.Row="0" Margin="10">
+                <Grid Grid.Row="0" Margin="10,10,10,0" Height="99" VerticalAlignment="Top">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="6*"/>
@@ -75,15 +75,13 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Grid.Column="0">
-                                <TextBox  Style="{StaticResource leftCornerRadiusTextbox}"
-                                          HorizontalContentAlignment="Center" IsReadOnly="True"
-                                          VerticalContentAlignment="Center" FontSize="20">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding setDate}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </TextBox>
+                                <!--<DatePickerTextBox VerticalContentAlignment="Center" FontSize="20" Margin="/>-->
+                                <DatePicker VerticalContentAlignment="Center" FontSize="20"
+                                            Background="GhostWhite">
+                                    <DatePicker.Text>
+                                        <Binding Path="SelectedDate" StringFormat="dd-MM-yyyy" RelativeSource="{RelativeSource Self}" />
+                                    </DatePicker.Text>
+                                </DatePicker>
                             </Border>
                             
                             <Border Grid.Column="1">
