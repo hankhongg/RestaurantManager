@@ -114,10 +114,12 @@
                             <TextBlock Text="Mật khẩu: "  Width="100"/>
                             <PasswordBox Width="250" PasswordChar="•" x:Name="passwordBox"
                                          IsEnabled="{Binding IsButtonPressed}">
-                                <!--Fix bux password box later-->
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Loaded">
-                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding ElementName=profileWindow}"/>
+                                        <i:InvokeCommandAction Command="{Binding PasswordBoxLoadedCommand}" CommandParameter="{Binding ElementName=profileWindow}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="PasswordChanged">
+                                        <i:InvokeCommandAction Command="{Binding CheckPasswordChanged}" CommandParameter="{Binding ElementName=passwordBox}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </PasswordBox>

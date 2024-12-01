@@ -105,6 +105,9 @@ namespace RestaurantManager.ViewModels
             }
         }
 
+        private string currentPassword;
+        public string CurrentPassword { get => currentPassword; set { currentPassword = value; OnPropertyChanged(); } }
+
         public void LoadAccountInformation()
         {
             var acc = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == AccountID).FirstOrDefault();
@@ -121,23 +124,35 @@ namespace RestaurantManager.ViewModels
 
         public void SaveAccountInformation()
         {
+            bool checkEmptyOrNull = string.IsNullOrEmpty(AccountName) || string.IsNullOrEmpty(AccountEmail) || string.IsNullOrEmpty(AccountPhoneNumber) || string.IsNullOrEmpty(AccountID);
             var acc = DataProvider.Instance.DB.Accounts.Where(y => y.AccUsername == AccountID).FirstOrDefault();
-            if (acc != null)
-            { 
+            if (checkEmptyOrNull)
+            {
+                MessageBox.Show("Không được để trống thông tin!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else if (acc == null)
+            {
+                MessageBox.Show("Không tìm thấy tài khoản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+            {
                 acc.AccDisplayname = AccountName;
                 acc.AccEmail = AccountEmail;
                 acc.AccPhone = AccountPhoneNumber;
                 acc.AccUsername = AccountID;
-                if (beforeHandPassword != AccountPassword)
+                if (acc.AccPassword != AccountPassword)
+                {
                     acc.AccPassword = MD5Hash(Base64Encode(AccountPassword));
+                }
                 DataProvider.Instance.DB.SaveChanges();
+                MessageBox.Show($"Lưu thông tin thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
-        public ICommand PasswordChangedCommand { get; set; }
+        public ICommand CheckPasswordChanged { get; set; }
+        public ICommand PasswordBoxLoadedCommand { get; set; }
         public ICommand IsButtonPressedCommand { get; set; }
         public ICommand SaveButtonPressedCommand { get; set; }
-        private string beforeHandPassword;
         public ProfileViewModel()
         {
             IsButtonPressedCommand = new RelayCommand<object>((p) =>
@@ -146,7 +161,7 @@ namespace RestaurantManager.ViewModels
                 },
                 (p) =>
                 {
-                    beforeHandPassword = AccountPassword;
+                    currentPassword = AccountPassword;
                     IsButtonPressed = !IsButtonPressed;
                 }
             );
@@ -159,15 +174,23 @@ namespace RestaurantManager.ViewModels
                     MessageBoxResult r = MessageBox.Show("Bấm Yes để xác nhận lưu thông tin!", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Asterisk);
                     if (r == MessageBoxResult.Yes)
                     {
+                        
                         SaveAccountInformation();
                         IsButtonPressed = false;
                     }
                 }
             );
-            PasswordChangedCommand = new RelayCommand<ProfileWindow>((p) => { return true; }, (p) =>
+            PasswordBoxLoadedCommand = new RelayCommand<ProfileWindow>((p) => { return true; }, (p) =>
             {
                 p.passwordBox.Password = AccountPassword;
             });
+            CheckPasswordChanged = new RelayCommand<PasswordBox>((p) => { return true; }, (p) => {
+                //MessageBox.Show($"{AccountPassword}");
+                if (!string.IsNullOrEmpty(p.Password))
+                {
+                    AccountPassword = p.Password;  
+                }
+            }) ;
         }
         public static string Base64Encode(string plainText)
         {
