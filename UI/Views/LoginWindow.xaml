@@ -63,11 +63,22 @@
             <!--Chia 2 dòng, để logo cái cửa ở center của dòng trên để đảm bảo ở resolution nào cũng đẹp-->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition/>
+                    <RowDefinition Height="4.5*"/>
+                    <RowDefinition Height="5.5*"/>
                 </Grid.RowDefinitions>
-                <Image Source="Images\login.png" Width="100" 
-           VerticalAlignment="Center"></Image>
+
+                
+                <StackPanel  Grid.Row="0" VerticalAlignment="Bottom">
+                    <Image Source="Images\login.png" Width="100"/>
+                    <TextBlock HorizontalAlignment="Center" Foreground="White"
+                        Text="Phần mềm Quản lý Nhà Hàng" FontSize="16" Margin="0,5,0,0" FontWeight="Bold"/>
+                    <TextBlock Text="Restaurant Manager" FontSize="16" Margin="0" FontWeight="UltraBold"
+                               HorizontalAlignment="Center" Foreground="White"/>
+                </StackPanel>
+                <Border Grid.Row="1" VerticalAlignment="Center" Height="200"  HorizontalAlignment="Center">
+                    <Image  Height="200" Source="Images\logo.png"></Image>
+                </Border>
+
             </Grid>
         </Border>
         

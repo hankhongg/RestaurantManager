@@ -17,6 +17,7 @@
     <None Remove="Views\Images\key.png" />
     <None Remove="Views\Images\login.png" />
     <None Remove="Views\Images\login_black.png" />
+    <None Remove="Views\Images\logo.png" />
     <None Remove="Views\Images\menu_black.png" />
     <None Remove="Views\Images\minimize.png" />
   </ItemGroup>
@@ -45,6 +46,7 @@
     <Resource Include="Views\Images\key.png" />
     <Resource Include="Views\Images\login.png" />
     <Resource Include="Views\Images\login_black.png" />
+    <Resource Include="Views\Images\logo.png" />
     <Resource Include="Views\Images\menu_black.png" />
     <Resource Include="Views\Images\minimize.png" />
   </ItemGroup>
