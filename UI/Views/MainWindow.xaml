@@ -106,14 +106,14 @@
                                   FontWeight="SemiBold" FontSize="30" Padding="30"
                                  Background="Transparent" BorderThickness="0">
                             <Grid>
-                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0">
-                                    <DataGrid.Columns>
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" BorderThickness="0" ItemsSource="{Binding CustomerList}">
+                                    <!--<DataGrid.Columns>
                                         <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Tên khách hàng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Địa chỉ" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="SĐT" Width="1.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
                                         <DataGridTextColumn Header="Email" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"/>
-                                    </DataGrid.Columns>
+                                    </DataGrid.Columns>-->
                                 </DataGrid>
                             </Grid>
                         </TabItem>
