@@ -109,9 +109,6 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        private string currentPassword;
-        public string CurrentPassword { get => currentPassword; set { currentPassword = value; OnPropertyChanged(); } }
-
         public void LoadAccountInformation()
         {
             var acc = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == AccountID || x.AccEmail == AccountEmail).FirstOrDefault();
@@ -165,7 +162,6 @@ namespace RestaurantManager.ViewModels
                 },
                 (p) =>
                 {
-                    currentPassword = AccountPassword;
                     IsButtonPressed = !IsButtonPressed;
                 }
             );
