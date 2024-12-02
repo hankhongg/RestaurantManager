@@ -190,7 +190,7 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
-                                    <Button Content="Thêm" Style="{StaticResource configureDataButton}" Command="{Binding AddCus}"
+                                    <Button Content="Thêm" Style="{StaticResource configureDataButton}" Command="{Binding AddCusCommand}"
                                             CommandParameter="{Binding ElementName=addCustomerWindow}"/>
                                     <Button Content="Xóa" Style="{StaticResource configureDataButton}"/>
                                     <Button Content="Sửa" Style="{StaticResource configureDataButton}"/>

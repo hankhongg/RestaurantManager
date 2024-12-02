@@ -9,5 +9,5 @@
     <viewmodel:TableViewModel x:Key="TableVM"></viewmodel:TableViewModel>
     <viewmodel:BookingViewModel x:Key="BookingVM"></viewmodel:BookingViewModel>
     <viewmodel:RecoveryPasswordViewModel x:Key="RecoveryVM"></viewmodel:RecoveryPasswordViewModel>
-    <viewmodel:HumanResourcesManagementViewModel x:Key="ManagementVM"></viewmodel:HumanResourcesManagementViewModel>
+    <viewmodel:CustomerManagementViewModel x:Key="CustomerMangementVM"></viewmodel:CustomerManagementViewModel>
 </ResourceDictionary>
