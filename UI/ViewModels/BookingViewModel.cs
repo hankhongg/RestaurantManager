@@ -36,8 +36,8 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        public ICommand AddCus { get; set; }
-        public ICommand RemoveCus { get; set; }
+        public ICommand AddCusNum { get; set; }
+        public ICommand RemoveCusNum { get; set; }
         public ICommand BookingInfo {  get; set; }
         public ICommand cancelOrder {  get; set; }
         public ICommand setDate { get; set; }
@@ -54,12 +54,12 @@ namespace RestaurantManager.ViewModels
                     p.Close();
                 }
             );
-            AddCus = new RelayCommand<object>((p) => { return true; }, (p) =>
+            AddCusNum = new RelayCommand<object>((p) => { return true; }, (p) =>
                 {
                     NumberOfCustomers++;
                 }
             );
-            RemoveCus = new RelayCommand<object>((p) => { return true; }, (p) =>
+            RemoveCusNum = new RelayCommand<object>((p) => { return true; }, (p) =>
                 {
                     if (NumberOfCustomers > 1)
                     {

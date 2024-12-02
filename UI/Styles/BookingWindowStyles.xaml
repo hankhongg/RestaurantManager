@@ -3,6 +3,7 @@
     <Style x:Key="labelStyle" TargetType="Label">
         <Setter Property="FontSize" Value="17"/>
         <Setter Property="Margin" Value="5,0"/>
+        <Setter Property="FontWeight" Value="Medium"/>
     </Style>
     <Style x:Key="buttonStyle" TargetType="Button">
         <Setter Property="BorderThickness" Value="0.25"/>

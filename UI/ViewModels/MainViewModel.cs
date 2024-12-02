@@ -41,7 +41,7 @@ namespace RestaurantManager.ViewModels
         public ICommand DelCus { get; set; }
         public ICommand ConfigCus { get; set; }
         public ICommand SaveCus { get; set; }
-
+        public ICommand CancelInfo { get; set; }
         private string usernameForProfileWindow;
 
         public MainViewModel() {
@@ -86,10 +86,10 @@ namespace RestaurantManager.ViewModels
                 }
             );
             AddCus = new RelayCommand<object>((p) => { return true; }, (p) =>
-                {
-                    
-                }
-            );
+            {
+                AddCusWindow addACustomer = new AddCusWindow();
+                addACustomer.ShowDialog();
+            });
         }
 
     }

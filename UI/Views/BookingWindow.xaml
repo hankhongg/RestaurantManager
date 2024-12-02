@@ -162,12 +162,12 @@
                                         Width="auto" >
                                 <Button Content="-" Width="75" Style="{StaticResource leftCornerRadiusButton}"
                                         Foreground="Red" HorizontalContentAlignment="Center" 
-                                        Command="{Binding RemoveCus}" CommandParameter="{Binding ElementName=bookingWindow}"/>
+                                        Command="{Binding RemoveCusNum}" CommandParameter="{Binding ElementName=bookingWindow}"/>
                                 <TextBox Text="{Binding NumberOfCustomers}" Width="70" FontSize="20" 
                                          VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                 <Button Content="+" Width="75" Style="{StaticResource rightCornerRadiusButton}"
                                         Foreground="DarkBlue" HorizontalContentAlignment="Center" 
-                                        Command="{Binding AddCus}" CommandParameter="{Binding ElementName=bookingWindow}"/>
+                                        Command="{Binding AddCusNum}" CommandParameter="{Binding ElementName=bookingWindow}"/>
                             </StackPanel>
                         </Border>
                     </Grid>
