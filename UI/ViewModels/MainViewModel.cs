@@ -37,11 +37,10 @@ namespace RestaurantManager.ViewModels
         public ICommand WindowIsLoadedCommand { get; set; }
         public ICommand ProfileManagementCommand {  get; set; }
         public ICommand AddOrderCommand { get; set; }
-        public ICommand AddCus { get; set; }
-        public ICommand DelCus { get; set; }
-        public ICommand ConfigCus { get; set; }
-        public ICommand SaveCus { get; set; }
-        public ICommand CancelInfo { get; set; }
+        public ICommand AddCusCommand { get; set; }
+        public ICommand DelCusCommnad { get; set; }
+        public ICommand ConfigCusCommand { get; set; }
+        public ICommand SaveCusCommand { get; set; }
         private string usernameForProfileWindow;
 
         public MainViewModel() {
@@ -49,24 +48,24 @@ namespace RestaurantManager.ViewModels
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees);
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
 
-            WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
-                { 
-                    p.Hide();
-                    LoginWindow loginWindow = new LoginWindow();
-                    loginWindow.ShowDialog(); 
-                    var loginVM = loginWindow.DataContext as LoginViewModel;
-                    if (loginVM != null)
+        WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
+            { 
+                p.Hide();
+                LoginWindow loginWindow = new LoginWindow();
+                loginWindow.ShowDialog(); 
+                var loginVM = loginWindow.DataContext as LoginViewModel;
+                if (loginVM != null)
+                {
+                    if (loginVM.isLogin)
                     {
-                        if (loginVM.isLogin)
-                        {
-                            loginVM.isLogin = false;
-                            p.Show();
-                            usernameForProfileWindow = loginVM.Username;
-                        }
-                        else p.Close();
+                        loginVM.isLogin = false;
+                        p.Show();
+                        usernameForProfileWindow = loginVM.Username;
                     }
+                    else p.Close();
                 }
-            );
+            }
+        );
             ProfileManagementCommand = new RelayCommand<object>( (p) => { return true; }, (p) =>
                 {
                     ProfileWindow profileWindow = new ProfileWindow();
@@ -85,10 +84,20 @@ namespace RestaurantManager.ViewModels
                     foodLayoutWindow.ShowDialog();
                 }
             );
-            AddCus = new RelayCommand<object>((p) => { return true; }, (p) =>
+            AddCusCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
-                AddCusWindow addACustomer = new AddCusWindow();
-                addACustomer.ShowDialog();
+                AddCusWindow addCusWindow = new AddCusWindow();
+                addCusWindow.ShowDialog();
+                var cusVM = addCusWindow.DataContext as CustomerManagementViewModel;
+                if (cusVM != null)
+                {
+                    if (cusVM.isConfirmed)
+                    {
+                        // Add new cus into data grid row
+                        CustomerList.Add(cusVM.NewCustomer);
+                        CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
+                    }
+                }
             });
         }
 
