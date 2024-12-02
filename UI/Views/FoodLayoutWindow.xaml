@@ -8,7 +8,7 @@
             Height="450" Width="800" 
             xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
             Title="Màn hình đặt món"
-            Name="foodLayoutWindow" Background="#FF040533"
+            Name="foodLayoutWindow" Background="#FF010126"
             xmlns:ItemControl="clr-namespace:RestaurantManager.Views.UserControls"
          >        
         <Grid>
@@ -19,7 +19,7 @@
 
             <Grid Grid.Row="1" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
                     <ColumnDefinition ></ColumnDefinition>
                     <ColumnDefinition Width="250"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
@@ -27,15 +27,15 @@
 
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="35*"></RowDefinition>
+                        <RowDefinition Height="33*"></RowDefinition>
                         <RowDefinition Height="280*"></RowDefinition>
-                        <RowDefinition Height="70*"></RowDefinition>
+                        <RowDefinition Height="45*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Background="White">
                         <TextBox Text="Nhập tên mặt hàng(F4)"  
                            Padding= "2"
                            Foreground="DimGray"
-                           Width="350"
+                           Width="400"
                            Height="25" FontStyle="Italic" TextAlignment="Center" VerticalAlignment="Center"                        
                         />
                     </Grid>
@@ -99,7 +99,7 @@
                         <RowDefinition Height="37*"></RowDefinition>
                         <RowDefinition Height="233*"></RowDefinition>
                         <RowDefinition Height="60*"></RowDefinition>
-                        <RowDefinition Height="74*" ></RowDefinition>
+                        <RowDefinition Height="47*" ></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="1" Background="White">
                         <StackPanel Height="230">
