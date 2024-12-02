@@ -49,13 +49,13 @@ namespace RestaurantManager.ViewModels
         public LoginViewModel()
         {
             isLogin = false;
-            ForgotPasswordCommand = new RelayCommand<object>((p) => { return true; }, (p) => 
-                { 
+            ForgotPasswordCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+                {
                     ForgotPasswordWindow passwordWindow = new ForgotPasswordWindow();
                     passwordWindow.ShowDialog();
                 }
             );
-            LoginCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
+            LoginCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {
                     Login(p);
                 }
@@ -69,7 +69,7 @@ namespace RestaurantManager.ViewModels
         public void Login(Window p)
         {
             string passwordEncode = MD5Hash(Base64Encode(Password));
-            var account = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == Username && x.AccPassword == passwordEncode).Count();
+            int account = DataProvider.Instance.DB.Accounts.Where(x => x.AccUsername == Username && x.AccPassword == passwordEncode).Count();
 
             if (account > 0)
             {
@@ -77,7 +77,8 @@ namespace RestaurantManager.ViewModels
                 isLogin = true;
                 p.Close();
             }
-            else { 
+            else
+            {
                 isLogin = false;
                 MessageBox.Show("Sai tài khoản hoặc mật khẩu!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -85,7 +86,7 @@ namespace RestaurantManager.ViewModels
 
         public static string Base64Encode(string plainText)
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            byte[] plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
         }
         public static string MD5Hash(string input)

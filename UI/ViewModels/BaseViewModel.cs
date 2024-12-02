@@ -56,7 +56,7 @@ namespace RestaurantManager.ViewModels
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        
+
     }
 
 

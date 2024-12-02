@@ -19,11 +19,11 @@ namespace RestaurantManager.ViewModels
 
         public MainViewModel() {
 
-            WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
-                { 
+            WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
+                {
                     p.Hide();
                     LoginWindow loginWindow = new LoginWindow();
-                    loginWindow.ShowDialog(); 
+                    loginWindow.ShowDialog();
                     var loginVM = loginWindow.DataContext as LoginViewModel;
                     if (loginVM != null)
                     {
@@ -33,7 +33,7 @@ namespace RestaurantManager.ViewModels
                     }
                 }
             );
-            ProfileManagementCommand = new RelayCommand<object>( (p) => { return true; }, (p) =>
+            ProfileManagementCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
                 {
                     ProfileWindow profileWindow = new ProfileWindow();
                     profileWindow.ShowDialog();

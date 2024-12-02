@@ -1,5 +1,4 @@
-﻿using RestaurantManager.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,19 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RestaurantManager.Views
+namespace RestaurantManager.Views.UserControls
 {
     /// <summary>
-    /// Interaction logic for FoodLayoutWindow.xaml
+    /// Interaction logic for FoodItemControl.xaml
     /// </summary>
-    public partial class FoodLayoutWindow : Window
+    public partial class FoodItemControl : UserControl
     {
-        public FoodLayoutWindow()
+        public FoodItemControl()
         {
             InitializeComponent();
-            DataContext = new FoodItemViewModel();
         }
     }
 }
