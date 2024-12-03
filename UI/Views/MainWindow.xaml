@@ -149,18 +149,9 @@
                                     <RowDefinition Height="1*"></RowDefinition>
                                 </Grid.RowDefinitions>
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
-                                          BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding CustomerList}">
+                                          BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding CustomerList}"
+                                          SelectedItem="{Binding SelectedCustomer}">
                                     <DataGrid.Columns>
-                                        <!--STT-->
-                                        <DataGridTextColumn Header="STT" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding CusId}">
-                                            <DataGridTextColumn.ElementStyle>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                    <Setter Property="FontSize" Value="20"/>
-                                                </Style>
-                                            </DataGridTextColumn.ElementStyle>
-                                        </DataGridTextColumn>
                                         <!--Mã khách hàng-->
                                         <DataGridTextColumn Header="Mã KH" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                                                             Binding="{Binding CusCode}">
@@ -192,9 +183,12 @@
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
                                     <Button Content="Thêm" Style="{StaticResource configureDataButton}" Command="{Binding AddCusCommand}"
                                             CommandParameter="{Binding ElementName=addCustomerWindow}"/>
-                                    <Button Content="Xóa" Style="{StaticResource configureDataButton}"/>
-                                    <Button Content="Sửa" Style="{StaticResource configureDataButton}"/>
-                                    <Button Content="Lưu" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Xóa" Style="{StaticResource configureDataButton}" Command="{Binding DelCusCommand}"
+                                            CommandParameter="{Binding ElementName=addCustomerWindow}"/>
+                                    <Button Content="Sửa" Style="{StaticResource configureDataButton}" Command="{Binding ConfigCusCommand}"
+                                            CommandParameter="{Binding ElementName=addCustomerWindow}"/>
+                                    <Button Content="Lưu" Style="{StaticResource configureDataButton}" Command="{Binding SaveCusCommand}"
+                                            CommandParameter="{Binding ElementName=addCustomerWindow}"/>
                                 </StackPanel>
                             </Grid>
                         </TabItem>

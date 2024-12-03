@@ -10,12 +10,15 @@ using System.Windows.Controls;
 using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantManager.ViewModels 
 {
     public class CustomerManagementViewModel : BaseViewModel
     {
         public bool isConfirmed { get; set; }
+        public int CustomerNumber { get; set; }
         private Customer newCustomer;
         public Customer NewCustomer
         {
@@ -88,7 +91,6 @@ namespace RestaurantManager.ViewModels
         public CustomerManagementViewModel()
         {
             isConfirmed = false;
-            var customerNumber = DataProvider.Instance.DB.Customers.Count() + 1;
             ConfirmInfo = new RelayCommand<Window>((p) => 
             {
                 return true; 
@@ -105,7 +107,9 @@ namespace RestaurantManager.ViewModels
                     MessageBox.Show("This phone number has already been used");
                     return;
                 }
-                addNewCustomer(p, customerNumber);
+
+                CustomerNumber = DataProvider.Instance.DB.Customers.Count();
+                addNewCustomer(p, CustomerNumber + 1);
             });
 
             CancelInfo = new RelayCommand<Window>((p) => { return true; }, (p) =>
@@ -116,9 +120,8 @@ namespace RestaurantManager.ViewModels
         public void addNewCustomer(Window p, int cusNumber)
         {
             isConfirmed = true;
-            newCustomer = new Customer()
+            NewCustomer = new Customer()
             {
-                //CusId = cusNumber,
                 CusCode = $"KH{cusNumber:D3}",
                 CusName = CustomerName,
                 CusAddr = CustomerAddress,
@@ -127,9 +130,6 @@ namespace RestaurantManager.ViewModels
                 CusEmail = CustomerEmail,
                 Isdeleted = false
             };
-
-            DataProvider.Instance.DB.Customers.Add(newCustomer);
-            DataProvider.Instance.DB.SaveChanges();
 
             CustomerName = "";
             CustomerAddress = "";

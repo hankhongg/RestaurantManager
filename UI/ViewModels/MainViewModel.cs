@@ -1,4 +1,5 @@
-﻿using RestaurantManager.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
 using RestaurantManager.Views;
 using System;
@@ -19,15 +20,14 @@ namespace RestaurantManager.ViewModels
         private ObservableCollection<Employee> employeeList;
         private ObservableCollection<Stockin> stockinList;
         
-        private Customer newCus;
-
-        public Customer NewCus
+        private Customer _selectedCustomer;
+        public Customer SelectedCustomer
         {
-            get { return newCus; }
-            set 
-            { 
-                newCus = value; 
-                OnPropertyChanged();
+            get => _selectedCustomer;
+            set
+            {
+                _selectedCustomer = value;
+                OnPropertyChanged(nameof(SelectedCustomer));
             }
         }
 
@@ -94,12 +94,43 @@ namespace RestaurantManager.ViewModels
                     if (cusVM.isConfirmed)
                     {
                         // Add new cus into data grid row
+                        string query = $"DBCC CHECKIDENT ('CUSTOMER', RESEED, {cusVM.CustomerNumber})";
+                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+
+                        DataProvider.Instance.DB.Customers.Add(cusVM.NewCustomer);
+                        DataProvider.Instance.DB.SaveChanges();
+
                         CustomerList.Add(cusVM.NewCustomer);
                         CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
                     }
                 }
             });
-        }
+            ConfigCusCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                AddCusWindow configCusWindow = new AddCusWindow();
+                configCusWindow.ShowDialog();
+                var cusVM = configCusWindow.DataContext as CustomerManagementViewModel;
 
+                if (cusVM != null)
+                {
+                    var SelectedCustomer = p as Customer;
+
+                    if (cusVM.isConfirmed)
+                    {
+                        // Add new cus into data grid row
+                        string query = $"DBCC CHECKIDENT ('CUSTOMER', RESEED, {cusVM.CustomerNumber})";
+                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+
+                        DataProvider.Instance.DB.Customers.Add(cusVM.NewCustomer);
+                        DataProvider.Instance.DB.SaveChanges();
+
+                        CustomerList.Add(cusVM.NewCustomer);
+                        CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
+                    }
+                }
+
+                
+            });
+        }
     }
 }
