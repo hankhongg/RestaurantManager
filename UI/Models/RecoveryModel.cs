@@ -26,7 +26,7 @@ namespace RestaurantManager.Models
         {
             try
             {
-                var fromAddress = new MailAddress("hankhongg@gmail.com", "Quên mật khẩu phần mềm Quản lý nhà hàng");
+                var fromAddress = new MailAddress("hankhongg@gmail.com", "Quên mật khẩu Phần mềm Quản lý nhà hàng");
                 var toAddress = new MailAddress(email);
                 const string fromPassword = "vuqd heti kiij yzkj";
                 string subject = "Mã xác nhận quên mật khẩu";

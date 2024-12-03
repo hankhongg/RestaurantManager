@@ -10,4 +10,5 @@
     <viewmodel:BookingViewModel x:Key="BookingVM"></viewmodel:BookingViewModel>
     <viewmodel:RecoveryPasswordViewModel x:Key="RecoveryVM"></viewmodel:RecoveryPasswordViewModel>
     <viewmodel:CustomerManagementViewModel x:Key="CustomerMangementVM"></viewmodel:CustomerManagementViewModel>
+    <viewmodel:OrderViewModel x:Key="OrderVM"></viewmodel:OrderViewModel>
 </ResourceDictionary>
