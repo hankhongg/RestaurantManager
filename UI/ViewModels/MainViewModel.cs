@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using UI.Views;
+using XAct;
 
 namespace RestaurantManager.ViewModels
 {
@@ -28,6 +29,19 @@ namespace RestaurantManager.ViewModels
             {
                 _selectedCustomer = value;
                 OnPropertyChanged(nameof(SelectedCustomer));
+
+                isSelectedCustomer = _selectedCustomer != null;
+            }
+        }
+        private bool _isSelectedCustomer = false;
+
+        public bool isSelectedCustomer
+        {
+            get { return _isSelectedCustomer; }
+            set 
+            {
+                _isSelectedCustomer = value;
+                OnPropertyChanged();
             }
         }
 
@@ -39,7 +53,7 @@ namespace RestaurantManager.ViewModels
         public ICommand AddOrderCommand { get; set; }
         public ICommand AddCusCommand { get; set; }
         public ICommand DelCusCommnad { get; set; }
-        public ICommand ConfigCusCommand { get; set; }
+        public ICommand EditCusCommand { get; set; }
         public ICommand SaveCusCommand { get; set; }
         private string usernameForProfileWindow;
 
@@ -91,6 +105,7 @@ namespace RestaurantManager.ViewModels
                 var cusVM = addCusWindow.DataContext as CustomerManagementViewModel;
                 if (cusVM != null)
                 {
+                    cusVM.managementID = 0;
                     if (cusVM.isConfirmed)
                     {
                         // Add new cus into data grid row
@@ -101,35 +116,55 @@ namespace RestaurantManager.ViewModels
                         DataProvider.Instance.DB.SaveChanges();
 
                         CustomerList.Add(cusVM.NewCustomer);
-                        CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
+                        //CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
                     }
                 }
             });
-            ConfigCusCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            EditCusCommand = new RelayCommand<object>((p) => SelectedCustomer != null, (p) =>
             {
-                AddCusWindow configCusWindow = new AddCusWindow();
-                configCusWindow.ShowDialog();
-                var cusVM = configCusWindow.DataContext as CustomerManagementViewModel;
+                AddCusWindow EditCusWindow = new AddCusWindow();
 
-                if (cusVM != null)
+                var cusVM = EditCusWindow.DataContext as CustomerManagementViewModel;
+                
+                var currCus = DataProvider.Instance.DB.Customers.Where(x => x.CusCode == SelectedCustomer.CusCode).FirstOrDefault();
+
+                if (cusVM != null && currCus != null)
                 {
-                    var SelectedCustomer = p as Customer;
-
-                    if (cusVM.isConfirmed)
+                    cusVM.isReadOnly = true;
+                    cusVM.managementID = 1;
+                    cusVM.CustomerCode = currCus.CusCode;
+                    cusVM.CustomerName = currCus.CusName;
+                    cusVM.CustomerPhone = currCus.CusPhone == null ? "" : currCus.CusPhone;
+                    cusVM.CustomerCccd = currCus.CusCccd == null ? "" : currCus.CusCccd;
+                    cusVM.CustomerEmail = currCus.CusEmail == null ? "" : currCus.CusEmail;
+                    cusVM.CustomerAddress = currCus.CusAddr == null ? "" : currCus.CusAddr;
+                    
+                    EditCusWindow.ShowDialog();
+                    
+                    if (cusVM.isEdited)
                     {
-                        // Add new cus into data grid row
-                        string query = $"DBCC CHECKIDENT ('CUSTOMER', RESEED, {cusVM.CustomerNumber})";
-                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+                        currCus.CusName = cusVM.EditedCustomer.CusName;
+                        currCus.CusPhone = cusVM.EditedCustomer.CusPhone;
+                        currCus.CusCccd = cusVM.EditedCustomer.CusCccd;
+                        currCus.CusEmail = cusVM.EditedCustomer.CusEmail;
+                        currCus.CusAddr = cusVM.EditedCustomer.CusAddr;
 
-                        DataProvider.Instance.DB.Customers.Add(cusVM.NewCustomer);
                         DataProvider.Instance.DB.SaveChanges();
 
-                        CustomerList.Add(cusVM.NewCustomer);
-                        CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
+                        var updatedCustomer = CustomerList.FirstOrDefault(c => c.CusCode == currCus.CusCode);
+                        if (updatedCustomer != null)
+                        {
+                            updatedCustomer.CusName = currCus.CusName;
+                            updatedCustomer.CusPhone = currCus.CusPhone;
+                            updatedCustomer.CusCccd = currCus.CusCccd;
+                            updatedCustomer.CusEmail = currCus.CusEmail;
+                            updatedCustomer.CusAddr = currCus.CusAddr;
+                        }
+
+                        CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.ToList());
+
                     }
                 }
-
-                
             });
         }
     }

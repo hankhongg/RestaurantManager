@@ -132,10 +132,10 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
-                                    <Button Content="Thêm" Style="{StaticResource configureDataButton}"/>
-                                    <Button Content="Xóa" Style="{StaticResource configureDataButton}"/>
-                                    <Button Content="Sửa" Style="{StaticResource configureDataButton}"/>
-                                    <Button Content="Lưu" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Thêm" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Sửa" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Lưu" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
                                 </StackPanel>
                             </Grid>
                         </TabItem>
@@ -151,7 +151,7 @@
                                 </Grid.RowDefinitions>
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
                                           BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding CustomerList}"
-                                          SelectedItem="{Binding SelectedCustomer}">
+                                          SelectedItem="{Binding SelectedCustomer, Mode=OneWayToSource}">
                                     <DataGrid.Columns>
                                         <!--Mã khách hàng-->
                                         <DataGridTextColumn Header="Mã KH" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
@@ -185,9 +185,9 @@
                                     <Button Content="Thêm" Style="{StaticResource configureDataButton}" Command="{Binding AddCusCommand}"
                                             CommandParameter="{Binding ElementName=addCustomerWindow}"/>
                                     <Button Content="Xóa" Style="{StaticResource configureDataButton}" Command="{Binding DelCusCommand}"
-                                            CommandParameter="{Binding ElementName=addCustomerWindow}"/>
-                                    <Button Content="Sửa" Style="{StaticResource configureDataButton}" Command="{Binding ConfigCusCommand}"
-                                            CommandParameter="{Binding ElementName=addCustomerWindow}"/>
+                                            CommandParameter="{Binding ElementName=addCustomerWindow}" IsEnabled="{Binding isSelectedCustomer}"/>
+                                    <Button Content="Sửa" Style="{StaticResource configureDataButton}" Command="{Binding EditCusCommand}"
+                                            CommandParameter="{Binding ElementName=addCustomerWindow}" IsEnabled="{Binding isSelectedCustomer}"/>
                                     <Button Content="Lưu" Style="{StaticResource configureDataButton}" Command="{Binding SaveCusCommand}"
                                             CommandParameter="{Binding ElementName=addCustomerWindow}"/>
                                 </StackPanel>

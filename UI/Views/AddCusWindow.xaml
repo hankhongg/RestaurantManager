@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterOwner" Background="Transparent"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         Title="AddCusWindow" Height="800" Width="750" DataContext="{StaticResource CustomerMangementVM}" Name="addCustomerWindow">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
+        
     </WindowChrome.WindowChrome>
     <Grid>
         <!--3 Main rows-->
@@ -83,7 +85,9 @@
                 <Border Grid.Row="1">
                     <TextBox x:Name="txtPhone" FontSize="20" Width="auto" Margin="0,0,0,15"
                              VerticalContentAlignment="Center" Style="{StaticResource txtStyle}"
-                             Text="{Binding CustomerPhone, UpdateSourceTrigger=PropertyChanged}"/>
+                             IsReadOnly="{Binding isReadOnly}"
+                             Text="{Binding CustomerPhone, UpdateSourceTrigger=PropertyChanged}">
+                    </TextBox>
                 </Border>
             </Grid>
             <Grid Grid.Row ="3" Margin="10">

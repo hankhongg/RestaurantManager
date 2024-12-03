@@ -17,7 +17,9 @@ namespace RestaurantManager.ViewModels
 {
     public class CustomerManagementViewModel : BaseViewModel
     {
+        public int managementID { get; set; }
         public bool isConfirmed { get; set; }
+        public bool isEdited { get; set; }
         public int CustomerNumber { get; set; }
         private Customer newCustomer;
         public Customer NewCustomer
@@ -28,6 +30,24 @@ namespace RestaurantManager.ViewModels
                 newCustomer = value;
                 OnPropertyChanged();
             }
+        }
+        private Customer editedCustomer;
+
+        public Customer EditedCustomer
+        {
+            get { return editedCustomer; }
+            set
+            {
+                editedCustomer = value;
+                OnPropertyChanged();
+            }
+        }
+        private string customerCode;
+
+        public string CustomerCode
+        {
+            get { return customerCode; }
+            set { customerCode = value; }
         }
 
         private string customerName;
@@ -85,12 +105,23 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+        private bool _isReadOnly = false;
+        public bool isReadOnly
+        {
+            get { return _isReadOnly; }
+            set
+            {
+                _isReadOnly = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand ConfirmInfo { get; set; }
         public ICommand CancelInfo { get; set; }
         public CustomerManagementViewModel()
         {
             isConfirmed = false;
+
             ConfirmInfo = new RelayCommand<Window>((p) => 
             {
                 return true; 
@@ -102,14 +133,16 @@ namespace RestaurantManager.ViewModels
                     return;
                 }
                 var customerList = DataProvider.Instance.DB.Customers.Where(x => x.CusPhone == CustomerPhone);
-                if (customerList == null || customerList.Count() != 0)
+                if (((customerList == null || customerList.Count() != 0) && managementID == 0))
                 {
                     MessageBox.Show("This phone number has already been used");
                     return;
                 }
 
                 CustomerNumber = DataProvider.Instance.DB.Customers.Count();
-                addNewCustomer(p, CustomerNumber + 1);
+                if (managementID == 0)
+                    addNewCustomer(p, CustomerNumber + 1);
+                else EditCustomer(p);
             });
 
             CancelInfo = new RelayCommand<Window>((p) => { return true; }, (p) =>
@@ -123,6 +156,28 @@ namespace RestaurantManager.ViewModels
             NewCustomer = new Customer()
             {
                 CusCode = $"KH{cusNumber:D3}",
+                CusName = CustomerName,
+                CusAddr = CustomerAddress,
+                CusPhone = CustomerPhone,
+                CusCccd = CustomerCccd,
+                CusEmail = CustomerEmail,
+                Isdeleted = false
+            };
+
+            CustomerName = "";
+            CustomerAddress = "";
+            CustomerPhone = "";
+            CustomerCccd = "";
+            CustomerEmail = "";
+
+            p.Close();
+        }
+        public void EditCustomer(Window p)
+        {
+            isEdited = true;
+            EditedCustomer = new Customer()
+            {
+                CusCode = CustomerCode,
                 CusName = CustomerName,
                 CusAddr = CustomerAddress,
                 CusPhone = CustomerPhone,

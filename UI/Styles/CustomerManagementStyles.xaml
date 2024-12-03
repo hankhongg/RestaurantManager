@@ -22,7 +22,7 @@
     <Style x:Key="configureDataButton" TargetType="Button">
         <Setter Property="Background" Value="SteelBlue"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="FontWeight" Value="Thin"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontSize" Value="25"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -34,10 +34,10 @@
                         <!-- Sử dụng ContentPresenter để hiển thị nội dung -->
                         <!-- Đảm bảo ContentPresenter hoạt động đúng -->
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
-                          Content="{TemplateBinding Content}" 
-                          ContentTemplate="{TemplateBinding ContentTemplate}" 
-                          RecognizesAccessKey="True" />
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                          Content="{TemplateBinding Content}" 
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                          RecognizesAccessKey="True" />     
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Button.IsDefaulted" Value="true">
