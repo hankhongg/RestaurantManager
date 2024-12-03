@@ -7,9 +7,10 @@
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:tableUC="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:bookingUC="clr-namespace:RestaurantManager.Views.UserControls"
+        xmlns:orderUC="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" WindowState="Maximized"
-        Title="Phần mềm Quản lý Nhà hàng" Height="768" Width="1366" DataContext="{StaticResource MainVM}" Background="Transparent"
+        Title="Phần mềm Quản lý Nhà hàng" Height="1080" Width="1980" DataContext="{StaticResource MainVM}" Background="Transparent"
         >
     <!--Dùng xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" để xài event trigger tránh khởi tạo 2 main window-->
     <i:Interaction.Triggers>
@@ -275,7 +276,8 @@
 
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
                     <Grid Grid.Column="0">
-                        <WrapPanel Margin="20" x:Name="tablePanel">
+                        <WrapPanel Margin="30" x:Name="tablePanel">
+                            <orderUC:OrderUC Width="360" Height="270"></orderUC:OrderUC>
                         </WrapPanel>
                     </Grid>
 
