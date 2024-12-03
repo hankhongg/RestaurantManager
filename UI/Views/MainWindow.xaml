@@ -277,7 +277,7 @@
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
                     <Grid Grid.Column="0">
                         <WrapPanel Margin="30" x:Name="tablePanel">
-                            <orderUC:OrderUC Width="360" Height="270"></orderUC:OrderUC>
+                            <orderUC:OrderUC Height="210" Width="320"></orderUC:OrderUC>
                         </WrapPanel>
                     </Grid>
 
