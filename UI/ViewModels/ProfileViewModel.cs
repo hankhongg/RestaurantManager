@@ -43,7 +43,7 @@ namespace RestaurantManager.ViewModels
 
                     accountName = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    LoadAccountInformation();
+                    //LoadAccountInformation();
 
                 }
             }
@@ -59,7 +59,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountEmail = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    LoadAccountInformation();
+                    //LoadAccountInformation();
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountPhoneNumber = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    LoadAccountInformation();
+                    //LoadAccountInformation();
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountID = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    LoadAccountInformation();
+                    //LoadAccountInformation();
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountPassword = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    LoadAccountInformation();
+                    //LoadAccountInformation();
                 }
             }
         }
