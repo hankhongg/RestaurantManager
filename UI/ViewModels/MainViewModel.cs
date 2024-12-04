@@ -17,10 +17,21 @@ namespace RestaurantManager.ViewModels
 {
     class MainViewModel : BaseViewModel
     {
-        private ObservableCollection<Customer> customerList;
-        private ObservableCollection<Employee> employeeList;
         private ObservableCollection<Stockin> stockinList;
+        public ObservableCollection<Stockin> StockinList { get { return stockinList; } set { if (stockinList != value) stockinList = value; OnPropertyChanged(); } }
         
+        private string usernameForProfileWindow;
+        public ICommand WindowIsLoadedCommand { get; set; }
+        public ICommand ProfileManagementCommand {  get; set; }
+        public ICommand AddOrderCommand { get; set; }
+
+        // Customer Management
+        private ObservableCollection<Customer> customerList;
+        public ObservableCollection<Customer> CustomerList { get { return customerList; } set { if (customerList != value) customerList = value; OnPropertyChanged(); } }
+
+        public ICommand AddCusCommand { get; set; }
+        public ICommand DelCusCommnad { get; set; }
+        public ICommand EditCusCommand { get; set; }
         private Customer _selectedCustomer;
         public Customer SelectedCustomer
         {
@@ -45,17 +56,35 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        public ObservableCollection<Customer> CustomerList { get { return customerList; } set { if (customerList != value) customerList = value; OnPropertyChanged(); } }
+        // Employee Management
+        private ObservableCollection<Employee> employeeList;
         public ObservableCollection<Employee> EmployeeList { get { return employeeList; } set { if (employeeList != value) employeeList = value; OnPropertyChanged(); } }
-        public ObservableCollection<Stockin> StockinList { get { return stockinList; } set { if (stockinList != value) stockinList = value; OnPropertyChanged(); } }
-        public ICommand WindowIsLoadedCommand { get; set; }
-        public ICommand ProfileManagementCommand {  get; set; }
-        public ICommand AddOrderCommand { get; set; }
-        public ICommand AddCusCommand { get; set; }
-        public ICommand DelCusCommnad { get; set; }
-        public ICommand EditCusCommand { get; set; }
-        public ICommand SaveCusCommand { get; set; }
-        private string usernameForProfileWindow;
+        public ICommand AddEmpCommand { get; set; }
+        public ICommand DelEmpCommand { get; set; }
+        public ICommand EditEmpCommand { get; set; }
+        private Employee _selectedEmployee;
+        public Employee SelectedEmployee
+        {
+            get => _selectedEmployee;
+            set
+            {
+                _selectedEmployee = value;
+                OnPropertyChanged(nameof(SelectedEmployee));
+
+                isSelectedEmployee = _selectedEmployee != null;
+            }
+        }
+        private bool _isSelectedEmployee = false;
+        public bool isSelectedEmployee
+        {
+            get { return _isSelectedEmployee; }
+            set
+            {
+                _isSelectedEmployee = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
@@ -99,6 +128,7 @@ namespace RestaurantManager.ViewModels
                     foodLayoutWindow.ShowDialog();
                 }
             );
+            // Customer Management
             AddCusCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
                 AddCusWindow addCusWindow = new AddCusWindow();
@@ -131,15 +161,8 @@ namespace RestaurantManager.ViewModels
 
                 if (cusVM != null && currCus != null)
                 {
-                    cusVM.isReadOnly = true;
-                    cusVM.managementID = 1;
-                    cusVM.CustomerCode = currCus.CusCode;
-                    cusVM.CustomerName = currCus.CusName;
-                    cusVM.CustomerPhone = currCus.CusPhone == null ? "" : currCus.CusPhone;
-                    cusVM.CustomerCccd = currCus.CusCccd == null ? "" : currCus.CusCccd;
-                    cusVM.CustomerEmail = currCus.CusEmail == null ? "" : currCus.CusEmail;
-                    cusVM.CustomerAddress = currCus.CusAddr == null ? "" : currCus.CusAddr;
-                    
+                    cusVM.LoadCustomerInformation(currCus);
+
                     EditCusWindow.ShowDialog();
                     
                     if (cusVM.isEdited)
@@ -163,7 +186,67 @@ namespace RestaurantManager.ViewModels
                         }
 
                         CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.ToList());
+                    }
+                }
+            });
+            // Employee Management
+            AddEmpCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                AddEmpWindow addEmpWindow = new AddEmpWindow();
+                addEmpWindow.ShowDialog();
+                var empVM = addEmpWindow.DataContext as EmployeeManagementViewModel;
+                if (empVM != null)
+                {
+                    empVM.managementID = 0;
+                    if (empVM.isConfirmed)
+                    {
+                        // Add new cus into data grid row
+                        string query = $"DBCC CHECKIDENT ('EMPLOYEE', RESEED, {empVM.EmployeeNumber})";
+                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
 
+                        DataProvider.Instance.DB.Employees.Add(empVM.NewEmployee);
+                        DataProvider.Instance.DB.SaveChanges();
+
+                        EmployeeList.Add(empVM.NewEmployee);
+                        //CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
+                    }
+                }
+            });
+            EditEmpCommand = new RelayCommand<object>((p) => SelectedEmployee != null, (p) =>
+            {
+                AddEmpWindow EditEmpWindow = new AddEmpWindow();
+
+                var empVM = EditEmpWindow.DataContext as EmployeeManagementViewModel;
+
+                var currEmp = DataProvider.Instance.DB.Employees.Where(x => x.EmpCode == SelectedEmployee.EmpCode).FirstOrDefault();
+
+                if (empVM != null && currEmp != null)
+                {
+                    empVM.LoadEmployeeInformation(currEmp);
+
+                    EditEmpWindow.ShowDialog();
+
+                    if (empVM.isEdited)
+                    {
+                        currEmp.EmpName = empVM.EditedEmployee.EmpName;
+                        currEmp.EmpPhone = empVM.EditedEmployee.EmpPhone;
+                        currEmp.EmpCccd = empVM.EditedEmployee.EmpCccd;
+                        currEmp.EmpSalary = empVM.EditedEmployee.EmpSalary;
+                        currEmp.EmpRole = empVM.EditedEmployee.EmpRole;
+
+                        DataProvider.Instance.DB.SaveChanges();
+
+                        var updatedEmployee = EmployeeList.FirstOrDefault(c => c.EmpCode == currEmp.EmpCode);
+                        if (updatedEmployee != null)
+                        {
+                            updatedEmployee.EmpName = currEmp.EmpName;
+                            updatedEmployee.EmpPhone = currEmp.EmpPhone;
+                            updatedEmployee.EmpCccd = currEmp.EmpCccd;
+                            updatedEmployee.EmpSalary = currEmp.EmpSalary;
+                            updatedEmployee.EmpRole = currEmp.EmpRole;
+                        }
+
+                        EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.ToList());
                     }
                 }
             });

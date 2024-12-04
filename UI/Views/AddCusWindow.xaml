@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterOwner" Background="Transparent"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
-        Title="AddCusWindow" Height="800" Width="750" DataContext="{StaticResource CustomerMangementVM}" Name="addCustomerWindow">
+        Title="AddCusWindow" Height="800" Width="750" DataContext="{StaticResource CustomerMangementVM}" 
+        Name="addCustomerWindow">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
         

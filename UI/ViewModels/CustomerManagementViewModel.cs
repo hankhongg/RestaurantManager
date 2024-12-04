@@ -194,6 +194,18 @@ namespace RestaurantManager.ViewModels
 
             p.Close();
         }
+        public void LoadCustomerInformation(Customer currCus)
+        {
+            // load customer information from customerlayoutwindow
+            isReadOnly = true;
+            managementID = 1;
+            CustomerCode = currCus.CusCode;
+            CustomerName = currCus.CusName;
+            CustomerPhone = currCus.CusPhone == null ? "" : currCus.CusPhone;
+            CustomerCccd = currCus.CusCccd == null ? "" : currCus.CusCccd;
+            CustomerEmail = currCus.CusEmail == null ? "" : currCus.CusEmail;
+            CustomerAddress = currCus.CusAddr == null ? "" : currCus.CusAddr;
+        }
     }
 }
 
