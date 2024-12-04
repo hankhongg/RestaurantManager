@@ -203,18 +203,8 @@
                                 </Grid.RowDefinitions>
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
                                           BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding EmployeeList}"
-                                          SelectedItem="{Binding SelectedCustomer, Mode=OneWayToSource}">
+                                          SelectedItem="{Binding SelectedEmployee, Mode=OneWayToSource}">
                                     <DataGrid.Columns>
-                                        <!--STT-->
-                                        <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding EmpId}">
-                                            <DataGridTextColumn.ElementStyle>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                    <Setter Property="FontSize" Value="20"/>
-                                                </Style>
-                                            </DataGridTextColumn.ElementStyle>
-                                        </DataGridTextColumn>
                                         <!--Mã NV-->
                                         <DataGridTextColumn Header="Mã NV" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                                                             Binding="{Binding EmpCode}">
@@ -247,7 +237,7 @@
                                     <Button Content="Thêm" Style="{StaticResource configureDataButton}"
                                             Command="{Binding AddEmpCommand}" CommandParameter="{Binding ElementName=addEmpWindow}"/>
                                     <Button Content="Xóa" Style="{StaticResource configureDataButton}" IsEnabled="{Binding isSelectedEmployee}"
-                                            Command="{Binding DeleteEmpCommand}" CommandParameter="{Binding ElementName=addEmpWindow}"/>
+                                            Command="{Binding DelEmpCommand}" CommandParameter="{Binding ElementName=addEmpWindow}"/>
                                     <Button Content="Sửa" Style="{StaticResource configureDataButton}" IsEnabled="{Binding isSelectedEmployee}" 
                                             Command="{Binding EditEmpCommand}" CommandParameter="{Binding ElementName=addEmpWindow}"/>
                                 </StackPanel>

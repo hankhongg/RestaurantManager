@@ -41,11 +41,8 @@ namespace RestaurantManager.ViewModels
             {
                 if (accountName != value)
                 {
-
                     accountName = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-
-
                 }
             }
         }
@@ -74,7 +71,6 @@ namespace RestaurantManager.ViewModels
                 {
                     accountPhoneNumber = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-
                 }
             }
         }
@@ -103,7 +99,6 @@ namespace RestaurantManager.ViewModels
                 {
                     accountPassword = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-
                 }
             }
         }

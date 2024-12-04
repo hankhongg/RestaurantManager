@@ -26,7 +26,8 @@
                 <ColumnDefinition Width="19*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Giá bán" FontSize="20" FontWeight="Bold" Foreground="{StaticResource DarkBlue}" Margin="20,60,0,10"/>
-            <TextBox Text="30000" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="2" Margin="20,103,5,28"  FontSize="16" TextWrapping="Wrap"/>
+            <TextBox Text="30000" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="2" Margin="20,103,5,28" FontSize="20" TextWrapping="Wrap"
+                     VerticalContentAlignment="Center" FontWeight="Medium"/>
             <TextBlock Text="Rau muống luộc" FontSize="22" FontWeight="Bold" HorizontalAlignment="Left" Foreground="{StaticResource DarkBlue}" Margin="20,10,0,132"  Width="182"/>
         </Grid>
 

@@ -115,6 +115,14 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+        private bool _isDeleted = false;
+
+        public bool IsDeleted
+        {
+            get { return _isDeleted; }
+            set { _isDeleted = value; }
+        }
+
 
         public ICommand ConfirmInfo { get; set; }
         public ICommand CancelInfo { get; set; }
@@ -129,17 +137,17 @@ namespace RestaurantManager.ViewModels
             {
                 if (string.IsNullOrEmpty(CustomerName) || string.IsNullOrEmpty(CustomerPhone))
                 {
-                    MessageBox.Show("Please fill in all the neccessary information");
+                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return;
                 }
-                var customerList = DataProvider.Instance.DB.Customers.Where(x => x.CusPhone == CustomerPhone);
+                var customerList = DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false && x.CusPhone == CustomerPhone);
                 if (((customerList == null || customerList.Count() != 0) && managementID == 0))
                 {
-                    MessageBox.Show("This phone number has already been used");
+                    MessageBox.Show("Số điện thoại này đã tồn tại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return;
                 }
 
-                CustomerNumber = DataProvider.Instance.DB.Customers.Count();
+                CustomerNumber = DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false).Count();
                 if (managementID == 0)
                     addNewCustomer(p, CustomerNumber + 1);
                 else EditCustomer(p);
@@ -147,6 +155,14 @@ namespace RestaurantManager.ViewModels
 
             CancelInfo = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
+                isConfirmed = false;
+                isEdited = false;
+                isReadOnly = false;
+                CustomerName = "";
+                CustomerAddress = "";
+                CustomerPhone = "";
+                CustomerCccd = "";
+                CustomerEmail = "";
                 p.Close();
             });
         }
@@ -161,7 +177,7 @@ namespace RestaurantManager.ViewModels
                 CusPhone = CustomerPhone,
                 CusCccd = CustomerCccd,
                 CusEmail = CustomerEmail,
-                Isdeleted = false
+                Isdeleted = IsDeleted
             };
 
             CustomerName = "";
