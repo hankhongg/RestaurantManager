@@ -88,7 +88,7 @@ namespace RestaurantManager.ViewModels
                     {
                         profileVM.AccountID = usernameForProfileWindow;
                         profileWindow.DataContext = profileVM;
-                        profileVM.LoadAccountInformation();
+                        //profileVM.LoadAccountInformation();
                         profileWindow.ShowDialog();
                     }
                 }

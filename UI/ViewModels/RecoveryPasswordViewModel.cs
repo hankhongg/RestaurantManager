@@ -57,12 +57,14 @@ namespace RestaurantManager.ViewModels
         {
             ConfirmCodeCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
+                MessageBox.Show(SentCode);
+                MessageBox.Show(TypeInCode);
                 if (TypeInCode == SentCode)
                 {
                     System.Windows.MessageBox.Show("Mã xác nhận thành công!", "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
                     p.Close();
                     ProfileWindow profileWindow = new ProfileWindow();
-                    var profileVM = profileWindow.DataContext as ProfileViewModel;
+                    ProfileViewModel? profileVM = profileWindow.DataContext as ProfileViewModel;
                     if (profileVM != null)
                     {
                         profileVM.AccountEmail = TypeInEmail;

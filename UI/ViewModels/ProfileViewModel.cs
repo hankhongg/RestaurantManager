@@ -60,6 +60,7 @@ namespace RestaurantManager.ViewModels
                     accountEmail = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
                     //LoadAccountInformation();
+                    LoadAccountInformation();
                 }
             }
         }
@@ -89,7 +90,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountID = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    //LoadAccountInformation();
+                    LoadAccountInformation();
                 }
             }
         }
@@ -118,6 +119,7 @@ namespace RestaurantManager.ViewModels
                 AccountEmail = acc.AccEmail;
                 AccountPhoneNumber = acc.AccPhone;
                 AccountID = acc.AccUsername;
+                originalID = acc.AccUsername;
                 AccountPassword = acc.AccPassword;
             }
 
@@ -126,7 +128,7 @@ namespace RestaurantManager.ViewModels
         public void SaveAccountInformation()
         {
             bool checkEmptyOrNull = string.IsNullOrEmpty(AccountName) || string.IsNullOrEmpty(AccountEmail) || string.IsNullOrEmpty(AccountPhoneNumber) || string.IsNullOrEmpty(AccountID);
-            var acc = DataProvider.Instance.DB.Accounts.Where(y => y.AccUsername == AccountID).FirstOrDefault();
+            var acc = DataProvider.Instance.DB.Accounts.Where(y => y.AccUsername == originalID).FirstOrDefault();
             if (checkEmptyOrNull)
             {
                 MessageBox.Show("Không được để trống thông tin!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -154,6 +156,8 @@ namespace RestaurantManager.ViewModels
         public ICommand PasswordBoxLoadedCommand { get; set; }
         public ICommand IsButtonPressedCommand { get; set; }
         public ICommand SaveButtonPressedCommand { get; set; }
+
+        private string originalID;
         public ProfileViewModel()
         {
             IsButtonPressedCommand = new RelayCommand<object>((p) =>
