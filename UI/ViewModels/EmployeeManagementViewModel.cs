@@ -5,8 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using RestaurantManager.Views;
+using System.Windows.Controls;
 using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
+using static System.Net.Mime.MediaTypeNames;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantManager.ViewModels
 {

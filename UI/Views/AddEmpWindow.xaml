@@ -7,7 +7,7 @@
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterOwner" Background="Transparent"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         Title="AddEmpWindow" Height="800" Width="750" DataContext="{StaticResource EmployeeMangementVM}" 
-        Name="addEmployeeWindow">
+        x:Name="addEmpWindow">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
 
@@ -136,10 +136,10 @@
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Style="{StaticResource buttonStyle}" CommandParameter="{Binding ElementName=addCustomerWindow}"
+            <Button Style="{StaticResource buttonStyle}" CommandParameter="{Binding ElementName=addEmpWindow}"
                     Content="HỦY THÔNG TIN" Command="{Binding CancelInfo}"/>
             <Button Grid.Column="1" Style="{StaticResource buttonStyle}"
-                    Content="XÁC NHẬN" CommandParameter="{Binding ElementName=addCustomerWindow}"
+                    Content="XÁC NHẬN" CommandParameter="{Binding ElementName=addEmpWindow}"
                     Command="{Binding ConfirmInfo}"/>
         </Grid>
     </Grid>

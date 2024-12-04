@@ -202,7 +202,8 @@
                                     <RowDefinition Height="1*"></RowDefinition>
                                 </Grid.RowDefinitions>
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
-                                          BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding EmployeeList}">
+                                          BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding EmployeeList}"
+                                          SelectedItem="{Binding SelectedCustomer, Mode=OneWayToSource}">
                                     <DataGrid.Columns>
                                         <!--STT-->
                                         <DataGridTextColumn Header="STT" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
@@ -244,11 +245,11 @@
                                 </DataGrid>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
                                     <Button Content="Thêm" Style="{StaticResource configureDataButton}"
-                                            Command="{Binding AddEmpCommand}" CommandParameter="{Binding ElementName=addEmployeeWindow}"/>
+                                            Command="{Binding AddEmpCommand}" CommandParameter="{Binding ElementName=addEmpWindow}"/>
                                     <Button Content="Xóa" Style="{StaticResource configureDataButton}" IsEnabled="{Binding isSelectedEmployee}"
-                                            Command="{Binding DeleteEmpCommand}" CommandParameter="{Binding ElementName=addEmployeeWindow}"/>
+                                            Command="{Binding DeleteEmpCommand}" CommandParameter="{Binding ElementName=addEmpWindow}"/>
                                     <Button Content="Sửa" Style="{StaticResource configureDataButton}" IsEnabled="{Binding isSelectedEmployee}" 
-                                            Command="{Binding EditEmpCommand}" CommandParameter="{Binding ElementName=addEmployeeWindow}"/>
+                                            Command="{Binding EditEmpCommand}" CommandParameter="{Binding ElementName=addEmpWindow}"/>
                                 </StackPanel>
                             </Grid>
                         </TabItem>

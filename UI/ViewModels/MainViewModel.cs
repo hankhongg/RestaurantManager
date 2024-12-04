@@ -129,66 +129,66 @@ namespace RestaurantManager.ViewModels
                 }
             );
             // Customer Management
-            AddCusCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
-            {
-                AddCusWindow addCusWindow = new AddCusWindow();
-                addCusWindow.ShowDialog();
-                var cusVM = addCusWindow.DataContext as CustomerManagementViewModel;
-                if (cusVM != null)
-                {
-                    cusVM.managementID = 0;
-                    if (cusVM.isConfirmed)
-                    {
-                        // Add new cus into data grid row
-                        string query = $"DBCC CHECKIDENT ('CUSTOMER', RESEED, {cusVM.CustomerNumber})";
-                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+            //AddCusCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            //{
+            //    AddCusWindow addCusWindow = new AddCusWindow();
+            //    addCusWindow.ShowDialog();
+            //    var cusVM = addCusWindow.DataContext as CustomerManagementViewModel;
+            //    if (cusVM != null)
+            //    {
+            //        cusVM.managementID = 0;
+            //        if (cusVM.isConfirmed)
+            //        {
+            //            // Add new cus into data grid row
+            //            string query = $"DBCC CHECKIDENT ('CUSTOMER', RESEED, {cusVM.CustomerNumber})";
+            //            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
 
-                        DataProvider.Instance.DB.Customers.Add(cusVM.NewCustomer);
-                        DataProvider.Instance.DB.SaveChanges();
+            //            DataProvider.Instance.DB.Customers.Add(cusVM.NewCustomer);
+            //            DataProvider.Instance.DB.SaveChanges();
 
-                        CustomerList.Add(cusVM.NewCustomer);
-                        //CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
-                    }
-                }
-            });
-            EditCusCommand = new RelayCommand<object>((p) => SelectedCustomer != null, (p) =>
-            {
-                AddCusWindow EditCusWindow = new AddCusWindow();
+            //            CustomerList.Add(cusVM.NewCustomer);
+            //            //CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
+            //        }
+            //    }
+            //});
+            //EditCusCommand = new RelayCommand<object>((p) => SelectedCustomer != null, (p) =>
+            //{
+            //    AddCusWindow EditCusWindow = new AddCusWindow();
 
-                var cusVM = EditCusWindow.DataContext as CustomerManagementViewModel;
+            //    var cusVM = EditCusWindow.DataContext as CustomerManagementViewModel;
                 
-                var currCus = DataProvider.Instance.DB.Customers.Where(x => x.CusCode == SelectedCustomer.CusCode).FirstOrDefault();
+            //    var currCus = DataProvider.Instance.DB.Customers.Where(x => x.CusCode == SelectedCustomer.CusCode).FirstOrDefault();
 
-                if (cusVM != null && currCus != null)
-                {
-                    cusVM.LoadCustomerInformation(currCus);
+            //    if (cusVM != null && currCus != null)
+            //    {
+            //        cusVM.LoadCustomerInformation(currCus);
 
-                    EditCusWindow.ShowDialog();
+            //        EditCusWindow.ShowDialog();
                     
-                    if (cusVM.isEdited)
-                    {
-                        currCus.CusName = cusVM.EditedCustomer.CusName;
-                        currCus.CusPhone = cusVM.EditedCustomer.CusPhone;
-                        currCus.CusCccd = cusVM.EditedCustomer.CusCccd;
-                        currCus.CusEmail = cusVM.EditedCustomer.CusEmail;
-                        currCus.CusAddr = cusVM.EditedCustomer.CusAddr;
+            //        if (cusVM.isEdited)
+            //        {
+            //            currCus.CusName = cusVM.EditedCustomer.CusName;
+            //            currCus.CusPhone = cusVM.EditedCustomer.CusPhone;
+            //            currCus.CusCccd = cusVM.EditedCustomer.CusCccd;
+            //            currCus.CusEmail = cusVM.EditedCustomer.CusEmail;
+            //            currCus.CusAddr = cusVM.EditedCustomer.CusAddr;
 
-                        DataProvider.Instance.DB.SaveChanges();
+            //            DataProvider.Instance.DB.SaveChanges();
 
-                        var updatedCustomer = CustomerList.FirstOrDefault(c => c.CusCode == currCus.CusCode);
-                        if (updatedCustomer != null)
-                        {
-                            updatedCustomer.CusName = currCus.CusName;
-                            updatedCustomer.CusPhone = currCus.CusPhone;
-                            updatedCustomer.CusCccd = currCus.CusCccd;
-                            updatedCustomer.CusEmail = currCus.CusEmail;
-                            updatedCustomer.CusAddr = currCus.CusAddr;
-                        }
+            //            var updatedCustomer = CustomerList.FirstOrDefault(c => c.CusCode == currCus.CusCode);
+            //            if (updatedCustomer != null)
+            //            {
+            //                updatedCustomer.CusName = currCus.CusName;
+            //                updatedCustomer.CusPhone = currCus.CusPhone;
+            //                updatedCustomer.CusCccd = currCus.CusCccd;
+            //                updatedCustomer.CusEmail = currCus.CusEmail;
+            //                updatedCustomer.CusAddr = currCus.CusAddr;
+            //            }
 
-                        CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.ToList());
-                    }
-                }
-            });
+            //            CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.ToList());
+            //        }
+            //    }
+            //});
             // Employee Management
             AddEmpCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
