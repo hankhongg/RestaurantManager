@@ -116,8 +116,9 @@ namespace RestaurantManager.ViewModels
                     if (profileVM != null && usernameForProfileWindow != null)
                     {
                         profileVM.AccountID = usernameForProfileWindow;
-                        profileWindow.DataContext = profileVM;
+                        profileVM.isMainProfile = true;
                         profileVM.LoadAccountInformation();
+                        profileWindow.DataContext = profileVM;
                         profileWindow.ShowDialog();
                     }
                 }

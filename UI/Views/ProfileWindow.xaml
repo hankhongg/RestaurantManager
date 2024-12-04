@@ -106,9 +106,15 @@
                         </StackPanel>
                         <StackPanel Style="{StaticResource stackPanelStyle}">
                             <TextBlock Text="Tài khoản: "  Width="100"/>
-                            <TextBox Width="250" 
+                            <TextBox Width="250" x:Name="accountIDPasswordBox"
                                      Text="{Binding AccountID}"
-                                     IsEnabled="{Binding IsButtonPressed}"/>
+                                     IsEnabled="{Binding IsButtonPressed}" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding CheckAccountIDChanged}" CommandParameter="{Binding ElementName=accountIDPasswordBox}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
                         </StackPanel>
                         <StackPanel Style="{StaticResource stackPanelStyle}">
                             <TextBlock Text="Mật khẩu: "  Width="100"/>

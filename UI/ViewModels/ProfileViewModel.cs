@@ -17,16 +17,17 @@ namespace RestaurantManager.ViewModels
 {
     internal class ProfileViewModel : BaseViewModel
     {
-       // private ObservableCollection<Account> accounts;
+        // private ObservableCollection<Account> accounts;
         //public ObservableCollection<Account> Accounts { get { return accounts; } set { if (accounts != value) accounts = value; OnPropertyChanged(); } }
 
+        public bool isMainProfile;
 
         private bool isButtonPressed;
         public bool IsButtonPressed
         {
             get => isButtonPressed; set
             {
-               
+
                 isButtonPressed = value;
                 OnPropertyChanged();
             }
@@ -43,7 +44,7 @@ namespace RestaurantManager.ViewModels
 
                     accountName = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    //LoadAccountInformation();
+
 
                 }
             }
@@ -59,7 +60,6 @@ namespace RestaurantManager.ViewModels
                 {
                     accountEmail = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    //LoadAccountInformation();
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace RestaurantManager.ViewModels
                 {
                     accountPhoneNumber = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    //LoadAccountInformation();
+
                 }
             }
         }
@@ -89,7 +89,6 @@ namespace RestaurantManager.ViewModels
                 {
                     accountID = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    //LoadAccountInformation();
                 }
             }
         }
@@ -104,10 +103,13 @@ namespace RestaurantManager.ViewModels
                 {
                     accountPassword = value;
                     OnPropertyChanged();  // Notify the UI that AccountName has changed
-                    //LoadAccountInformation();
+
                 }
             }
         }
+
+        private string currentPassword;
+        public string CurrentPassword { get => currentPassword; set { currentPassword = value; OnPropertyChanged(); } }
 
         public void LoadAccountInformation()
         {
@@ -120,6 +122,7 @@ namespace RestaurantManager.ViewModels
                 AccountID = acc.AccUsername;
                 AccountPassword = acc.AccPassword;
             }
+            else MessageBox.Show("Không tìm thấy tài khoản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 
         }
 
@@ -140,7 +143,6 @@ namespace RestaurantManager.ViewModels
                 acc.AccDisplayname = AccountName;
                 acc.AccEmail = AccountEmail;
                 acc.AccPhone = AccountPhoneNumber;
-                acc.AccUsername = AccountID;
                 if (acc.AccPassword != AccountPassword)
                 {
                     acc.AccPassword = MD5Hash(Base64Encode(AccountPassword));
@@ -154,27 +156,29 @@ namespace RestaurantManager.ViewModels
         public ICommand PasswordBoxLoadedCommand { get; set; }
         public ICommand IsButtonPressedCommand { get; set; }
         public ICommand SaveButtonPressedCommand { get; set; }
+        public ICommand CheckAccountIDChanged { get; set; }
         public ProfileViewModel()
         {
             IsButtonPressedCommand = new RelayCommand<object>((p) =>
-                {
-                    return !IsButtonPressed;
-                },
+            {
+                return !IsButtonPressed;
+            },
                 (p) =>
                 {
+                    currentPassword = AccountPassword;
                     IsButtonPressed = !IsButtonPressed;
                 }
             );
             SaveButtonPressedCommand = new RelayCommand<object>((p) =>
-                {
-                    return IsButtonPressed;
-                },
+            {
+                return IsButtonPressed;
+            },
                 (p) =>
                 {
                     MessageBoxResult r = MessageBox.Show("Bấm Yes để xác nhận lưu thông tin!", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Asterisk);
                     if (r == MessageBoxResult.Yes)
                     {
-                        
+
                         SaveAccountInformation();
                         IsButtonPressed = false;
                     }
@@ -188,9 +192,15 @@ namespace RestaurantManager.ViewModels
                 //MessageBox.Show($"{AccountPassword}");
                 if (!string.IsNullOrEmpty(p.Password))
                 {
-                    AccountPassword = p.Password;  
+                    AccountPassword = p.Password;
                 }
-            }) ;
+            });
+            CheckAccountIDChanged = new RelayCommand<TextBox>((p) => { return true; }, (p) =>
+            {
+                p.Text = AccountID;
+                p.IsEnabled = false;
+                MessageBox.Show("Không được thay đổi tài khoản!\nVui lòng thay đổi mật khẩu nếu cần đổi bảo mật.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+            });
         }
         public static string Base64Encode(string plainText)
         {

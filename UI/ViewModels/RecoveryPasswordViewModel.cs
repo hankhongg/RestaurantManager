@@ -62,10 +62,11 @@ namespace RestaurantManager.ViewModels
                     System.Windows.MessageBox.Show("Mã xác nhận thành công!", "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
                     p.Close();
                     ProfileWindow profileWindow = new ProfileWindow();
-                    var profileVM = profileWindow.DataContext as ProfileViewModel;
+                    ProfileViewModel? profileVM = profileWindow.DataContext as ProfileViewModel;
                     if (profileVM != null)
                     {
                         profileVM.AccountEmail = TypeInEmail;
+                        profileVM.LoadAccountInformation();
                         profileWindow.DataContext = profileVM;
                         profileWindow.ShowDialog();
                     }
