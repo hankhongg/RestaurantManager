@@ -11,8 +11,12 @@ namespace RestaurantManager.ViewModels
     class FoodLayoutViewModel : BaseViewModel
     {
         public ICommand NewDishCommand { get; set; }
+
         public RelayCommand<object> FoodItemCommand { get; private set; }
         public ICommand FoodItemComand { get; set; }
+
+        public ICommand EditDishComand { get; set; }
+        public RelayCommand<object> EditDishCommand { get; private set; }
         public FoodLayoutViewModel()
         {
 
@@ -22,6 +26,11 @@ namespace RestaurantManager.ViewModels
             });
             FoodItemCommand = new RelayCommand<object>((p) => { return true; }, (p) => {
                 FoodItemWindow wd = new FoodItemWindow();
+                wd.ShowDialog();
+            });
+            EditDishComand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                EditDishWindow wd = new EditDishWindow();
                 wd.ShowDialog();
             });
         }
