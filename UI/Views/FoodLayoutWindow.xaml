@@ -62,7 +62,7 @@
                         <Button Content="Xóa món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent"/>
                     </Grid>
                     <Grid Grid.Column="2">
-                        <Button Content="Sửa món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent"/>
+                        <Button Content="Sửa món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent" Command="{Binding FoodItemCommand}"/>
                     </Grid>
                 </Grid>
 
