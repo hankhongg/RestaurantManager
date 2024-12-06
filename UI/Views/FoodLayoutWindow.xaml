@@ -93,9 +93,9 @@
                     <RowDefinition Height="369*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Background="White">
-                    <TextBlock x:Name="menutextblock" Text="^^" HorizontalAlignment="Center" VerticalAlignment="Center"
-                 FontSize="25"   Foreground="DimGray"/>
-
+                    <Border VerticalAlignment="Center"  HorizontalAlignment="Center">
+                        <Image Source="Images\logo.png"></Image>
+                    </Border>
                 </Grid>
                 <Grid Grid.Row="1" >
                     <StackPanel>
