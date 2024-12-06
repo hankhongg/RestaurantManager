@@ -5,13 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d"
-        Title="NewDishWindow" Height="450" Width="800" Background="#FF55B6E9">
+        Title="Màn hình từng món" Height="450" Width="800" 
+        Name="newDishWindow"
+        xmlns:fooduc="clr-namespace:RestaurantManager.Views.UserControls"
+        WindowStyle="None">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
+    </WindowChrome.WindowChrome>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="19*"></RowDefinition>
             <RowDefinition Height="198*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="1" Margin="0,17,0,0">
+        <Grid Grid.Row="0">
+            <fooduc:ControlBar Grid.ColumnSpan="2" Tag="{Binding Title, ElementName=newDishWindow}"></fooduc:ControlBar>
+        </Grid>
+        <Grid Grid.Row="2" Margin="0,17,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition ></ColumnDefinition>
                 <ColumnDefinition ></ColumnDefinition>
@@ -29,7 +39,7 @@
                 <Grid Grid.Row="1">
                     <Button Content="Chọn ảnh" Height="50" Width="100" HorizontalAlignment="Center" 
                VerticalAlignment="Center" Background="#4CA3F2" Foreground="White" 
-                BorderBrush="Transparent" BorderThickness="1" FontWeight="Bold" FontSize="14" 
+               BorderBrush="Transparent" BorderThickness="1" FontWeight="Bold" FontSize="14" 
                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
                 </Grid>
             </Grid>
@@ -44,11 +54,11 @@
                 <Grid Grid.Row="1" Margin="10">
                     <!-- Các nút hành động -->
                     <Button Content="Lưu" Height="50" Width="100" HorizontalAlignment="Left" 
-               VerticalAlignment="Top" Background="#4CA3F2" Foreground="White" 
-             BorderBrush="Transparent"   BorderThickness="1" FontWeight="Bold" FontSize="14" Margin="112,20,0,0"/>
+                    VerticalAlignment="Top" Background="#4CA3F2" Foreground="White" 
+                    BorderBrush="Transparent"   BorderThickness="1" FontWeight="Bold" FontSize="14" Margin="112,20,0,0"/>
                     <Button Content="Thoát" Height="50" Width="100" HorizontalAlignment="Left" 
-               VerticalAlignment="Top" Background="#FF5C5C" Foreground="White" 
-               BorderBrush="Transparent" BorderThickness="1" FontWeight="Bold" FontSize="14" Margin="255,20,0,0"/>
+                    VerticalAlignment="Top" Background="#FF5C5C" Foreground="White" 
+                    BorderBrush="Transparent" BorderThickness="1" FontWeight="Bold" FontSize="14" Margin="255,20,0,0"/>
                 </Grid>
 
                 <Grid Grid.Row="0" Margin="10">
@@ -59,11 +69,11 @@
                     Background="#F5F5F5" BorderBrush="#D1D1D1" BorderThickness="1" />
 
                         <TextBlock Text="Giá gốc món ăn:" FontWeight="SemiBold" FontSize="14" Foreground="#333333"/>
-                        <TextBox Text="30000" Height="40" Width="200" Margin="0,0" Padding="10"
+                        <TextBox Text="3000" Height="40" Width="200" Margin="0,0" Padding="10"
                     Background="#F5F5F5" BorderBrush="#D1D1D1" BorderThickness="1" />
 
                         <TextBlock Text="Giá món ăn:" FontWeight="SemiBold" FontSize="14" Foreground="#333333"/>
-                        <TextBox Text="5000" Height="40" Width="200" Margin="0,0" Padding="10"
+                        <TextBox Text="50000" Height="40" Width="200" Margin="0,0" Padding="10"
                     Background="#F5F5F5" BorderBrush="#D1D1D1" BorderThickness="1" />
 
                         <TextBlock Text="Loại món ăn:" FontWeight="SemiBold" FontSize="14" Foreground="#333333"/>
@@ -73,5 +83,7 @@
                 </Grid>
             </Grid>
         </Grid>
+        <Border CornerRadius="10" Grid.ColumnSpan="2" Grid.RowSpan="3" Panel.ZIndex="-1" Background="#FF55B6E9">
+        </Border>
     </Grid>
 </Window>

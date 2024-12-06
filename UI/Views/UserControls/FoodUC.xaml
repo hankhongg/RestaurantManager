@@ -14,7 +14,7 @@
 
             <!-- Price Label -->
             <Border  CornerRadius="10" Width="60" HorizontalAlignment="Left" Background="#FF00BAFF" Height="20" VerticalAlignment="Top" >
-                <TextBlock Text="45000"
+                <TextBlock Text="45,000"
        FontWeight="Bold"
        Foreground="White"                
        TextAlignment="Center"

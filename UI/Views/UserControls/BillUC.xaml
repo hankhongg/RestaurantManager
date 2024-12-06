@@ -24,10 +24,10 @@
             <TextBlock Text="Giá thường: 45000" FontStyle="Italic" Foreground="White" Margin="0,0,0,10" />
             <!-- Các nút -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="-" Command="{Binding DecreaseCommand}" Background="White" Width="40" Height="40" Margin="0,0,0,0" BorderThickness="1" BorderBrush="White"/>
-                <Button Content="+" Command="{Binding IncreaseCommand}" Background="White" Width="40" Height="40" Margin="30,0,0,0" BorderThickness="1" BorderBrush="White" />
-                <Button Content="Sửa" Command="{Binding EditCommand}"  Background="White" Width="40" Height="40"  Margin="30,0,0,0" BorderThickness="1" BorderBrush="White"/>
-                <Button Content="Xóa" Command="{Binding DeleteCommand}"  Background="White" Width="40" Height="40" Foreground="Red" Margin="30,0,0,0" BorderThickness="1" BorderBrush="White" />
+                <Button Content="-" Command="{Binding DecreaseCommand}" Background="White" Width="40" Height="40" Margin="0,0,0,0" BorderThickness="1" BorderBrush="Transparent"/>
+                <Button Content="+" Command="{Binding IncreaseCommand}" Background="White" Width="40" Height="40" Margin="30,0,0,0" BorderThickness="1" BorderBrush="Transparent" />
+                <Button Content="Sửa" Command="{Binding EditCommand}"  Background="White" Width="40" Height="40"  Margin="30,0,0,0" BorderThickness="1" BorderBrush="Transparent"/>
+                <Button Content="Xóa" Command="{Binding DeleteCommand}"  Background="White" Width="40" Height="40" Foreground="Red" Margin="30,0,0,0" BorderThickness="1" BorderBrush="Transparent"/>
             </StackPanel>
         </StackPanel>
     </Border>

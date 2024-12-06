@@ -5,20 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d"
-        Title="FoodItemWindow" Height="450" Width="800">
+        Name="foodItemWindow"
+        Title="Màn hình sửa hóa đơn" Height="450" Width="800"
+        WindowStyle="None" 
+        xmlns:fooduc="clr-namespace:RestaurantManager.Views.UserControls">
     <Window.Resources>
         <!-- Màu xanh nước biển hiện đại -->
         <SolidColorBrush x:Key="LightBlue" Color="#A7D8F2"/>
         <SolidColorBrush x:Key="DarkBlue" Color="#039BE5"/>
+        <Style TargetType="Label" BasedOn="{StaticResource TextControl}">
+            <Setter Property="FontWeight" Value="DemiBold"></Setter>
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource TextControl}"></Style>
+        <Style TargetType="PasswordBox" BasedOn="{StaticResource TextControl}"></Style>
     </Window.Resources>
-    <Grid Background="White">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition ></RowDefinition>
             <RowDefinition ></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
-
+        <Grid Grid.Row="0">
+            <fooduc:ControlBar Grid.ColumnSpan="2" Tag="{Binding Title, ElementName=foodItemWindow}"></fooduc:ControlBar>
+        </Grid>
+        <Border CornerRadius="10" Grid.ColumnSpan="3" Grid.RowSpan="3" Panel.ZIndex="-1" Background="White">
+        </Border>
         <!-- Phần Giới thiệu Giá bán -->
         <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
@@ -26,8 +41,7 @@
                 <ColumnDefinition Width="19*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Giá bán" FontSize="20" FontWeight="Bold" Foreground="{StaticResource DarkBlue}" Margin="20,60,0,10"/>
-            <TextBox Text="30000" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="2" Margin="20,103,5,28" FontSize="20" TextWrapping="Wrap"
-                     VerticalContentAlignment="Center" FontWeight="Medium"/>
+            <TextBox Text="30000" Background="White" BorderBrush="{StaticResource DarkBlue}" BorderThickness="2" Margin="20,103,5,28"  FontSize="16" TextWrapping="Wrap"/>
             <TextBlock Text="Rau muống luộc" FontSize="22" FontWeight="Bold" HorizontalAlignment="Left" Foreground="{StaticResource DarkBlue}" Margin="20,10,0,132"  Width="182"/>
         </Grid>
 
@@ -44,7 +58,7 @@
                 <Button Content="+" Width="40" Height="40"  Background="{StaticResource DarkBlue}" Foreground="White" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Left"/>
             </StackPanel>
             <!-- Nút xóa -->
-            <Button Content="Xóa" Width="48" HorizontalAlignment="Right" Background="White" Foreground="#FFFF0505" BorderBrush="{StaticResource DarkBlue}" BorderThickness="1" Margin="0,86,147,44"/>
+            <Button Content="Xóa" Width="50" HorizontalAlignment="Right" Background="White" Foreground="#FFFF0505" BorderBrush="{StaticResource DarkBlue}" BorderThickness="1" Margin="0,86,147,44"/>
         </Grid>
 
         <!-- Phần Xác nhận -->
