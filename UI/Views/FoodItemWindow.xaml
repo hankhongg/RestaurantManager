@@ -8,7 +8,8 @@
         Name="foodItemWindow"
         Title="Màn hình sửa hóa đơn" Height="450" Width="800"
         WindowStyle="None" 
-        xmlns:fooduc="clr-namespace:RestaurantManager.Views.UserControls" Background="Transparent">
+        xmlns:fooduc="clr-namespace:RestaurantManager.Views.UserControls" Background="Transparent" 
+        DataContext="{StaticResource FoodItemVM}">
     <Window.Resources>
         <!-- Màu xanh nước biển hiện đại -->
         <SolidColorBrush x:Key="LightBlue" Color="#A7D8F2"/>

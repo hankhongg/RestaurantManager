@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="120" d:DesignWidth="400">
+             d:DesignHeight="120" d:DesignWidth="400"
+             Name="billuc" DataContext="{StaticResource BillUCVM}">
     <Border  Background="#FF00C3FF"  CornerRadius="10" Padding="10" Margin="5">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <!-- Tên món ăn và giá -->

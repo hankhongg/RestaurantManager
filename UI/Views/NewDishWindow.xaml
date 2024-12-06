@@ -8,7 +8,7 @@
         Title="Màn hình từng món" Height="450" Width="800" 
         Name="newDishWindow"
         xmlns:fooduc="clr-namespace:RestaurantManager.Views.UserControls"
-        WindowStyle="None" Background="Transparent">
+        WindowStyle="None" Background="Transparent" DataContext="{StaticResource NewDishVM}">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>

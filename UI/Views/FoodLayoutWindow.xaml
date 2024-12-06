@@ -9,7 +9,7 @@
         xmlns:fooduc="clr-namespace:RestaurantManager.Views.UserControls"
         Title="Màn hình đặt món"
         Name="foodLayoutWindow" 
-        WindowStyle="None" Background="Transparent">
+        WindowStyle="None" Background="Transparent" DataContext="{StaticResource FoodLayoutVM}">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
@@ -56,7 +56,7 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <Button Content="Thêm món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent"/>
+                        <Button Content="Thêm món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent" Command="{Binding NewDishCommand}"/>
                     </Grid>
                     <Grid Grid.Column="1" >
                         <Button Content="Xóa món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent"/>
@@ -89,7 +89,7 @@
             </Grid>
             <Grid Grid.Column="0" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="37*"></RowDefinition>
+                    <RowDefinition Height="37.6*"></RowDefinition>
                     <RowDefinition Height="369*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Background="White">
@@ -111,15 +111,30 @@
             </Grid>
             <Grid Grid.Column="2" Width="246" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="43*"></RowDefinition>
+                    <RowDefinition Height="41*"></RowDefinition>
                     <RowDefinition Height="268*"></RowDefinition>
                     <RowDefinition Height="69*"></RowDefinition>
                     <RowDefinition Height="54*" ></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="1" Background="White">
-                    <StackPanel Height="230">
-                        <TextBlock Text="Hóa đơn" Style="{StaticResource ResourceKey=txtReceiptStyle}"></TextBlock>
-                    </StackPanel>
+                    <TextBlock Text="Danh sách đơn" Foreground="DimGray" Width="100" Height="25" FontStyle="Italic" Padding="10" ></TextBlock>
+                    <!-- Danh sách món ăn -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding FoodItems}">
+                            <!-- Sử dụng WrapPanel để tự động sắp xếp -->
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <!-- Template cho từng món ăn -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <fooduc:BillUC DataContext="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Grid>
                 <Grid Grid.Row="2"  Background="#FFE4E6E9">
                     <TextBlock Text="" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" Foreground="DimGray">                 
