@@ -147,21 +147,29 @@ namespace RestaurantManager.ViewModels
                 return true;
             }, (p) =>
             {
-                if (string.IsNullOrEmpty(EmployeeName) || string.IsNullOrEmpty(EmployeePhone))
+                try
                 {
-                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                    return;
+                    if (string.IsNullOrEmpty(EmployeeName) || string.IsNullOrEmpty(EmployeePhone))
+                    {
+                        MessageBox.Show("Vui lòng nhập đầy đủ thông tin", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                        return;
+                    }
+                    var employeeList = DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false && x.EmpPhone == EmployeePhone);
+                    if (((employeeList == null || employeeList.Count() != 0) && managementID == 0))
+                    {
+                        MessageBox.Show("Số điện thoại này đã tồn tại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                        return;
+                    }
+                    EmployeeNumber = DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false).Count();
+                    if (managementID == 0)
+                        addNewEmployee(p, EmployeeNumber + 1);
+                    else EditEmployee(p);
+
                 }
-                var employeeList = DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false && x.EmpPhone == EmployeePhone);
-                if (((employeeList == null || employeeList.Count() != 0) && managementID == 0))
+                catch (FormatException)
                 {
-                    MessageBox.Show("Số điện thoại này đã tồn tại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                    return;
+                    MessageBox.Show("Sai định dạng nhập lương, vui lòng thử lại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 }
-                EmployeeNumber = DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false).Count();
-                if (managementID == 0)
-                    addNewEmployee(p, EmployeeNumber + 1);
-                else EditEmployee(p);
             });
             CancelInfo = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
@@ -186,6 +194,7 @@ namespace RestaurantManager.ViewModels
                 EmpName = EmployeeName,
                 EmpAddr = EmployeeAddress,
                 EmpPhone = EmployeePhone,
+                EmpRole = EmployeeRole,
                 EmpCccd = EmployeeCccd,
                 EmpSalary = decimal.Parse(EmployeeSalary),
                 Isdeleted = IsDeleted
@@ -209,6 +218,7 @@ namespace RestaurantManager.ViewModels
                 EmpName = EmployeeName,
                 EmpAddr = EmployeeAddress,
                 EmpPhone = EmployeePhone,
+                EmpRole = EmployeeRole,
                 EmpCccd = EmployeeCccd,
                 EmpSalary = decimal.Parse(EmployeeSalary),
                 Isdeleted = false

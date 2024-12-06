@@ -1,5 +1,5 @@
-﻿<Window x:Class="RestaurantManager.Views.AddEmpWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Window x:Class="RestaurantManager.Views.UserControls.AddStockInWindow"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,7 +7,7 @@
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterOwner" Background="Transparent"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         Title="AddEmpWindow" Height="800" Width="750" DataContext="{StaticResource EmployeeMangementVM}" 
-        x:Name="addEmpWindow">
+        x:Name="addStkWindow">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
 
@@ -39,7 +39,7 @@
                     <GradientStop Color="WhiteSmoke" Offset="0.15"/>
                 </LinearGradientBrush>
             </Border.Background>
-            <TextBlock Text="Thêm thông tin nhân viên" FontSize="25" FontWeight="Bold"
+            <TextBlock Text="Thêm thông tin nhập kho" FontSize="25" FontWeight="Bold"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
 
@@ -140,7 +140,7 @@
                 <Border Grid.Row="1">
                     <TextBox x:Name="txtSalary" FontSize="20" Width="auto" Margin="0,0,0,15"
                              VerticalContentAlignment="Center" Style="{StaticResource txtStyle}"
-                             Text="{Binding EmployeeSalary, UpdateSourceTrigger=PropertyChanged}"/>         
+                             Text="{Binding EmployeeSalary, UpdateSourceTrigger=PropertyChanged}"/>
                 </Border>
             </Grid>
         </Grid>
@@ -154,7 +154,7 @@
                     Content="HỦY THÔNG TIN" Command="{Binding CancelInfo}"/>
             <Button Grid.Column="1" Style="{StaticResource buttonStyle}"
                     Content="XÁC NHẬN" CommandParameter="{Binding ElementName=addEmpWindow}"
-                    Command="{Binding ConfirmInfo}" IsDefault="True"/>
+                    Command="{Binding ConfirmInfo}" />
         </Grid>
     </Grid>
 </Window>

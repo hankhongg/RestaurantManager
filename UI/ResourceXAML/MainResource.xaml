@@ -11,5 +11,6 @@
     <viewmodel:RecoveryPasswordViewModel x:Key="RecoveryVM"></viewmodel:RecoveryPasswordViewModel>
     <viewmodel:CustomerManagementViewModel x:Key="CustomerMangementVM"></viewmodel:CustomerManagementViewModel>
     <viewmodel:EmployeeManagementViewModel x:Key="EmployeeMangementVM"></viewmodel:EmployeeManagementViewModel>
+    <viewmodel:StockInManagementViewModel x:Key="StockInManagementVM"></viewmodel:StockInManagementViewModel>
     <viewmodel:OrderViewModel x:Key="OrderVM"></viewmodel:OrderViewModel>
 </ResourceDictionary>

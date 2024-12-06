@@ -28,7 +28,8 @@
         <!--Chia dòng trong form-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="31*"></RowDefinition>
+            <RowDefinition Height="939*"/>
             <RowDefinition Height="80"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -36,7 +37,7 @@
         từ xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" (UserControls)-->
         <controlbar:ControlBar Tag="{Binding Title, ElementName=mainWindow}"></controlbar:ControlBar>
         <!--Thêm thanh điều hướng ở dưới (có hình ngôi nhà)-->
-        <DockPanel Grid.Row="2" Height="80" VerticalAlignment="Bottom">
+        <DockPanel Grid.Row="3" Height="80" VerticalAlignment="Center">
             <DockPanel.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </DockPanel.Background>
@@ -53,14 +54,14 @@
         </DockPanel>
 
         <!--Tô màu cho background của form-->
-        <Border Grid.Row="1">
+        <Border Grid.Row="1" Grid.RowSpan="2">
             <Border.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </Border.Background>
         </Border>
 
         <!--Tab control cho form (gồm menu, tất cả đơn, sơ đồ bàn và bookings-->
-        <TabControl Grid.Row="1" SelectedIndex="1">
+        <TabControl Grid.Row="1" SelectedIndex="1" Grid.RowSpan="2">
             <TabControl.Background>
                 <!--Tô màu cho Grid.Row="1" (cũng là khu vực của Tab Control vừa tạo)-->
                 <LinearGradientBrush>
@@ -74,7 +75,7 @@
                 <TabItem.Header>
                     <Border BorderThickness="0">
                         <Image Source="Images/menu_black.png" Height="70" Cursor="Hand">
-                            
+
                         </Image>
                     </Border>
                 </TabItem.Header>
@@ -88,11 +89,11 @@
                                  Background="Transparent" BorderThickness="0">
                             <Grid></Grid>
                         </TabItem>
-                        
+
                         <!--Stock-in Management-->
-                        <TabItem Header="Quản lý tồn kho" Style="{StaticResource TabItemStyle}" 
+                        <TabItem Header="Quản lý nhập kho" Style="{StaticResource TabItemStyle}" 
                                  FontWeight="SemiBold" FontSize="30" Padding="30"
-                                 Background="Transparent" BorderThickness="0">          
+                                 Background="Transparent" BorderThickness="0">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="9*"></RowDefinition>
@@ -101,41 +102,44 @@
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
                                           BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding StockinList}">
                                     <DataGrid.Columns>
-                                        <!--STT-->
-                                        <DataGridTextColumn Header="STT" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding StoId}">
-                                            <DataGridTextColumn.ElementStyle>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                    <Setter Property="FontSize" Value="20"/>
-                                                </Style>
-                                            </DataGridTextColumn.ElementStyle>
-                                        </DataGridTextColumn>
                                         <!--Mã tồn kho-->
-                                        <DataGridTextColumn Header="Mã tồn kho" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                        <DataGridTextColumn Header="Mã nhập kho" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                                                             Binding="{Binding StoCode}">
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                    <Setter Property="FontSize" Value="20"/>
+                                                    <Setter Property="FontSize" Value="28"/>
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
                                         <!--Ngày tồn kho-->
-                                        <DataGridTextColumn Header="Ngày tồn kho" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding StoDate}" 
-                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>             
+                                        <DataGridTextColumn Header="Ngày nhập kho" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding StoDate}">
+                                            <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="28"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
                                         <!--Giá tồn kho-->
-                                        <DataGridTextColumn Header="Giá tồn kho" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding StoPrice}" 
-                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>                 
+                                        <DataGridTextColumn Header="Giá nhập kho" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding StoPrice, StringFormat={}{0:0}}" >
+                                            <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="28"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
                                     <Button Content="Thêm" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
                                     <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
                                     <Button Content="Sửa" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
-                                    <Button Content="Lưu" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
                                 </StackPanel>
                             </Grid>
                         </TabItem>
@@ -191,7 +195,7 @@
                                 </StackPanel>
                             </Grid>
                         </TabItem>
-                        
+
                         <!--Employee Management-->
                         <TabItem Header="Quản lý nhân viên" Style="{StaticResource TabItemStyle}" 
                                  FontWeight="SemiBold" FontSize="30" Padding="30"
@@ -230,6 +234,10 @@
                                         <!--Vị trí nhân viên-->
                                         <DataGridTextColumn Header="Vị trí" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                                                             Binding="{Binding EmpRole}" 
+                                                            ElementStyle="{StaticResource ElementStyleConfiguration}"/>
+                                        <!--Lương nhân viên-->
+                                        <DataGridTextColumn Header="Lương" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding EmpSalary, StringFormat={}{0:0}}" 
                                                             ElementStyle="{StaticResource ElementStyleConfiguration}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -319,7 +327,7 @@
 
                         </WrapPanel>
                     </ScrollViewer>
-                    
+
 
                 </Grid>
             </TabItem>
@@ -333,7 +341,7 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <!--Booking UC-->
                     <Grid Grid.Column="0">
                         <WrapPanel Margin="10">
@@ -348,7 +356,7 @@
                             <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
                         </WrapPanel>
                     </Grid>
-                    
+
                     <Grid Grid.Column="1">
                         <!--Background của button-->
                         <Grid.Background>
@@ -391,7 +399,7 @@
         </TabControl>
 
         <!--DockPanel để hiển thị Icon người dùng ở góc trên phải của form-->
-        <DockPanel Height ="80" VerticalAlignment="Top" Grid.Row="1">
+        <DockPanel Height ="80" VerticalAlignment="Top" Grid.Row="1" Grid.RowSpan="2">
             <Border Height="80" Grid.Row="1" VerticalAlignment="Center" CornerRadius="8,0,0,8"
                HorizontalAlignment="Right" Background="GhostWhite">
                 <Image Source="Images/account_black.png" Cursor="Hand">

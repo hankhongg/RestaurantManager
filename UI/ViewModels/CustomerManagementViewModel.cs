@@ -49,9 +49,8 @@ namespace RestaurantManager.ViewModels
             get { return customerCode; }
             set { customerCode = value; }
         }
-
+        // Customer Name
         private string customerName;
-
         public string CustomerName
         {
             get { return customerName; }
@@ -122,7 +121,6 @@ namespace RestaurantManager.ViewModels
             get { return _isDeleted; }
             set { _isDeleted = value; }
         }
-
 
         public ICommand ConfirmInfo { get; set; }
         public ICommand CancelInfo { get; set; }

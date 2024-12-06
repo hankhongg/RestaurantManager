@@ -91,18 +91,22 @@ namespace RestaurantManager.ViewModels
 
 
         public MainViewModel() {
-            // này là làm 
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
-
-
-            //CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
-            
-            
-            //EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
-            
-            
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
-            StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+            
+            StockinList = new ObservableCollection<Stockin>(
+                from stockIn in DataProvider.Instance.DB.Stockins
+                join IngresStockin in DataProvider.Instance.DB.StockinDetailsIngres 
+                    on stockIn.StoId equals IngresStockin.StoId
+                join DrinkOtherStockIn in DataProvider.Instance.DB.StockinDetailsDrinkOthers
+                    on stockIn.StoId equals DrinkOtherStockIn.StoId
+                select new Stockin
+                {
+                    StoId = stockIn.StoId,
+                }
+            );
+
+            
 
         WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
             { 
