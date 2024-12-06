@@ -32,7 +32,7 @@
         <Grid Grid.Row="0">
             <fooduc:ControlBar Grid.ColumnSpan="2" Tag="{Binding Title, ElementName=foodItemWindow}"></fooduc:ControlBar>
         </Grid>
-        <Border CornerRadius="10" Grid.ColumnSpan="3" Grid.RowSpan="3" Panel.ZIndex="-1" Background="White">
+        <Border CornerRadius="10" Grid.ColumnSpan="2" Grid.RowSpan="4" Panel.ZIndex="-1" Background="White">
         </Border>
         <!-- Phần Giới thiệu Giá bán -->
         <Grid Grid.Row="1" >
