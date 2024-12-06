@@ -23,7 +23,6 @@
             + chọn bàn: chỉ hiện bàn đang trống>chọn>binding lưu và tạm tính(10)
             + tổng tiền: tính tổng giá trị các đơn hiện có(cập nhập liên tục)(9)
             + nút thoát, lưu, lưu và tạm tính, thanh toán(11)-->
-
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
@@ -84,20 +83,20 @@
                     <TextBlock Text="Danh sách món ăn" Foreground="White" Width="100" Height="25" FontStyle="Italic" ></TextBlock>
                     <!-- Danh sách món ăn -->
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding FoodItems}">
-                            <!-- Sử dụng WrapPanel để tự động sắp xếp -->
+                        <!--<ItemsControl ItemsSource="{Binding FoodItems}">
+                            --><!-- Sử dụng WrapPanel để tự động sắp xếp --><!--
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            <!-- Template cho từng món ăn -->
+                            --><!-- Template cho từng món ăn --><!--
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <fooduc:FoodUC DataContext="{Binding}" Width="150" Height="150" Margin="5" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        </ItemsControl>-->
                     </ScrollViewer>
                 </Grid>
             </Grid>
@@ -148,20 +147,20 @@
                     <TextBlock Text="Danh sách đơn" Foreground="DimGray" Width="100" Height="25" FontStyle="Italic" Padding="10" ></TextBlock>
                     <!-- Danh sách món ăn -->
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding FoodItems}">
-                            <!-- Sử dụng WrapPanel để tự động sắp xếp -->
+                        <!--<ItemsControl ItemsSource="{Binding FoodItems}">
+                            --><!-- Sử dụng WrapPanel để tự động sắp xếp --><!--
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Vertical" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            <!-- Template cho từng món ăn -->
+                            --><!-- Template cho từng món ăn --><!--
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <fooduc:BillUC DataContext="{Binding}"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        </ItemsControl>-->
                     </ScrollViewer>
                 </Grid>
                 <Grid Grid.Row="2"  Background="#FFE4E6E9">
