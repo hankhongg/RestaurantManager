@@ -10,6 +10,20 @@
         Title="Màn hình đặt món"
         Name="foodLayoutWindow" 
         WindowStyle="None" Background="Transparent" DataContext="{StaticResource FoodLayoutVM}">
+    
+            <!--- các chức năng backend của FoodLayoutWindow:
+            + thêm món ăn: thêm vào database=foodItemWin(1)
+            + sửa món ăn: sửa database/dùng chung foodItemWin hay tách riêng?(4)
+            + xóa món ăn: xóa database(7)
+            + usercontrol fooditem: tự động hiện nội dung trong database(2)
+            + nhấn 1 lần vào fooditemUC> tạo 1 đơn> cộng, trừ , sửa> sửa đơn(5)
+            + nhấn giữ fooditemUC> hiện chức năng xóa/sửa món ăn(6)
+            + chuyển tab(3)
+            + tìm tên: tương tự tabcontrol>chỉ hiện foodituc trùng tên(8)
+            + chọn bàn: chỉ hiện bàn đang trống>chọn>binding lưu và tạm tính(10)
+            + tổng tiền: tính tổng giá trị các đơn hiện có(cập nhập liên tục)(9)
+            + nút thoát, lưu, lưu và tạm tính, thanh toán(11)-->
+
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
