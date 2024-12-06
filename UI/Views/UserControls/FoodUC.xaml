@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d"
-        Title="FoodUC" Height="200" Width="250">
+        Title="FoodUC" Height="200" Width="250" WindowStyle="None">
     <Border CornerRadius="10" >
         <Grid>
 

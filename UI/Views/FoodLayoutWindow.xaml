@@ -9,7 +9,7 @@
         xmlns:fooduc="clr-namespace:RestaurantManager.Views.UserControls"
         Title="Màn hình đặt món"
         Name="foodLayoutWindow" 
-        WindowStyle="None">
+        WindowStyle="None" Background="Transparent">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
