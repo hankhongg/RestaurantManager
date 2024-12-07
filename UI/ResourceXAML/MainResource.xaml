@@ -13,4 +13,10 @@
     <viewmodel:EmployeeManagementViewModel x:Key="EmployeeMangementVM"></viewmodel:EmployeeManagementViewModel>
     <viewmodel:StockInManagementViewModel x:Key="StockInManagementVM"></viewmodel:StockInManagementViewModel>
     <viewmodel:OrderViewModel x:Key="OrderVM"></viewmodel:OrderViewModel>
+    <viewmodel:BillUCViewModel x:Key="BillUCVM"></viewmodel:BillUCViewModel>
+    <viewmodel:FoodItemUCViewModel x:Key="FoodItemUCVM"></viewmodel:FoodItemUCViewModel>
+    <viewmodel:FoodItemViewModel x:Key="FoodItemVM"></viewmodel:FoodItemViewModel>
+    <viewmodel:FoodLayoutViewModel x:Key="FoodLayoutVM"></viewmodel:FoodLayoutViewModel>
+    <viewmodel:NewDishViewModel x:Key="NewDishVM"></viewmodel:NewDishViewModel>
+    <viewmodel:EditDishViewModel x:Key="EditDishVM"></viewmodel:EditDishViewModel>
 </ResourceDictionary>

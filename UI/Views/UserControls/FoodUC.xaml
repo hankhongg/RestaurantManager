@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d"
-        Title="FoodUC" Height="200" Width="250">
+        Title="món" Height="200" Width="250" WindowStyle="None" Name="foodUC" DataContext="{StaticResource FoodItemUCVM}">
     <Border CornerRadius="10" >
         <Grid>
 
@@ -14,7 +14,7 @@
 
             <!-- Price Label -->
             <Border  CornerRadius="10" Width="60" HorizontalAlignment="Left" Background="#FF00BAFF" Height="20" VerticalAlignment="Top" >
-                <TextBlock Text="45000"
+                <TextBlock Text="45,000"
        FontWeight="Bold"
        Foreground="White"                
        TextAlignment="Center"

@@ -21,6 +21,7 @@
         <Setter Property="Margin" Value="-1,0,0,0"></Setter>
         <Setter Property="Foreground" Value="DimGray"></Setter>
         <Setter Property="Text" Value="Chọn bàn >"></Setter>
+        <Setter Property="FontStyle" Value="Italic"></Setter>
     </Style>
     <Style TargetType="TextBlock" x:Key="txtReceiptStyle">
         <Setter Property="Background" Value="#0088FE"></Setter>
