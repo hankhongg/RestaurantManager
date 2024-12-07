@@ -355,6 +355,7 @@ namespace RestaurantManager.ViewModels
                     if (stockInVM.isConfirmed)
                     {
                         // Add new stockin into data grid row
+                    tryagain:
                         int existedStockInNumber = DataProvider.Instance.DB.Stockins.Count();
                         string query = $"DBCC CHECKIDENT ('STOCKIN', RESEED, {existedStockInNumber + 1})";
                         DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
@@ -379,6 +380,35 @@ namespace RestaurantManager.ViewModels
                                 DataProvider.Instance.DB.SaveChanges();
                                 StockinList.Add(stockInVM.NewStockIn);
                             }
+
+                            // Cập nhật STO_PRICE từ STOCKIN_DETAILS_INGRE
+                            string query1 = @"
+                                SET STO_PRICE = (
+                                    SELECT SUM(SI.CPRICE * SI.QUANTITY_KG)
+                                    FROM STOCKIN_DETAILS_INGRE SI
+                                    WHERE SI.STO_ID = STOCKIN.STO_ID
+                                )
+                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_INGRE);
+";
+
+                            // Thực thi câu lệnh SQL đầu tiên
+                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
+
+                            // Cập nhật STO_PRICE từ STOCKIN_DETAILS_DRINK_OTHER
+                            string query2 = @"
+                                UPDATE STOCKIN
+                                SET STO_PRICE = COALESCE(STO_PRICE, 0) + (
+                                    SELECT SUM(SD.CPRICE * SD.QUANTITY_UNITS)
+                                    FROM STOCKIN_DETAILS_DRINK_OTHER SD
+                                    WHERE SD.STO_ID = STOCKIN.STO_ID
+                                )
+                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_DRINK_OTHER);
+                            ";
+
+                            // Thực thi câu lệnh SQL thứ hai
+                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
+
+
                             StockinList = new ObservableCollection<Stockin>(
                                 (from stkIn in DataProvider.Instance.DB.Stockins
                                  join stkInDetails in DataProvider.Instance.DB.StockinDetailsIngre
@@ -387,29 +417,11 @@ namespace RestaurantManager.ViewModels
                                  on stkInDetails.IngreId equals ingre.IngreId
                                  select stkIn)
                                 .Distinct());
-
-                            query = $"SET STO_PRICE = (\r\n    " +
-                                    $"SELECT SUM(SI.CPRICE * SI.QUANTITY_KG)\r\n    " +
-                                    $"FROM STOCKIN_DETAILS_INGRE SI\r\n    " +
-                                    $"WHERE SI.STO_ID = STOCKIN.STO_ID\r\n)\r\n" +
-                                    $"WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_INGRE);";
-                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
-                            query = $"UPDATE STOCKIN \r\n" +
-                                    $"SET STO_PRICE = COALESCE(STO_PRICE, 0) + (\r\n    " +
-                                    $"SELECT SUM(SD.CPRICE * SD.QUANTITY_UNITS)\r\n    " +
-                                    $"FROM STOCKIN_DETAILS_DRINK_OTHER SD\r\n    " +
-                                    $"WHERE SD.STO_ID = STOCKIN.STO_ID\r\n)\r\n" +
-                                    $"WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_DRINK_OTHER);";
-                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
-
-
-
                         }
-
-
                         catch (Microsoft.EntityFrameworkCore.DbUpdateException)
                         {
                             MessageBox.Show("Đã tồn tại mã nguyên liệu hoặc mã mặt hàng, vui lòng thử lại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                            goto tryagain;
                         }
                     }
                 }

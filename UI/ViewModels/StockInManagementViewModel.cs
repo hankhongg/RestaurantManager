@@ -208,8 +208,17 @@ namespace RestaurantManager.ViewModels
                         managementID = 2;
                         IsEnable = false;
                         isConfirmed = true;
+
+                        var isIngreIdExisted = DataProvider.Instance.DB.StockinDetailsIngre.Where(x => x.IngreId == int.Parse(StockInDetailsID));
+                        var isDrinkOtherIdExisted = DataProvider.Instance.DB.StockinDetailsDrinkOthers.Where(x => x.ItemId == int.Parse(StockInDetailsID));
+
                         if (SelectedIdxStockin == 0)
                         {
+                            if (isIngreIdExisted.Count() != 0 || isIngreIdExisted == null)
+                            {
+                                MessageBox.Show("Nguyên liệu đã tồn tại trong kho, vui lòng kiểm tra lại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                                return;
+                            }
                             NewIngreStockin = new StockinDetailsIngre()
                             {
                                 StoId = int.Parse(StockInID),
@@ -220,6 +229,11 @@ namespace RestaurantManager.ViewModels
                         }
                         else
                         {
+                            if (isDrinkOtherIdExisted.Count() != 0 || isDrinkOtherIdExisted == null)
+                            {
+                                MessageBox.Show("Mặt hàng đã tồn tại trong kho, vui lòng kiểm tra lại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                                return;
+                            }
                             newDrinkOtherStockin = new StockinDetailsDrinkOther()
                             {
                                 StoId = int.Parse(StockInID),
@@ -229,7 +243,6 @@ namespace RestaurantManager.ViewModels
                             };
                         }
                         IsEnable = true;
-
                         StockInID = "";
                         StockInQuantity = "";
                         CostPrice = "";
