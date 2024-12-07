@@ -2,9 +2,11 @@
 using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
 using RestaurantManager.Views;
+using RestaurantManager.Views.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,8 +19,7 @@ namespace RestaurantManager.ViewModels
 {
     class MainViewModel : BaseViewModel
     {
-        private ObservableCollection<Stockin> stockinList;
-        public ObservableCollection<Stockin> StockinList { get { return stockinList; } set { if (stockinList != value) stockinList = value; OnPropertyChanged(); } }
+       
         
         private string usernameForProfileWindow;
         public ICommand WindowIsLoadedCommand { get; set; }
@@ -90,42 +91,68 @@ namespace RestaurantManager.ViewModels
         // ----------------------------
 
 
+        // Stockin Management
+        private ObservableCollection<Stockin> stockinList;
+        public ObservableCollection<Stockin> StockinList { get { return stockinList; } set { if (stockinList != value) stockinList = value; OnPropertyChanged(); } }
+        public ICommand AddStockinCommand { get; set; }
+        public ICommand DelStockinCommand { get; set; }
+        public ICommand EditStockinCommand { get; set; }
+        private Stockin _selectedStockin;
+        public Stockin SelectedStockin
+        {
+            get => _selectedStockin;
+            set
+            {
+                _selectedStockin = value;
+                OnPropertyChanged(nameof(SelectedStockin));
+
+                isSelectedStockin = _selectedStockin != null;
+            }
+        }
+        private bool _isSelectedStockin = false;
+        public bool isSelectedStockin
+        {
+            get { return _isSelectedStockin; }
+            set
+            {
+                _isSelectedStockin = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
-            
             StockinList = new ObservableCollection<Stockin>(
-                from stockIn in DataProvider.Instance.DB.Stockins
-                join IngresStockin in DataProvider.Instance.DB.StockinDetailsIngres 
-                    on stockIn.StoId equals IngresStockin.StoId
-                join DrinkOtherStockIn in DataProvider.Instance.DB.StockinDetailsDrinkOthers
-                    on stockIn.StoId equals DrinkOtherStockIn.StoId
-                select new Stockin
-                {
-                    StoId = stockIn.StoId,
+                    (from stkIn in DataProvider.Instance.DB.Stockins
+                     join stkInDetails in DataProvider.Instance.DB.StockinDetailsIngre
+                     on stkIn.StoId equals stkInDetails.StoId
+                     join ingre in DataProvider.Instance.DB.Ingredients
+                     on stkInDetails.IngreId equals ingre.IngreId
+                     select stkIn)
+                    .Distinct());
+
+
+
+
+            WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
+                { 
+                    p.Hide();
+                    LoginWindow loginWindow = new LoginWindow();
+                    loginWindow.ShowDialog(); 
+                    var loginVM = loginWindow.DataContext as LoginViewModel;
+                    if (loginVM != null)
+                    {
+                        if (loginVM.isLogin)
+                        {
+                            loginVM.isLogin = false;
+                            p.Show();
+                            usernameForProfileWindow = loginVM.Username;
+                        }
+                        else p.Close();
+                    }
                 }
             );
-
-            
-
-        WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
-            { 
-                p.Hide();
-                LoginWindow loginWindow = new LoginWindow();
-                loginWindow.ShowDialog(); 
-                var loginVM = loginWindow.DataContext as LoginViewModel;
-                if (loginVM != null)
-                {
-                    if (loginVM.isLogin)
-                    {
-                        loginVM.isLogin = false;
-                        p.Show();
-                        usernameForProfileWindow = loginVM.Username;
-                    }
-                    else p.Close();
-                }
-            }
-        );
             ProfileManagementCommand = new RelayCommand<object>( (p) => { return true; }, (p) =>
                 {
                     ProfileWindow profileWindow = new ProfileWindow();
@@ -315,6 +342,128 @@ namespace RestaurantManager.ViewModels
                     EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
                 }
             });
+
+            // StockIn Management
+            AddStockinCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                AddStockInWindow stockInManagementWindow = new AddStockInWindow();
+                var stockInVM = stockInManagementWindow.DataContext as StockInManagementViewModel;
+                if (stockInVM != null)
+                {
+                    stockInVM.managementID = 0;
+                    stockInManagementWindow.ShowDialog();
+                    if (stockInVM.isConfirmed)
+                    {
+                        // Add new stockin into data grid row
+                        int existedStockInNumber = DataProvider.Instance.DB.Stockins.Count();
+                        string query = $"DBCC CHECKIDENT ('STOCKIN', RESEED, {existedStockInNumber + 1})";
+                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+
+                        try
+                        {
+                            if (stockInVM.managementID == 2)
+                            {
+                                if (stockInVM.SelectedIdxStockin == 0)
+                                {
+                                    DataProvider.Instance.DB.StockinDetailsIngre.Add(stockInVM.NewIngreStockin);
+                                }
+                                else
+                                {
+                                    DataProvider.Instance.DB.StockinDetailsDrinkOthers.Add(stockInVM.NewDrinkOtherStockin);
+                                }
+                                DataProvider.Instance.DB.SaveChanges();
+                            }
+                            else if (stockInVM.managementID == 0)
+                            {
+                                DataProvider.Instance.DB.Stockins.Add(stockInVM.NewStockIn);
+                                DataProvider.Instance.DB.SaveChanges();
+                                StockinList.Add(stockInVM.NewStockIn);
+                            }
+                            StockinList = new ObservableCollection<Stockin>(
+                                (from stkIn in DataProvider.Instance.DB.Stockins
+                                 join stkInDetails in DataProvider.Instance.DB.StockinDetailsIngre
+                                 on stkIn.StoId equals stkInDetails.StoId
+                                 join ingre in DataProvider.Instance.DB.Ingredients
+                                 on stkInDetails.IngreId equals ingre.IngreId
+                                 select stkIn)
+                                .Distinct());
+
+                            query = $"SET STO_PRICE = (\r\n    " +
+                                    $"SELECT SUM(SI.CPRICE * SI.QUANTITY_KG)\r\n    " +
+                                    $"FROM STOCKIN_DETAILS_INGRE SI\r\n    " +
+                                    $"WHERE SI.STO_ID = STOCKIN.STO_ID\r\n)\r\n" +
+                                    $"WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_INGRE);";
+                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+                            query = $"UPDATE STOCKIN \r\n" +
+                                    $"SET STO_PRICE = COALESCE(STO_PRICE, 0) + (\r\n    " +
+                                    $"SELECT SUM(SD.CPRICE * SD.QUANTITY_UNITS)\r\n    " +
+                                    $"FROM STOCKIN_DETAILS_DRINK_OTHER SD\r\n    " +
+                                    $"WHERE SD.STO_ID = STOCKIN.STO_ID\r\n)\r\n" +
+                                    $"WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_DRINK_OTHER);";
+                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+
+
+
+                        }
+
+
+                        catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+                        {
+                            MessageBox.Show("Đã tồn tại mã nguyên liệu hoặc mã mặt hàng, vui lòng thử lại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                        }
+                    }
+                }
+            });
+            
+            DelStockinCommand = new RelayCommand<object>((p) => SelectedStockin != null, (p) =>
+            {
+                var stockIn = DataProvider.Instance.DB.Stockins.Where(x => x.StoId == SelectedStockin.StoId).FirstOrDefault();
+                var DialogResult = MessageBox.Show("Bạn có chắc chắn muốn xóa?", "Thông báo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (stockIn != null && DialogResult == MessageBoxResult.Yes)
+                {
+                    DataProvider.Instance.DB.Stockins.Remove(stockIn);
+                    DataProvider.Instance.DB.SaveChanges();
+
+                    int i = 0;
+                    foreach (Stockin stkIn in StockinList)
+                    {
+                        stkIn.StoCode = $"NV{++i:D6}";
+                    }
+                    DataProvider.Instance.DB.SaveChanges();
+
+                    StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+                }
+            });
+            //EditStockinCommand = new RelayCommand<object>((p) => SelectedStockin != null, (p) =>
+            //{
+            //    AddStockInWindow EditStockInWindow = new AddStockInWindow();
+            //    var stockInVM = EditStockInWindow.DataContext as StockInManagementViewModel;
+            //    var currStockIn = DataProvider.Instance.DB.Stockins.Where(x => x.StoId == SelectedStockin.StoId).FirstOrDefault();
+
+            //    if (stockInVM != null && currStockIn != null)
+            //    {
+            //        stockInVM.LoadStockinDetailsInformation(currStockIn);
+
+            //        EditStockInWindow.ShowDialog();
+
+            //        if (stockInVM.isEdited)
+            //        {
+            //            currStockIn.StoPrice = stockInVM.EditedStockIn.StoPrice;
+            //            currStockIn.StoDate = stockInVM.EditedStockIn.StoDate;
+
+            //            DataProvider.Instance.DB.SaveChanges();
+
+            //            var updatedStockIn = StockinList.FirstOrDefault(c => c.StoId == currStockIn.StoId);
+            //            if (updatedStockIn != null)
+            //            {
+            //                updatedStockIn.StoPrice = currStockIn.StoPrice;
+            //                updatedStockIn.StoDate = currStockIn.StoDate;
+            //            }
+            //            StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+            //        }
+            //    }
+            //});
+
         }
     }
 }

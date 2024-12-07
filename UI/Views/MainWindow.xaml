@@ -10,8 +10,7 @@
         xmlns:orderUC="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" WindowState="Maximized"
-        Title="Phần mềm Quản lý Nhà hàng" Height="1080" Width="1980" DataContext="{StaticResource MainVM}" Background="Transparent"
-        >
+        Title="Phần mềm Quản lý Nhà hàng" Height="1080" Width="1980" DataContext="{StaticResource MainVM}" Background="Transparent">
     <!--Dùng xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" để xài event trigger tránh khởi tạo 2 main window-->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -28,8 +27,7 @@
         <!--Chia dòng trong form-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="31*"></RowDefinition>
-            <RowDefinition Height="939*"/>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="80"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -37,7 +35,7 @@
         từ xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" (UserControls)-->
         <controlbar:ControlBar Tag="{Binding Title, ElementName=mainWindow}"></controlbar:ControlBar>
         <!--Thêm thanh điều hướng ở dưới (có hình ngôi nhà)-->
-        <DockPanel Grid.Row="3" Height="80" VerticalAlignment="Center">
+        <DockPanel Grid.Row="2" Height="80" VerticalAlignment="Bottom">
             <DockPanel.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </DockPanel.Background>
@@ -54,14 +52,14 @@
         </DockPanel>
 
         <!--Tô màu cho background của form-->
-        <Border Grid.Row="1" Grid.RowSpan="2">
+        <Border Grid.Row="1">
             <Border.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </Border.Background>
         </Border>
 
         <!--Tab control cho form (gồm menu, tất cả đơn, sơ đồ bàn và bookings-->
-        <TabControl Grid.Row="1" SelectedIndex="1" Grid.RowSpan="2">
+        <TabControl Grid.Row="1" SelectedIndex="1">
             <TabControl.Background>
                 <!--Tô màu cho Grid.Row="1" (cũng là khu vực của Tab Control vừa tạo)-->
                 <LinearGradientBrush>
@@ -100,7 +98,8 @@
                                     <RowDefinition Height="1*"></RowDefinition>
                                 </Grid.RowDefinitions>
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
-                                          BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding StockinList}">
+                                          BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding StockinList}"
+                                          SelectedItem="{Binding SelectedStockin}">
                                     <DataGrid.Columns>
                                         <!--Mã tồn kho-->
                                         <DataGridTextColumn Header="Mã nhập kho" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
@@ -114,7 +113,7 @@
                                         </DataGridTextColumn>
                                         <!--Ngày tồn kho-->
                                         <DataGridTextColumn Header="Ngày nhập kho" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding StoDate}">
+                                                            Binding="{Binding StoDate, StringFormat='dd/MM/yyyy'}">
                                             <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
@@ -137,9 +136,11 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
-                                    <Button Content="Thêm" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
-                                    <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
-                                    <Button Content="Sửa" BorderThickness="2" Style="{StaticResource configureDataButton}"/>
+                                    <Button Content="Thêm" BorderThickness="2" Style="{StaticResource configureDataButton}"
+                                            Command="{Binding AddStockinCommand}" CommandParameter="AddStockinWindow"/>
+                                    <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}"
+                                            Command="{Binding DelStockinCommand}" CommandParameter="AddStockinWindow"
+                                            IsEnabled="{Binding isSelectedStockin}"/>
                                 </StackPanel>
                             </Grid>
                         </TabItem>
@@ -268,14 +269,14 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
-                    <Grid Grid.Column="0">
+                    <Grid Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,592,0">
                         <WrapPanel Margin="30" x:Name="tablePanel">
                             <orderUC:OrderUC Height="210" Width="320"></orderUC:OrderUC>
                         </WrapPanel>
                     </Grid>
 
                     <!--Cột 2 là nút tạo đơn mới-->
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="2">
                         <!--Tô màu cho cột 2-->
                         <Grid.Background>
                             <LinearGradientBrush>
@@ -399,7 +400,7 @@
         </TabControl>
 
         <!--DockPanel để hiển thị Icon người dùng ở góc trên phải của form-->
-        <DockPanel Height ="80" VerticalAlignment="Top" Grid.Row="1" Grid.RowSpan="2">
+        <DockPanel Height ="80" VerticalAlignment="Top" Grid.Row="1">
             <Border Height="80" Grid.Row="1" VerticalAlignment="Center" CornerRadius="8,0,0,8"
                HorizontalAlignment="Right" Background="GhostWhite">
                 <Image Source="Images/account_black.png" Cursor="Hand">
