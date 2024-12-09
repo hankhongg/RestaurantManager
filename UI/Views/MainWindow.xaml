@@ -97,9 +97,22 @@
                                     <RowDefinition Height="9*"></RowDefinition>
                                     <RowDefinition Height="1*"></RowDefinition>
                                 </Grid.RowDefinitions>
-                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
+                                <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True" 
                                           BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding StockinList}"
-                                          SelectedItem="{Binding SelectedStockin}">
+                                          SelectedItem="{Binding SelectedStockin}" >
+
+                                    <DataGrid.Resources>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="IsHitTestVisible" Value="False"/>
+                                        </Style>
+                                    </DataGrid.Resources>
+                                    
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding EnterStockinDetailsCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+
                                     <DataGrid.Columns>
                                         <!--Mã tồn kho-->
                                         <DataGridTextColumn Header="Mã nhập kho" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
@@ -141,6 +154,8 @@
                                     <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}"
                                             Command="{Binding DelStockinCommand}" CommandParameter="AddStockinWindow"
                                             IsEnabled="{Binding isSelectedStockin}"/>
+                                    <!--<Button Content="Sửa" BorderThickness="2" Style="{StaticResource configureDataButton}"
+                                            Command="{Binding EditStockinCommand}" CommandParameter="AddStockinWindow"/>-->
                                 </StackPanel>
                             </Grid>
                         </TabItem>

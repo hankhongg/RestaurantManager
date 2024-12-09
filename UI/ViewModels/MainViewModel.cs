@@ -97,6 +97,7 @@ namespace RestaurantManager.ViewModels
         public ICommand AddStockinCommand { get; set; }
         public ICommand DelStockinCommand { get; set; }
         public ICommand EditStockinCommand { get; set; }
+        public ICommand EnterStockinDetailsCommand { get; set; }
         private Stockin _selectedStockin;
         public Stockin SelectedStockin
         {
@@ -119,20 +120,43 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+        private StockinDetailsDrinkOther _selectedStockinDetailsDrinkOther;
+
+        public StockinDetailsDrinkOther SelectedStockInDetailsDrinkOther
+        {
+            get { return _selectedStockinDetailsDrinkOther; }
+            set 
+            {
+                _selectedStockinDetailsDrinkOther = value;
+                OnPropertyChanged();
+            }
+        }
+        // same with ingre
+        private StockinDetailsDrinkOther _selectedStockinDetailsIngre;
+        public StockinDetailsDrinkOther SelectedStockInDetailsIngre
+        {
+            get { return _selectedStockinDetailsIngre; }
+            set
+            {
+                _selectedStockinDetailsIngre = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
-            StockinList = new ObservableCollection<Stockin>(
-                    (from stkIn in DataProvider.Instance.DB.Stockins
-                     join stkInDetails in DataProvider.Instance.DB.StockinDetailsIngre
-                     on stkIn.StoId equals stkInDetails.StoId
-                     join ingre in DataProvider.Instance.DB.Ingredients
-                     on stkInDetails.IngreId equals ingre.IngreId
-                     select stkIn)
-                    .Distinct());
+            //StockinList = new ObservableCollection<Stockin>(
+            //        (from stkIn in DataProvider.Instance.DB.Stockins
+            //         join stkInDetails in DataProvider.Instance.DB.StockinDetailsIngre
+            //         on stkIn.StoId equals stkInDetails.StoId
+            //         join ingre in DataProvider.Instance.DB.Ingredients
+            //         on stkInDetails.IngreId equals ingre.IngreId
+            //         select stkIn)
+            //        .Distinct());
 
-
+            StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
 
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
@@ -351,78 +375,78 @@ namespace RestaurantManager.ViewModels
                 if (stockInVM != null)
                 {
                     stockInVM.managementID = 0;
+                    stockInVM.StockInID = (DataProvider.Instance.DB.Stockins.Count() + 1).ToString();
+                    StockInDetailsWindow stockInDetailsWindow = new StockInDetailsWindow();
+                    var stockInDetailsVM = stockInDetailsWindow.DataContext as StockInManagementViewModel;
+                    int existedStockInNumber = DataProvider.Instance.DB.Stockins.Count();
                     stockInManagementWindow.ShowDialog();
                     if (stockInVM.isConfirmed)
                     {
                         // Add new stockin into data grid row
-                    tryagain:
-                        int existedStockInNumber = DataProvider.Instance.DB.Stockins.Count();
-                        string query = $"DBCC CHECKIDENT ('STOCKIN', RESEED, {existedStockInNumber + 1})";
-                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
-
                         try
                         {
-                            if (stockInVM.managementID == 2)
-                            {
-                                if (stockInVM.SelectedIdxStockin == 0)
-                                {
-                                    DataProvider.Instance.DB.StockinDetailsIngre.Add(stockInVM.NewIngreStockin);
-                                }
-                                else
-                                {
-                                    DataProvider.Instance.DB.StockinDetailsDrinkOthers.Add(stockInVM.NewDrinkOtherStockin);
-                                }
-                                DataProvider.Instance.DB.SaveChanges();
-                            }
-                            else if (stockInVM.managementID == 0)
-                            {
-                                DataProvider.Instance.DB.Stockins.Add(stockInVM.NewStockIn);
-                                DataProvider.Instance.DB.SaveChanges();
-                                StockinList.Add(stockInVM.NewStockIn);
-                            }
+                            DataProvider.Instance.DB.Stockins.Add(stockInVM.NewStockIn);
+                            DataProvider.Instance.DB.SaveChanges();
+                            StockinList.Add(stockInVM.NewStockIn);
 
+                            StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+
+                            stockInDetailsVM.StockInID = (existedStockInNumber + 1).ToString();
+                            stockInDetailsWindow.ShowDialog();
+
+                            //if (stockInVM.managementID == 2)
+                            //{
+                            //    if (stockInVM.SelectedIdxStockin == 0)
+                            //    {
+                            //        DataProvider.Instance.DB.StockinDetailsIngre.Add(stockInVM.NewIngreStockin);
+                            //    }
+                            //    else
+                            //    {
+                            //        DataProvider.Instance.DB.StockinDetailsDrinkOthers.Add(stockInVM.NewDrinkOtherStockin);
+                            //    }
+                            //    DataProvider.Instance.DB.SaveChanges();
+                            //}
+                            //StockinList = new ObservableCollection<Stockin>(
+                            //    (from stkIn in DataProvider.Instance.DB.Stockins
+                            //        join stkInDetails in DataProvider.Instance.DB.StockinDetailsIngre
+                            //        on stkIn.StoId equals stkInDetails.StoId
+                            //        join ingre in DataProvider.Instance.DB.Ingredients
+                            //        on stkInDetails.IngreId equals ingre.IngreId
+                            //        select stkIn)
+                            //    .Distinct());
                             // Cập nhật STO_PRICE từ STOCKIN_DETAILS_INGRE
-                            string query1 = @"
-                                SET STO_PRICE = (
-                                    SELECT SUM(SI.CPRICE * SI.QUANTITY_KG)
-                                    FROM STOCKIN_DETAILS_INGRE SI
-                                    WHERE SI.STO_ID = STOCKIN.STO_ID
-                                )
-                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_INGRE);
-";
+                            //                            string query1 = @"
+                            //                                SET STO_PRICE = (
+                            //                                    SELECT SUM(SI.CPRICE * SI.QUANTITY_KG)
+                            //                                    FROM STOCKIN_DETAILS_INGRE SI
+                            //                                    WHERE SI.STO_ID = STOCKIN.STO_ID
+                            //                                )
+                            //                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_INGRE);
+                            //";
 
-                            // Thực thi câu lệnh SQL đầu tiên
-                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
+                            //                            // Thực thi câu lệnh SQL đầu tiên
+                            //                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
 
-                            // Cập nhật STO_PRICE từ STOCKIN_DETAILS_DRINK_OTHER
-                            string query2 = @"
-                                UPDATE STOCKIN
-                                SET STO_PRICE = COALESCE(STO_PRICE, 0) + (
-                                    SELECT SUM(SD.CPRICE * SD.QUANTITY_UNITS)
-                                    FROM STOCKIN_DETAILS_DRINK_OTHER SD
-                                    WHERE SD.STO_ID = STOCKIN.STO_ID
-                                )
-                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_DRINK_OTHER);
-                            ";
+                            //                            // Cập nhật STO_PRICE từ STOCKIN_DETAILS_DRINK_OTHER
+                            //                            string query2 = @"
+                            //                                UPDATE STOCKIN
+                            //                                SET STO_PRICE = COALESCE(STO_PRICE, 0) + (
+                            //                                    SELECT SUM(SD.CPRICE * SD.QUANTITY_UNITS)
+                            //                                    FROM STOCKIN_DETAILS_DRINK_OTHER SD
+                            //                                    WHERE SD.STO_ID = STOCKIN.STO_ID
+                            //                                )
+                            //                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_DRINK_OTHER);
+                            //                            ";
 
                             // Thực thi câu lệnh SQL thứ hai
-                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
+                            //DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
 
-
-                            StockinList = new ObservableCollection<Stockin>(
-                                (from stkIn in DataProvider.Instance.DB.Stockins
-                                 join stkInDetails in DataProvider.Instance.DB.StockinDetailsIngre
-                                 on stkIn.StoId equals stkInDetails.StoId
-                                 join ingre in DataProvider.Instance.DB.Ingredients
-                                 on stkInDetails.IngreId equals ingre.IngreId
-                                 select stkIn)
-                                .Distinct());
                         }
                         catch (Microsoft.EntityFrameworkCore.DbUpdateException)
                         {
                             MessageBox.Show("Đã tồn tại mã nguyên liệu hoặc mã mặt hàng, vui lòng thử lại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                            goto tryagain;
                         }
+                        
                     }
                 }
             });
@@ -436,14 +460,38 @@ namespace RestaurantManager.ViewModels
                     DataProvider.Instance.DB.Stockins.Remove(stockIn);
                     DataProvider.Instance.DB.SaveChanges();
 
+                    StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+
+
                     int i = 0;
                     foreach (Stockin stkIn in StockinList)
                     {
-                        stkIn.StoCode = $"NV{++i:D6}";
+                        stkIn.StoCode = $"ST{++i:D6}";
                     }
                     DataProvider.Instance.DB.SaveChanges();
 
                     StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+                }
+            });
+            EnterStockinDetailsCommand = new RelayCommand<object>((p) => SelectedStockin != null, (p) =>
+            {
+                StockInDetailsWindow stockInDetailsWindow = new StockInDetailsWindow();
+                var stockInDetailsVM = stockInDetailsWindow.DataContext as StockInManagementViewModel;
+                if (stockInDetailsVM != null)
+                {
+                    stockInDetailsVM.StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(DataProvider.Instance.DB.StockinDetailsIngre.Where(x => x.StoId == SelectedStockin.StoId));
+                    stockInDetailsVM.StockInDetailsDrinkOtherList = new ObservableCollection<StockinDetailsDrinkOther>(DataProvider.Instance.DB.StockinDetailsDrinkOthers.Where(x => x.StoId == SelectedStockin.StoId));
+                    
+                    stockInDetailsVM.IngredientNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Ingredients.Select(x => x.IngreName));
+                    stockInDetailsVM.MenuItemsNameList = new ObservableCollection<string>(DataProvider.Instance.DB.MenuItems.Select(x => x.ItemName));
+                    //stockInDetailsVM.SelectedTable = stockInDetailsVM.StockInDetailsDrinkOtherList;
+
+                    //stockInDetailsVM.SelectedTable = StockInDetailsIngresList;
+                    //SelectedTable = StockInDetailsDrinkOtherList;
+
+                    //stockInDetailsVM.LoadStockinDetails();
+                    stockInDetailsVM.UpdateStockInType();
+                    stockInDetailsWindow.ShowDialog();
                 }
             });
             //EditStockinCommand = new RelayCommand<object>((p) => SelectedStockin != null, (p) =>
@@ -454,13 +502,12 @@ namespace RestaurantManager.ViewModels
 
             //    if (stockInVM != null && currStockIn != null)
             //    {
-            //        stockInVM.LoadStockinDetailsInformation(currStockIn);
+            //        stockInVM.LoadStockin(currStockIn);
 
             //        EditStockInWindow.ShowDialog();
 
             //        if (stockInVM.isEdited)
             //        {
-            //            currStockIn.StoPrice = stockInVM.EditedStockIn.StoPrice;
             //            currStockIn.StoDate = stockInVM.EditedStockIn.StoDate;
 
             //            DataProvider.Instance.DB.SaveChanges();

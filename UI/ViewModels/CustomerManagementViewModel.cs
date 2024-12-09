@@ -86,7 +86,7 @@ namespace RestaurantManager.ViewModels
         private string customerCccd;
         public string CustomerCccd
         {
-            get { return customerCccd; }
+            get{ return customerCccd; }
             set
             {
                 customerCccd = value;
