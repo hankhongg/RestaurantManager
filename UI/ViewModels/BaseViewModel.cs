@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Input;
+using System.Globalization;
+using System.Windows.Data;
 
 namespace RestaurantManager.ViewModels
 {
@@ -55,10 +57,7 @@ namespace RestaurantManager.ViewModels
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-
-        
     }
-
-
+   
 
 }

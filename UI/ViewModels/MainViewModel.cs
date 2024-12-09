@@ -479,13 +479,44 @@ namespace RestaurantManager.ViewModels
                 var stockInDetailsVM = stockInDetailsWindow.DataContext as StockInManagementViewModel;
                 if (stockInDetailsVM != null)
                 {
-                    stockInDetailsVM.StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(DataProvider.Instance.DB.StockinDetailsIngre.Where(x => x.StoId == SelectedStockin.StoId));
-                    stockInDetailsVM.StockInDetailsDrinkOtherList = new ObservableCollection<StockinDetailsDrinkOther>(DataProvider.Instance.DB.StockinDetailsDrinkOthers.Where(x => x.StoId == SelectedStockin.StoId));
-                    
+                    //stockInDetailsVM.StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(
+                    //    DataProvider.Instance.DB.StockinDetailsIngre.Where(x => x.StoId == SelectedStockin.StoId));
+
+                    //stockInDetailsVM.StockInDetailsDrinkOtherList = new ObservableCollection<StockinDetailsDrinkOther>(
+                    //    DataProvider.Instance.DB.StockinDetailsDrinkOthers.Where(x => x.StoId == SelectedStockin.StoId));
+                    stockInDetailsVM.StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(
+                        from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngre
+                        join ingre in DataProvider.Instance.DB.Ingredients
+                        on stkInDetailsIngre.IngreId equals ingre.IngreId
+                        select new StockinDetailsIngre
+                        {
+                            Cprice = stkInDetailsIngre.Cprice,
+                            IngreId = stkInDetailsIngre.IngreId,
+                            QuantityKg = stkInDetailsIngre.QuantityKg,
+                            StoId = stkInDetailsIngre.StoId,
+                            Sto = stkInDetailsIngre.Sto,
+                            Ingre = ingre // Gán dữ liệu từ bảng Ingredients
+                        });
+
+                    stockInDetailsVM.StockInDetailsDrinkOtherList = new ObservableCollection<StockinDetailsDrinkOther>(
+                        from stkInDetailsDrinkOther in DataProvider.Instance.DB.StockinDetailsDrinkOthers
+                        join item in DataProvider.Instance.DB.MenuItems
+                        on stkInDetailsDrinkOther.ItemId equals item.ItemId
+                        select new StockinDetailsDrinkOther
+                        {
+                            Cprice = stkInDetailsDrinkOther.Cprice,
+                            ItemId = stkInDetailsDrinkOther.ItemId,
+                            QuantityUnits = stkInDetailsDrinkOther.QuantityUnits,
+                            StoId = stkInDetailsDrinkOther.StoId,
+                            Sto = stkInDetailsDrinkOther.Sto,
+                            Item = item // Gán dữ liệu từ bảng MenuItems    
+                        });
+
                     stockInDetailsVM.IngredientNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Ingredients.Select(x => x.IngreName));
                     stockInDetailsVM.MenuItemsNameList = new ObservableCollection<string>(DataProvider.Instance.DB.MenuItems.Select(x => x.ItemName));
                     //stockInDetailsVM.SelectedTable = stockInDetailsVM.StockInDetailsDrinkOtherList;
-
+                    stockInDetailsVM.StockInID = SelectedStockin.StoId.ToString();
+                    stockInDetailsVM.selectedTable();
                     //stockInDetailsVM.SelectedTable = StockInDetailsIngresList;
                     //SelectedTable = StockInDetailsDrinkOtherList;
 

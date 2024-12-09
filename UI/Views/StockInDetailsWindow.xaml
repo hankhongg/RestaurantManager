@@ -78,7 +78,7 @@
                     <ComboBoxItem Content="Nhập nguyên liệu"/>
                     <ComboBoxItem Content="Nhập các vật phẩm khác"/>
                 </ComboBox>
-                <DatePicker Grid.Column="1" VerticalAlignment="Center" FontSize="25">
+                <DatePicker Grid.Column="1" VerticalAlignment="Center" FontSize="25" SelectedDate="">
                     
                 </DatePicker>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
@@ -91,8 +91,9 @@
                 </StackPanel>
             </Grid>
             
+            <!--Chi tiết nguyên liệu--> 
             <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
-                      BorderThickness="0" AutoGenerateColumns="False" 
+                      BorderThickness="0" AutoGenerateColumns="False" Visibility="{Binding isIngreVisibility}"
                       ItemsSource="{Binding SelectedTable}" HorizontalAlignment="Left" Margin="0,70,0,0" Grid.RowSpan="2">
                 <DataGrid.Columns>
                     <!--Mã nhập kho-->
@@ -105,9 +106,9 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <!--Mã nguyên liệu, mã mặt hàng-->
+                    <!--Tên nguyên liệu-->
                     <DataGridTextColumn Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                        Binding="{Binding }">
+                                        Binding="{Binding Ingre.IngreName}">
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding DataContext.stockInTypeIDHeader, RelativeSource={RelativeSource AncestorType=DataGrid}}"
@@ -122,9 +123,9 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    
-                    <!--Giá tồn kho-->
-                    <DataGridTextColumn Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                    <!--Số lượng-->
+                    <DataGridTextColumn Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                        Binding="{Binding QuantityKg}">
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding DataContext.QuantityTypeHeader, RelativeSource={RelativeSource AncestorType=DataGrid}}"
@@ -137,9 +138,78 @@
                                 <Setter Property="FontSize" Value="28"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
+                    <!--Đơn giá-->
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Đơn giá" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                         >
+                                        Binding="{Binding Cprice, StringFormat={}{0:0}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="FontSize" Value="28"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Tổng cộng" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="FontSize" Value="28"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            
+            <!--Chi tiết mặt hàng--> 
+            <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
+                      BorderThickness="0" AutoGenerateColumns="False" Visibility="{Binding isItemVisibility}"
+                      ItemsSource="{Binding SelectedTable}" HorizontalAlignment="Left" Margin="0,70,0,0" Grid.RowSpan="2">
+                <DataGrid.Columns>
+                    <!--Mã nhập kho-->
+                    <DataGridTextColumn Header="Mã nhập kho" Width="auto" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                            Binding="{Binding StoId}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="FontSize" Value="28"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!--Tên mặt hàng-->
+                    <DataGridTextColumn Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                            Binding="{Binding Item.ItemName}">
+                        <DataGridTextColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DataContext.stockInTypeIDHeader, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                               FontSize="20" FontWeight="Bold"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="FontSize" Value="28"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!--Số lượng-->
+                    <DataGridTextColumn Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                            Binding="{Binding QuantityUnits}">
+                        <DataGridTextColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DataContext.QuantityTypeHeader, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                               FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="FontSize" Value="28"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    <!--Đơn giá-->
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Đơn giá" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                            Binding="{Binding Cprice, StringFormat={}{0:0}}">
                         <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -150,18 +220,17 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Tổng cộng" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                         <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
-                        
+
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
                                 <Setter Property="FontSize" Value="28"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
-                        
+
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            
             <Grid Grid.Column="1" Grid.Row="2" Margin="10,10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1.5*"/>
@@ -195,9 +264,9 @@
                     </StackPanel>
                     <Border Grid.Row="1" Margin="0,0,5,0" Grid.Column="0">
                         <ComboBox FontSize="18" Width="auto" Margin="0,0,0,25"
-                                 VerticalContentAlignment="Center" ItemsSource="{Binding SelectedStockinDetailsName}"
-                                 Text="{Binding StockInDetailsID, UpdateSourceTrigger=PropertyChanged}"
-                                 SelectedIndex="0"/>
+                                  VerticalContentAlignment="Center" 
+                                  ItemsSource="{Binding SelectedStockinDetailsName}"
+                                  SelectedIndex="0"/>
                     </Border>
                 </Grid>
                 
@@ -207,12 +276,12 @@
                         <RowDefinition Height="5.5*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Margin="0,0,5,0" Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding QuantityStockInType}" FontSize="18" FontWeight="Medium"/>
+                        <TextBlock Text="{Binding StockInDetailsQuantityType}" FontSize="18" FontWeight="Medium"/>
                     </StackPanel>
                     <Border Grid.Row="1" Margin="0,0,5,0" Grid.Column="1" >
                         <TextBox FontSize="18" Width="auto" Margin="0,0,0,25"
                                 VerticalContentAlignment="Center" Style="{StaticResource txtStyle}"
-                                Text="{Binding StockInQuantity, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding StockInDetailsQuantity, UpdateSourceTrigger=PropertyChanged}"
                                 MaxLength="18"/>
                     </Border>
                 </Grid>
@@ -228,7 +297,7 @@
                     <Border Grid.Row="1" Grid.Column="2"  Margin="0,0,5,0">
                         <TextBox FontSize="18" Width="auto" Margin="0,0,0,25"
                                 VerticalContentAlignment="Center" Style="{StaticResource txtStyle}"
-                                Text="{Binding CostPrice, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding DetailsCostPrice, UpdateSourceTrigger=PropertyChanged}"
                                 MaxLength="100"/>
                     </Border>
                 </Grid>

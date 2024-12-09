@@ -20,6 +20,9 @@ namespace RestaurantManager.ViewModels
         public bool isEdited { get; set; }
         public bool IsEnable { get; set; }
         public int StockInNumber { get; set; }
+
+        //-----------------------------------------
+
         private Stockin newStockIn;
         public Stockin NewStockIn
         {
@@ -63,6 +66,9 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        //-----------------------------------------
+
         private int selectedIdxStockin;
         public int SelectedIdxStockin
         {
@@ -74,6 +80,9 @@ namespace RestaurantManager.ViewModels
                 UpdateStockInType();
             }
         }
+
+        //-----------------------------------------
+
         // ID, Code
         private string stockInCode;
         public string StockInCode
@@ -91,28 +100,8 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _stockInDetailsID;
 
-        public string StockInDetailsID // changeable    
-        {
-            get { return _stockInDetailsID; }
-            set
-            {
-                _stockInDetailsID = value;
-                OnPropertyChanged();
-            }
-        }
-        private string _stockInDetailsIDType;
-
-        public string StockInDetailsIDType
-        {
-            get { return _stockInDetailsIDType; }
-            set 
-            {
-                _stockInDetailsIDType = value;
-                OnPropertyChanged();    
-            }
-        }
+        //-----------------------------------------
 
         // Datetime
         private DateTime stockInDate = DateTime.Now;
@@ -125,29 +114,33 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _quantityStockInType;
 
-        public string QuantityStockInType
+        //-----------------------------------------
+
+        private string _stockInDetailsIDType;
+
+        public string StockInDetailsIDType
         {
-            get { return _quantityStockInType; }
+            get { return _stockInDetailsIDType; }
             set 
-            { 
-                _quantityStockInType = value;
+            {
+                _stockInDetailsIDType = value;
+                OnPropertyChanged();    
+            }
+        }
+        private string _stockInDetailsQuantityType;
+
+        public string StockInDetailsQuantityType
+        {
+            get { return _stockInDetailsQuantityType; }
+            set 
+            {
+                _stockInDetailsQuantityType = value;
                 OnPropertyChanged();
             }
         }
-        private string _stockInQuantity;
+        //-----------------------------------------
 
-        public string StockInQuantity
-
-        {
-            get { return _stockInQuantity; }
-            set 
-            { 
-                _stockInQuantity = value;
-                OnPropertyChanged();
-            }
-        }
         private string _costPrice;
 
         public string CostPrice
@@ -159,6 +152,7 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+
         private string _stockInDetailName;
 
         public string StockInDetailName
@@ -166,6 +160,9 @@ namespace RestaurantManager.ViewModels
             get { return _stockInDetailName; }
             set { _stockInDetailName = value; }
         }
+
+        //-----------------------------------------
+        
         private string _stockInTypeIDHeader;
 
         public string stockInTypeIDHeader
@@ -188,7 +185,16 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        private string _stockInDetailsQuantity;
+        public string StockInDetailsQuantity
+        {
+            get { return _stockInDetailsQuantity; }
+            set 
+            { 
+                _stockInDetailsQuantity = value; 
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand ConfirmInfo { get; set; }
         public ICommand CancelInfo { get; set; }
@@ -263,33 +269,56 @@ namespace RestaurantManager.ViewModels
             }
         }
 
+        private Visibility _isItemVisibility;
 
+        public Visibility isItemVisibility
+        {
+            get { return _isItemVisibility; }
+            set 
+            { 
+                _isItemVisibility = value; 
+                OnPropertyChanged();
+            }
+        }
+        private Visibility _isIngreVisibility;
+        public Visibility isIngreVisibility
+        {
+            get { return _isIngreVisibility; }
+            set
+            {
+                _isIngreVisibility = value;
+                OnPropertyChanged();
+            }
+        }
         public void UpdateStockInType()
         {
             if (SelectedIdxStockin == 0)
             {
                 // Header
-                StockInDetailsIDType = "Tên nguyên liệu";                
-                QuantityStockInType = "Số lượng nhập kho (kg)";
+                StockInDetailsIDType = "Tên nguyên liệu";
+                StockInDetailsQuantityType = "Số lượng nhập kho (kg)";
                 stockInTypeIDHeader = "Tên nguyên liệu";
                 QuantityTypeHeader = "Số lượng nhập kho";
 
                 // Data
                 SelectedTable = StockInDetailsIngresList;
                 SelectedStockinDetailsName = IngredientNameList;
+                isItemVisibility = Visibility.Hidden;
+                isIngreVisibility = Visibility.Visible;
             }
             else
             {
                 // Header
                 StockInDetailsIDType = "Tên mặt hàng";
-                QuantityStockInType = "Số lượng nhập kho (Đơn vị)"; 
+                StockInDetailsQuantityType = "Số lượng nhập kho (Đơn vị)"; 
                 stockInTypeIDHeader = "Tên mặt hàng";
                 QuantityTypeHeader = "Số lượng nhập kho";
 
                 // Data
                 SelectedTable = StockInDetailsDrinkOtherList;
                 SelectedStockinDetailsName = MenuItemsNameList;
-
+                isIngreVisibility = Visibility.Hidden;
+                isItemVisibility = Visibility.Visible;
             }
         }
         public StockInManagementViewModel()
@@ -299,8 +328,6 @@ namespace RestaurantManager.ViewModels
             isConfirmed = false;
             isEdited = false;
             IsEnable = true;
-            
-
 
             // Add Stockin
             ConfirmInfo = new RelayCommand<Window>((p) =>
@@ -390,9 +417,7 @@ namespace RestaurantManager.ViewModels
                 isConfirmed = false;
                 isEdited = false;
                 StockInID = "";
-                StockInQuantity = "";
                 CostPrice = "";
-                StockInDetailsID = "";
                 StockInDate = DateTime.Now;
                 p.Close();
             });
@@ -408,16 +433,14 @@ namespace RestaurantManager.ViewModels
                 return true;
             }, (p) =>
             {
-                if (string.IsNullOrEmpty(StockInDetailsID) || string.IsNullOrEmpty(StockInQuantity))
-                {
-                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                    return;
-                }
+                //if (string.IsNullOrEmpty(StockInDetailsQuantity) && SelectedIdxStockin == 0|| string.IsNullOrEmpty(StockInQuantity))
+                //{
+                //    MessageBox.Show("Vui lòng nhập đầy đủ thông tin", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                //    return;
+                //}
                 if (SelectedIdxStockin == 0) 
                 {
                     // Thiết lập dữ liệu bảng StockinDetailsIngre
-                    SelectedTable = StockInDetailsIngresList.Where(x => x.StoId == 1);
-                    if (StockInDetailsIngresList.Count() != 0 || StockInDetailsIngresList == null)
                     {
                         MessageBox.Show("Nguyên liệu đã tồn tại trong kho, vui lòng kiểm tra lại!", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                         return;
@@ -425,15 +448,14 @@ namespace RestaurantManager.ViewModels
                     
                     NewIngreStockin = new StockinDetailsIngre()
                     {
-                        IngreId = int.Parse(StockInDetailsID),
-                        QuantityKg = StockInQuantity == null ? 0 : double.Parse(StockInQuantity),
+                        //IngreId = int.Parse(StockInDetailsID),
+                        QuantityKg = StockInDetailsQuantity == null ? 0 : double.Parse(StockInDetailsQuantity),
                         Cprice = CostPrice == null ? 0 : decimal.Parse(CostPrice)
                     };
                 }
                 else
                 {
                     // Thiết lập dữ liệu bảng StockinDetailsDrinkOther
-                    SelectedTable = StockInDetailsDrinkOtherList.Where(x => x.StoId == 1);
                     
                     if (StockInDetailsDrinkOtherList.Count() != 0 || StockInDetailsDrinkOtherList == null)
                     {
@@ -443,16 +465,13 @@ namespace RestaurantManager.ViewModels
                     newDrinkOtherStockin = new StockinDetailsDrinkOther()
                     {
                         StoId = int.Parse(StockInID),
-                        ItemId = int.Parse(StockInDetailsID),
-                        QuantityUnits = StockInQuantity == null ? 0 : int.Parse(StockInQuantity),
+                        //QuantityUnits = StockInQuantity == null ? 0 : int.Parse(StockInQuantity),
                         Cprice = CostPrice == null ? 0 : decimal.Parse(CostPrice)
                     };
                 }
                 IsEnable = true;
                 StockInID = "";
-                StockInQuantity = "";
                 CostPrice = "";
-                StockInDetailsID = "";
                 StockInDate = DateTime.Now;
                 return;
             });
@@ -500,10 +519,19 @@ namespace RestaurantManager.ViewModels
             StockInCode = CurrStockIn.StoCode;
             StockInDate = CurrStockIn.StoDate;
         }
-
-        // Add, edit Stockin Details
+        public void selectedTable()
+        {
+            if (SelectedIdxStockin == 0)
+            {
+                // Thiết lập dữ liệu bảng StockinDetailsIngre
+                SelectedTable = StockInDetailsIngresList.Where(x => x.StoId == int.Parse(StockInID));
+            }
+            else
+                SelectedTable = StockInDetailsDrinkOtherList.Where(x => x.StoId == int.Parse(StockInID));
+        }
 
 
 
     }
+
 }
