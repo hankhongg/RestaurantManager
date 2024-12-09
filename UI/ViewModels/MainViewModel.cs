@@ -144,6 +144,65 @@ namespace RestaurantManager.ViewModels
         }
 
 
+        // Ingredients & Items Management
+        private ObservableCollection<Ingredient> ingredientsList;
+        public ObservableCollection<Ingredient> IngredientsList { get { return ingredientsList; } set { if (ingredientsList != value) ingredientsList = value; OnPropertyChanged(); } }
+
+        private Ingredient selectedIngre;
+        public Ingredient SelectedIngre
+        {
+            get { return selectedIngre; }
+            set
+            {
+                selectedIngre = value;
+                OnPropertyChanged();
+                IsSelectedIngre = selectedIngre != null;
+            }
+        }
+        private bool isSelectedIngre;
+        public bool IsSelectedIngre
+        {
+            get { return isSelectedIngre; }
+            set
+            {
+                isSelectedIngre = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<MenuItem> itemsList;
+        public ObservableCollection<MenuItem> ItemsList { get { return itemsList; } set { if (itemsList != value) itemsList = value; OnPropertyChanged(); } }
+
+        private MenuItem selectedItem;
+        public MenuItem SelectedItem
+        {
+            get { return selectedItem; }
+            set
+            {
+                selectedItem = value;
+                OnPropertyChanged();
+                IsSelectedItem = selectedItem != null;
+            }
+        }
+
+        private bool isSelectedItem;
+        public bool IsSelectedItem
+        {
+            get { return isSelectedItem; }
+            set
+            {
+                isSelectedItem = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand AddIngreCommand { get; set; }
+        public ICommand DelIngreCommand { get; set; }
+        public ICommand EditIngreCommand { get; set; }
+        public ICommand AddItemCommand { get; set; }
+        public ICommand DelItemCommand { get; set; }
+        public ICommand EditItemCommand { get; set; }
+
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
@@ -157,7 +216,8 @@ namespace RestaurantManager.ViewModels
             //        .Distinct());
 
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
-
+            IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
+            ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) => 
                 { 
@@ -554,6 +614,33 @@ namespace RestaurantManager.ViewModels
             //    }
             //});
 
+            // Ingredients & Items Management
+            AddIngreCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                //AddIngreWindow addIngreWindow = new AddIngreWindow();
+                //var ingreVM = addIngreWindow.DataContext as IngredientManagementViewModel;
+                //if (ingreVM != null)
+                //{
+                //    ingreVM.managementID = 0;
+                //    addIngreWindow.ShowDialog();
+                //    if (ingreVM.isConfirmed)
+                //    {
+                //        // Add new ingre into data grid row
+                //        int existedIngreNumber = DataProvider.Instance.DB.Ingredients.Count();
+                //        string query = $"DBCC CHECKIDENT ('INGREDIENT', RESEED, {existedIngreNumber + 1})";
+                //        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+                //        DataProvider.Instance.DB.Ingredients.Add(ingreVM.NewIngredient);
+                //        DataProvider.Instance.DB.SaveChanges();
+                //        IngredientsList.Add(ingreVM.NewIngredient);
+                //        //CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
+                //    }
+                //}
+                if (IsSelectedIngre)
+                {
+                    MessageBox.Show("Y");
+                }
+                else MessageBox.Show("N");
+            });
         }
     }
 }
