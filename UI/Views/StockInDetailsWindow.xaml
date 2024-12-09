@@ -6,7 +6,7 @@
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d" WindowStyle="None" Name="StkDetails" DataContext="{Binding StockInManagementVM}"
-        Title="Chi tiết nhập kho" Height="768" Width="1366" Background="Transparent" WindowStartupLocation="CenterOwner">
+        Title="Chi tiết nhập kho" Height="768" Width="1366" Background="Transparent" WindowStartupLocation="CenterScreen">
     <WindowChrome.WindowChrome> 
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
