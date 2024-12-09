@@ -360,7 +360,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DatePicker}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" CornerRadius="5,0,0,5">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" CornerRadius="5,5,5,5">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
@@ -489,6 +489,7 @@
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding Source={x:Static SystemParameters.HighContrast}}" Value="false">
                             <Setter Property="Foreground" TargetName="PART_TextBox" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                            <Setter Property="Background" TargetName="PART_TextBox" Value="Transparent"/>
                         </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
