@@ -4,10 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
+<<<<<<< HEAD
+        xmlns:local="clr-namespace:RestaurantManager.Views"
+        mc:Ignorable="d" WindowStyle="None" Name="StkDetails" DataContext="{Binding StockInManagementVM}"
+        Title="Chi tiết nhập kho" Height="768" Width="1366" Background="Transparent" WindowStartupLocation="CenterScreen">
+    <WindowChrome.WindowChrome> 
+=======
         xmlns:local="clr-namespace:RestaurantManager.Views" 
         mc:Ignorable="d" WindowStyle="None" Name="StkDetails" DataContext="{StaticResource StockInManagementVM}"
         Title="Chi tiết nhập kho" Height="768" Width="1366" Background="Transparent" WindowStartupLocation="CenterScreen">
     <WindowChrome.WindowChrome>
+>>>>>>> d7313d2e6cd81298cd8d0f0c87f0308542f4ea4f
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
 
