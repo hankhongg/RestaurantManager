@@ -106,7 +106,7 @@
                                             <Setter Property="IsHitTestVisible" Value="False"/>
                                         </Style>
                                     </DataGrid.Resources>
-                                    
+
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseDoubleClick">
                                             <i:InvokeCommandAction Command="{Binding EnterStockinDetailsCommand}" />
@@ -163,7 +163,7 @@
                         <!--Customer Management-->
                         <TabItem Header="Quản lý khách hàng" Style="{StaticResource TabItemStyle}" 
                                   FontWeight="SemiBold" FontSize="30" Padding="30"
-                                 Background="Transparent" BorderThickness="0">
+                                 Background="Transparent" BorderThickness="0" Height="104" Margin="-2,0,0,0" VerticalAlignment="Center">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="9*"></RowDefinition>
