@@ -20,4 +20,5 @@
     <viewmodel:NewDishViewModel x:Key="NewDishVM"></viewmodel:NewDishViewModel>
     <viewmodel:EditDishViewModel x:Key="EditDishVM"></viewmodel:EditDishViewModel>
     <viewmodel:StockinDetailsViewModel x:Key="StockinDetailsVM"></viewmodel:StockinDetailsViewModel>
+    <viewmodel:IngredientsManagementViewModel x:Key="IngredientsManagementVM"></viewmodel:IngredientsManagementViewModel>
 </ResourceDictionary>

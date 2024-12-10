@@ -143,6 +143,7 @@
                                     Height="40" Margin="10,0"
                                     IsEnabled="{Binding IsButtonPressed}"
                                     Command="{Binding SaveButtonPressedCommand}"
+                                    CommandParameter="{Binding ElementName=profileWindow}"
                                     IsDefault="True"/>
                         </StackPanel>
                     </StackPanel>

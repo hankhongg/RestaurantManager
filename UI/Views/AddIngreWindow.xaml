@@ -1,0 +1,61 @@
+﻿<Window x:Class="RestaurantManager.Views.AddIngreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RestaurantManager.Views"
+        xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
+        x:Name="addIngreWindow" DataContext="{StaticResource IngredientsManagementVM}"
+        mc:Ignorable="d" WindowStyle="None" Background="Transparent"
+        Title="Chi tiết nguyên liệu" Height="400" Width="700">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Roboto"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Roboto"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Grid.RowSpan="3" CornerRadius="10">
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSteelBlue" Offset="0.25"/>
+                    <GradientStop Color="GhostWhite" Offset="0.75"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <controlbar:ControlBar Tag="{Binding Title, ElementName=addIngreWindow}" Grid.ColumnSpan="2"></controlbar:ControlBar>
+        <Grid Grid.Row="1">
+            <StackPanel Margin="50" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Right">
+                    <TextBlock Text="Tên nguyên liệu: " FontWeight="Bold" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Width="300" Text="{Binding IngreName}" FontSize="20" x:Name="ingreNameTextBox"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Right">
+                    <TextBlock Text="Giá bán trên đơn vị: " FontWeight="Bold"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Width="300" Text="{Binding IngreCPrice}" FontSize="20" x:Name="ingreCPriceTextBox"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="70" Margin="0,10">
+                    <Button Content="Xác nhận" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}" VerticalContentAlignment="Center"
+                            Command="{Binding ConfirmIngredientCommand}" CommandParameter="{Binding ElementName=addIngreWindow}" Margin="0,0,10,0"/>
+                    <Button Content="Hủy bỏ" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}"
+                            Command="{Binding CancelIngredientCommand}" CommandParameter="{Binding ElementName=addIngreWindow}" Margin="10,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+            
+
+        </Grid>
+    </Grid>
+</Window>

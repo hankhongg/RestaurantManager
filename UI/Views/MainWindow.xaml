@@ -179,7 +179,7 @@
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                    <Setter Property="FontSize" Value="20"/>
+                                                    <Setter Property="FontSize" Value="23"/>
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
@@ -231,7 +231,7 @@
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                    <Setter Property="FontSize" Value="20"/>
+                                                    <Setter Property="FontSize" Value="23"/>
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
@@ -279,6 +279,11 @@
                                 <DataGrid x:Name="ingredientsDataGrid" CanUserDeleteRows="False"
                                           BorderThickness="0"  IsReadOnly="True" SelectedItem="{Binding SelectedIngre, Mode=OneWayToSource}"
                                           AutoGenerateColumns="False" ItemsSource="{Binding IngredientsList}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding EditIngreCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding IngreCode}" Header="Mã nguyên liệu"
                                                             Width="2.5*"
@@ -337,6 +342,8 @@
                                 <DataGrid Grid.Column="1" x:Name="itemsDataGrid" CanUserDeleteRows="False"
                                           BorderThickness="0" IsReadOnly="True" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}"
                                           AutoGenerateColumns="False" ItemsSource="{Binding ItemsList}">
+                                    
+
                                     <DataGrid.Columns>
                                         <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                                                             Binding="{Binding ItemCode}" 

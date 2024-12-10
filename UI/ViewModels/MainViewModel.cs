@@ -615,31 +615,25 @@ namespace RestaurantManager.ViewModels
             //});
 
             // Ingredients & Items Management
-            AddIngreCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            AddIngreCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
-                //AddIngreWindow addIngreWindow = new AddIngreWindow();
-                //var ingreVM = addIngreWindow.DataContext as IngredientManagementViewModel;
-                //if (ingreVM != null)
-                //{
-                //    ingreVM.managementID = 0;
-                //    addIngreWindow.ShowDialog();
-                //    if (ingreVM.isConfirmed)
-                //    {
-                //        // Add new ingre into data grid row
-                //        int existedIngreNumber = DataProvider.Instance.DB.Ingredients.Count();
-                //        string query = $"DBCC CHECKIDENT ('INGREDIENT', RESEED, {existedIngreNumber + 1})";
-                //        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
-                //        DataProvider.Instance.DB.Ingredients.Add(ingreVM.NewIngredient);
-                //        DataProvider.Instance.DB.SaveChanges();
-                //        IngredientsList.Add(ingreVM.NewIngredient);
-                //        //CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers);
-                //    }
-                //}
-                if (IsSelectedIngre)
+               AddIngreWindow addIngreWindow = new AddIngreWindow();
+               addIngreWindow.ShowDialog();
+               IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
+            });
+            EditIngreCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            {
+                AddIngreWindow addIngreWindow = new AddIngreWindow();
+                var ingreVM = addIngreWindow.DataContext as IngredientsManagementViewModel;
+                //var currIngre = DataProvider.Instance.DB.Ingredients.Where(x => x.IngreId == SelectedIngre.IngreId).FirstOrDefault();
+                if (ingreVM != null /*&& currIngre != null*/)
                 {
-                    MessageBox.Show("Y");
+                    ingreVM.IngredientID = SelectedIngre.IngreId;
+                    ingreVM.LoadIngredientInformation();
+                    addIngreWindow.DataContext = ingreVM;
+                    addIngreWindow.ShowDialog();
+                    IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
                 }
-                else MessageBox.Show("N");
             });
         }
     }
