@@ -1,5 +1,6 @@
 ﻿using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
+using RestaurantManager.Models.Database;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +14,7 @@ namespace RestaurantManager.ViewModels
 {
     class IngredientsManagementViewModel : BaseViewModel
     {
+        public bool AddButtonIngredient { get; set; } = false;
 
         private int ingredientId;
         public int IngredientID { get; set; }
@@ -67,20 +69,18 @@ namespace RestaurantManager.ViewModels
         }
 
         Ingredient SelectedIngreDetails; 
-        StockinDetailsIngre SelectedStockInIngreDetails; 
         public void LoadIngredientInformation()
         {
             SelectedIngreDetails = DataProvider.Instance.DB.Ingredients.Where(x => x.IngreId == IngredientID).FirstOrDefault();
-            SelectedStockInIngreDetails = DataProvider.Instance.DB.StockinDetailsIngre.Where(y => y.IngreId == IngredientID).FirstOrDefault();
 
             if (SelectedIngreDetails != null)
             {
                 IngreName = SelectedIngreDetails.IngreName;
+                if (SelectedIngreDetails.IngrePrice != null)
+                    IngreCPrice = SelectedIngreDetails.IngrePrice.ToString();
+                else IngreCPrice = "0";
             }
-            if (SelectedStockInIngreDetails != null)
-            {
-                IngreCPrice = SelectedStockInIngreDetails.Cprice.ToString();
-            }
+
         }
 
         public ICommand ConfirmIngredientCommand { get; set; }
@@ -91,37 +91,54 @@ namespace RestaurantManager.ViewModels
             //LoadIngredientInformation();
             ConfirmIngredientCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
-                int addedIngreID = -1;
+                decimal parsedPrice;
+                if (!decimal.TryParse(IngreCPrice, out parsedPrice))
+                {
+                    MessageBox.Show("Giá nguyên liệu không hợp lệ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 SelectedIngreDetails = DataProvider.Instance.DB.Ingredients.Where(x => x.IngreId == IngredientID).FirstOrDefault();
-                SelectedStockInIngreDetails = DataProvider.Instance.DB.StockinDetailsIngre.Where(y => y.IngreId == IngredientID).FirstOrDefault();
 
                 bool checkValidIngre = !String.IsNullOrEmpty(IngreName) && !String.IsNullOrEmpty(IngreCPrice);
-                if (!checkValidIngre) { MessageBox.Show("Không được để trống thông tin!\nThông tin không được lưu.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk); p.Close(); }
+                if (!checkValidIngre) { MessageBox.Show("Không được để trống thông tin!\nThông tin không được lưu.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk); p.Close(); return; }
                 int existedIngre = DataProvider.Instance.DB.Ingredients.Count();
-                // đã có trong db
-                if (SelectedIngreDetails != null)
+              
+                if (SelectedIngreDetails != null && AddButtonIngredient == false)  // đã có trong db
                 {
-                    var dbIngre = SelectedIngreDetails;
-                    dbIngre.IngreName = IngreName;
-                    DataProvider.Instance.DB.SaveChanges();
-                    p.Close();
+                    try
+                    {
+                        var dbIngre = SelectedIngreDetails;
+                        dbIngre.IngreName = IngreName;
+                        dbIngre.IngrePrice = decimal.Parse(IngreCPrice);
+
+                        DataProvider.Instance.DB.SaveChanges(); 
+                        p.Close(); 
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi: {ex.Message}");
+                    }
                 }
-                else
-                {                   
-                    var newIngre = new Ingredient() { IngreName = IngreName, IngreCode = $"NL{existedIngre + 1:D3}" };
-                    addedIngreID = newIngre.IngreId;
-                    DataProvider.Instance.DB.Ingredients.Add(newIngre);
-                    var newStockInIngre = new StockinDetailsIngre() { IngreId = addedIngreID, Cprice = decimal.Parse(IngreCPrice) };
-                    DataProvider.Instance.DB.SaveChanges();
-                    MessageBox.Show("Thêm nguyên liệu thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    p.Close();
-                } // chưa có trong db
-                //// đã có giá trong db
-                //if (SelectedStockInIngreDetails != null)
+                //else if (SelectedIngreDetails != null && SelectedIngreDetails.IngrePrice == null) 
                 //{
-                //    var dbStockInIngre = SelectedStockInIngreDetails;
+                //    MessageBox.Show("YES");
+                //    IngreCPrice = "0";
                 //}
-                //else { } // chưa có giá trong db
+                else // chưa có trong db
+                {
+                    try
+                    {
+                        var newIngre = new Ingredient() { IngreName = IngreName, IngreCode = $"NL{existedIngre + 1:D3}", IngrePrice = decimal.Parse(IngreCPrice) };
+                        DataProvider.Instance.DB.Ingredients.Add(newIngre);
+                        DataProvider.Instance.DB.SaveChanges();
+                        MessageBox.Show("Thêm nguyên liệu thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                        p.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi: {ex.Message}");
+                    }                    
+                } 
             });
             CancelIngredientCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
