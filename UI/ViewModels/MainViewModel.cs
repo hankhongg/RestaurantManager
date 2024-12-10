@@ -144,8 +144,71 @@ namespace RestaurantManager.ViewModels
         }
 
 
+<<<<<<< HEAD
         public MainViewModel()
         {
+=======
+        // Ingredients & Items Management
+        private ObservableCollection<Ingredient> ingredientsList;
+        public ObservableCollection<Ingredient> IngredientsList { get { return ingredientsList; } set { if (ingredientsList != value) ingredientsList = value; OnPropertyChanged(); } }
+
+        private Ingredient selectedIngre;
+        public Ingredient SelectedIngre
+        {
+            get { return selectedIngre; }
+            set
+            {
+                selectedIngre = value;
+                OnPropertyChanged();
+                IsSelectedIngre = selectedIngre != null;
+            }
+        }
+        private bool isSelectedIngre;
+        public bool IsSelectedIngre
+        {
+            get { return isSelectedIngre; }
+            set
+            {
+                isSelectedIngre = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<MenuItem> itemsList;
+        public ObservableCollection<MenuItem> ItemsList { get { return itemsList; } set { if (itemsList != value) itemsList = value; OnPropertyChanged(); } }
+
+        private MenuItem selectedItem;
+        public MenuItem SelectedItem
+        {
+            get { return selectedItem; }
+            set
+            {
+                selectedItem = value;
+                OnPropertyChanged();
+                IsSelectedItem = selectedItem != null;
+            }
+        }
+
+        private bool isSelectedItem;
+        public bool IsSelectedItem
+        {
+            get { return isSelectedItem; }
+            set
+            {
+                isSelectedItem = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand AddIngreCommand { get; set; }
+        public ICommand DelIngreCommand { get; set; }
+        public ICommand EditIngreCommand { get; set; }
+        public ICommand AddItemCommand { get; set; }
+        public ICommand DelItemCommand { get; set; }
+        public ICommand EditItemCommand { get; set; }
+
+        public MainViewModel() {
+>>>>>>> efe798f73e0a63cdd559ab46c8ab6f60de55851f
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
             //StockinList = new ObservableCollection<Stockin>(
@@ -158,7 +221,8 @@ namespace RestaurantManager.ViewModels
             //        .Distinct());
 
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
-
+            IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
+            ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {
@@ -572,6 +636,59 @@ namespace RestaurantManager.ViewModels
                     //stockInDetailsVM.LoadStockinDetails();
                 }
             });
+<<<<<<< HEAD
+=======
+            //EditStockinCommand = new RelayCommand<object>((p) => SelectedStockin != null, (p) =>
+            //{
+            //    AddStockInWindow EditStockInWindow = new AddStockInWindow();
+            //    var stockInVM = EditStockInWindow.DataContext as StockInManagementViewModel;
+            //    var currStockIn = DataProvider.Instance.DB.Stockins.Where(x => x.StoId == SelectedStockin.StoId).FirstOrDefault();
+
+            //    if (stockInVM != null && currStockIn != null)
+            //    {
+            //        stockInVM.LoadStockin(currStockIn);
+
+            //        EditStockInWindow.ShowDialog();
+
+            //        if (stockInVM.isEdited)
+            //        {
+            //            currStockIn.StoDate = stockInVM.EditedStockIn.StoDate;
+
+            //            DataProvider.Instance.DB.SaveChanges();
+
+            //            var updatedStockIn = StockinList.FirstOrDefault(c => c.StoId == currStockIn.StoId);
+            //            if (updatedStockIn != null)
+            //            {
+            //                updatedStockIn.StoPrice = currStockIn.StoPrice;
+            //                updatedStockIn.StoDate = currStockIn.StoDate;
+            //            }
+            //            StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+            //        }
+            //    }
+            //});
+
+            // Ingredients & Items Management
+            AddIngreCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            {
+               AddIngreWindow addIngreWindow = new AddIngreWindow();
+               addIngreWindow.ShowDialog();
+               IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
+            });
+            EditIngreCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            {
+                AddIngreWindow addIngreWindow = new AddIngreWindow();
+                var ingreVM = addIngreWindow.DataContext as IngredientsManagementViewModel;
+                //var currIngre = DataProvider.Instance.DB.Ingredients.Where(x => x.IngreId == SelectedIngre.IngreId).FirstOrDefault();
+                if (ingreVM != null /*&& currIngre != null*/)
+                {
+                    ingreVM.IngredientID = SelectedIngre.IngreId;
+                    ingreVM.LoadIngredientInformation();
+                    addIngreWindow.DataContext = ingreVM;
+                    addIngreWindow.ShowDialog();
+                    IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
+                }
+            });
+>>>>>>> efe798f73e0a63cdd559ab46c8ab6f60de55851f
         }
     }
 }

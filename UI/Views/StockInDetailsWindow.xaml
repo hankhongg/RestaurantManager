@@ -7,9 +7,13 @@
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d" WindowStyle="None" Name="StkDetails" DataContext="{StaticResource StockInManagementVM}"
         Title="Chi tiết nhập kho" Height="768" Width="1366" Background="Transparent" WindowStartupLocation="CenterScreen">
+<<<<<<< HEAD
 
     <WindowChrome.WindowChrome>
 
+=======
+    <WindowChrome.WindowChrome> 
+>>>>>>> efe798f73e0a63cdd559ab46c8ab6f60de55851f
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
 
