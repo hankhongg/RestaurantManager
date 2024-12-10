@@ -7,13 +7,9 @@
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d" WindowStyle="None" Name="StkDetails" DataContext="{StaticResource StockInManagementVM}"
         Title="Chi tiết nhập kho" Height="768" Width="1366" Background="Transparent" WindowStartupLocation="CenterScreen">
-<<<<<<< HEAD
 
-    <WindowChrome.WindowChrome>
-
-=======
     <WindowChrome.WindowChrome> 
->>>>>>> efe798f73e0a63cdd559ab46c8ab6f60de55851f
+
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
 
@@ -168,8 +164,8 @@
                 </DataGrid.Columns>
             </DataGrid>
             
-            <!--Chi tiết mặt hàng--> 
-            <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True"
+            <!--Chi tiết mặt hàng-->
+            <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True" SelectedItem="{Binding SelectedStockinDetailsDrinkOther}"
                       BorderThickness="0" AutoGenerateColumns="False" Visibility="{Binding isItemVisibility}"
                       ItemsSource="{Binding StockInDetailsDrinkOtherList}" HorizontalAlignment="Left" Margin="0,70,0,0" Grid.RowSpan="2">
                 <DataGrid.Columns>
@@ -184,7 +180,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <!--Tên mặt hàng-->
-                    <DataGridTextColumn Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                    <DataGridTextColumn Width="6*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                             Binding="{Binding Item.ItemName}">
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
@@ -200,7 +196,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <!--Số lượng-->
-                    <DataGridTextColumn Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                    <DataGridTextColumn Width="5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                             Binding="{Binding QuantityUnits}">
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
@@ -216,7 +212,7 @@
                         </DataGridTextColumn.ElementStyle>
                     <!--Đơn giá-->
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Đơn giá" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                    <DataGridTextColumn Header="Đơn giá" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                             Binding="{Binding Cprice, StringFormat={}{0:0}}">
                         <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
                         <DataGridTextColumn.ElementStyle>
@@ -226,7 +222,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Tổng cộng" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                    <DataGridTextColumn Header="Tổng cộng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                         <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
 
                         <DataGridTextColumn.ElementStyle>

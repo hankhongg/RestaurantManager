@@ -137,7 +137,7 @@
                                         </DataGridTextColumn>
                                         <!--Giá tồn kho-->
                                         <DataGridTextColumn Header="Giá nhập kho" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding StoPrice, StringFormat={}{0:0}}" >
+                                                            Binding="{Binding StoPrice, StringFormat={}{0:N2}}" >
                                             <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
@@ -179,7 +179,7 @@
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                    <Setter Property="FontSize" Value="20"/>
+                                                    <Setter Property="FontSize" Value="23"/>
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
@@ -231,7 +231,7 @@
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                    <Setter Property="FontSize" Value="20"/>
+                                                    <Setter Property="FontSize" Value="23"/>
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
@@ -253,7 +253,7 @@
                                                             ElementStyle="{StaticResource ElementStyleConfiguration}"/>
                                         <!--Lương nhân viên-->
                                         <DataGridTextColumn Header="Lương" Width="2*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding EmpSalary, StringFormat={}{0:0}}" 
+                                                            Binding="{Binding EmpSalary, StringFormat={}{0:N2}}" 
                                                             ElementStyle="{StaticResource ElementStyleConfiguration}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -267,6 +267,157 @@
                                 </StackPanel>
                             </Grid>
                         </TabItem>
+                        <TabItem Header="Quản lý nguyên liệu" Style="{StaticResource TabItemStyle}" 
+                                 FontWeight="SemiBold" FontSize="30" Padding="30"
+                                 Background="Transparent" BorderThickness="0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="9*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                
+                                <DataGrid x:Name="ingredientsDataGrid" CanUserDeleteRows="False"
+                                          BorderThickness="0"  IsReadOnly="True" SelectedItem="{Binding SelectedIngre, Mode=OneWayToSource}"
+                                          AutoGenerateColumns="False" ItemsSource="{Binding IngredientsList}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding EditIngreCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding IngreCode}" Header="Mã nguyên liệu"
+                                                            Width="2.5*"
+                                                            HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="23"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding IngreName}" Header="Tên nguyên liệu"
+                                                            Width="5*"
+                                                            HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            >
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="23"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding InstockKg}" Header="Tồn kho (KG)"
+                                                            Width="2.5*"
+                                                            HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            >
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="23"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="Thêm nguyên liệu" Style="{StaticResource configureDataButton}"
+                                            Command="{Binding AddIngreCommand}" CommandParameter="{Binding ElementName=addIngreWindow}"/>
+                                    <Button Content="Xóa nguyên liệu" Style="{StaticResource configureDataButton}" IsEnabled="{Binding IsSelectedIngre}"
+                                             Command="{Binding DelIngreCommand}" CommandParameter="{Binding ElementName=addIngreWindow}"/>
+                                    <Button Content="Sửa nguyên liệu" Style="{StaticResource configureDataButton}" IsEnabled="{Binding IsSelectedIngre}" 
+                                            Command="{Binding EditIngreCommand}" CommandParameter="{Binding ElementName=addIngreWindow}"/>             
+                                </StackPanel>
+
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Quản lý thực đơn" Style="{StaticResource TabItemStyle}" 
+                                 FontWeight="SemiBold" FontSize="30" Padding="30"
+                                 Background="Transparent" BorderThickness="0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="9*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <DataGrid Grid.Column="1" x:Name="itemsDataGrid" CanUserDeleteRows="False"
+                                          BorderThickness="0" IsReadOnly="True" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}"
+                                          AutoGenerateColumns="False" ItemsSource="{Binding ItemsList}">
+                                    
+
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding ItemCode}" 
+                                                            Width="1.5*"
+                                                            Header="Mã sản phẩm">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="23"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding ItemName}" ElementStyle="{StaticResource ElementStyleConfiguration}"
+                                                            Width="3*"
+                                                            Header="Tên sản phẩm"/>
+                                        <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding ItemType}" 
+                                                            Width="1*"
+                                                            Header="Loại sản phẩm">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="23"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding ItemCprice, StringFormat={}{0:N2}}"
+                                                            Width="1.5*"
+                                                            Header="Giá vốn">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="23"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding ItemSprice, StringFormat={}{0:N2}}"
+                                                            Width="1.5*"
+                                                            Header="Giá bán">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="23"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                                            Binding="{Binding IsAvailable}" 
+                                                            Width="1.5*"
+                                                            Header="Còn hàng">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                    <Setter Property="FontSize" Value="23"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
+                                    <Button Content="Thêm sản phẩm" Style="{StaticResource configureDataButton}"
+                                            Command="{Binding AddItemCommand}" CommandParameter="{Binding ElementName=addItemWindow}"/>
+                                    <Button Content="Xóa sản phẩm" Style="{StaticResource configureDataButton}" IsEnabled="{Binding IsSelectedItem}"
+                                            Command="{Binding DelItemCommand}" CommandParameter="{Binding ElementName=addItemWindow}"/>
+                                    <Button Content="Sửa sản phẩm" Style="{StaticResource configureDataButton}" IsEnabled="{Binding IsSelectedItem}" 
+                                            Command="{Binding EditItemCommand}" CommandParameter="{Binding ElementName=addItemWindow}"/>
+                                </StackPanel>
+                            </Grid>
+                            
+                        </TabItem>
+                        
                     </TabControl>
                 </Grid>
             </TabItem>

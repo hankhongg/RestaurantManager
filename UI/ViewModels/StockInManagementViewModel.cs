@@ -402,15 +402,29 @@ namespace RestaurantManager.ViewModels
                             DataProvider.Instance.DB.Stockins.Update(mainVM.SelectedStockin);
                             DataProvider.Instance.DB.SaveChanges();
                             mainVM.StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+
+                            SelectedStockinDetails = null;
+                            StockinDetailsCostPrice = "";
+                            StockInDetailsQuantity = "";
                             p.Close();
                         }
                         else if (dialogResult == MessageBoxResult.Cancel) { return; }
-                        else { p.Close(); }
+                        else 
+                        {
+                            SelectedStockinDetails = null;
+                            StockinDetailsCostPrice = "";
+                            StockInDetailsQuantity = "";
+                            p.Close(); 
+                        }
                     }
-                    else p.Close();
+                    else 
+                    {
+                        SelectedStockinDetails = null;
+                        StockinDetailsCostPrice = "";
+                        StockInDetailsQuantity = "";
+                        p.Close();
+                    }
                 }
-
-                
             });
 
             // Add Stockin Details
@@ -573,7 +587,10 @@ namespace RestaurantManager.ViewModels
             {
                 foreach (var entry in DataProvider.Instance.DB.ChangeTracker.Entries())
                 {
-                    entry.State = EntityState.Detached;
+                    if (entry.Entity != SelectedStockinDetailsIngre && entry.Entity != SelectedStockinDetailsDrinkOther)
+                    {
+                        entry.State = EntityState.Detached;
+                    }
                 }
                 if (SelectedIdxStockin == 0)
                 {

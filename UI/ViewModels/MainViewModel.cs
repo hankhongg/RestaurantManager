@@ -143,11 +143,6 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-
-<<<<<<< HEAD
-        public MainViewModel()
-        {
-=======
         // Ingredients & Items Management
         private ObservableCollection<Ingredient> ingredientsList;
         public ObservableCollection<Ingredient> IngredientsList { get { return ingredientsList; } set { if (ingredientsList != value) ingredientsList = value; OnPropertyChanged(); } }
@@ -208,7 +203,6 @@ namespace RestaurantManager.ViewModels
         public ICommand EditItemCommand { get; set; }
 
         public MainViewModel() {
->>>>>>> efe798f73e0a63cdd559ab46c8ab6f60de55851f
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
             //StockinList = new ObservableCollection<Stockin>(
@@ -636,8 +630,7 @@ namespace RestaurantManager.ViewModels
                     //stockInDetailsVM.LoadStockinDetails();
                 }
             });
-<<<<<<< HEAD
-=======
+
             //EditStockinCommand = new RelayCommand<object>((p) => SelectedStockin != null, (p) =>
             //{
             //    AddStockInWindow EditStockInWindow = new AddStockInWindow();
@@ -688,7 +681,6 @@ namespace RestaurantManager.ViewModels
                     IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
                 }
             });
->>>>>>> efe798f73e0a63cdd559ab46c8ab6f60de55851f
         }
     }
 }

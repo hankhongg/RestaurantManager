@@ -121,20 +121,9 @@ namespace RestaurantManager.ViewModels
 
         }
 
-        public void SaveAccountInformation()
+        public void SaveAccountInformation(Account acc)
         {
-            bool checkEmptyOrNull = string.IsNullOrEmpty(AccountName) || string.IsNullOrEmpty(AccountEmail) || string.IsNullOrEmpty(AccountPhoneNumber) || string.IsNullOrEmpty(AccountID);
-            var acc = DataProvider.Instance.DB.Accounts.Where(y => y.AccUsername == AccountID).FirstOrDefault();
-            if (checkEmptyOrNull)
-            {
-                MessageBox.Show("Không được để trống thông tin!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-            }
-            else if (acc == null)
-            {
-                MessageBox.Show("Không tìm thấy tài khoản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-            }
-            else
-            {
+
                 acc.AccDisplayname = AccountName;
                 acc.AccEmail = AccountEmail;
                 acc.AccPhone = AccountPhoneNumber;
@@ -144,7 +133,7 @@ namespace RestaurantManager.ViewModels
                 }
                 DataProvider.Instance.DB.SaveChanges();
                 MessageBox.Show($"Lưu thông tin thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+
         }
 
         public ICommand CheckPasswordChanged { get; set; }
@@ -164,7 +153,7 @@ namespace RestaurantManager.ViewModels
                     IsButtonPressed = !IsButtonPressed;
                 }
             );
-            SaveButtonPressedCommand = new RelayCommand<object>((p) =>
+            SaveButtonPressedCommand = new RelayCommand<ProfileWindow>((p) =>
             {
                 return IsButtonPressed;
             },
@@ -173,8 +162,20 @@ namespace RestaurantManager.ViewModels
                     MessageBoxResult r = MessageBox.Show("Bấm Yes để xác nhận lưu thông tin!", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Asterisk);
                     if (r == MessageBoxResult.Yes)
                     {
-
-                        SaveAccountInformation();
+                        bool checkEmptyOrNull = string.IsNullOrEmpty(AccountName) || string.IsNullOrEmpty(AccountEmail) || string.IsNullOrEmpty(AccountPhoneNumber) || string.IsNullOrEmpty(AccountID);
+                        var acc = DataProvider.Instance.DB.Accounts.Where(y => y.AccUsername == AccountID).FirstOrDefault();
+                        if (checkEmptyOrNull)
+                        {
+                            MessageBox.Show("Không được để trống thông tin!\nThông tin không được lưu.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                            p.Close();
+                        }
+                        else if (acc == null)
+                        {
+                            MessageBox.Show("Không tìm thấy tài khoản!\nThông tin không được lưu.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                            p.Close();
+                        }
+                        else
+                            SaveAccountInformation(acc);
                         IsButtonPressed = false;
                     }
                 }
