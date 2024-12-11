@@ -74,7 +74,7 @@
                 </StackPanel>
                 <Border Grid.Row="1" Grid.Column="1">
                     <DatePicker x:Name="txtDate" FontSize="18" Width="auto" Margin="0,0,5,15"
-                                VerticalContentAlignment="Center"
+                                VerticalContentAlignment="Center" Language="en-GB"
                                 SelectedDate="{Binding StockInDate, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding IsEnable}"/>
                 </Border>

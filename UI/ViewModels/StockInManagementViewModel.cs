@@ -13,6 +13,7 @@ using RestaurantManager.Views;
 using UI.Views;
 using XAct;
 using XAct.Entities.Implementations;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace RestaurantManager.ViewModels
 {
@@ -414,6 +415,26 @@ namespace RestaurantManager.ViewModels
                 var mainVM = mainWindow.DataContext as MainViewModel;
                 if (mainVM != null)
                 {
+                    // Cập nhật STO_PRICE từ STOCKIN_DETAILS_DRINK_OTHER
+                    string query1 = @"
+                                UPDATE STOCKIN
+                                SET STO_PRICE = (
+                                    SELECT SUM(SI.CPRICE * SI.QUANTITY_KG)
+                                    FROM STOCKIN_DETAILS_INGRE SI
+                                    WHERE SI.STO_ID = STOCKIN.STO_ID
+                                )
+                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_INGRE);
+                            ";
+                    string query2 = @"
+                                UPDATE STOCKIN
+                                SET STO_PRICE = COALESCE(STO_PRICE, 0) + (
+                                    SELECT SUM(SD.CPRICE * SD.QUANTITY_UNITS)
+                                    FROM STOCKIN_DETAILS_DRINK_OTHER SD
+                                    WHERE SD.STO_ID = STOCKIN.STO_ID
+                                )
+                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_DRINK_OTHER);
+                            ";
+
                     checkConfigured(mainVM);
                     if (isConfigured)
                     {
@@ -432,8 +453,15 @@ namespace RestaurantManager.ViewModels
                             if (mainVM.SelectedStockin != null)
                                 DataProvider.Instance.DB.Stockins.Update(mainVM.SelectedStockin);
                             else DataProvider.Instance.DB.Stockins.Update(NewStockIn);
+
+                            // Thực thi câu lệnh SQL đầu tiên
+                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
+
+                            // Thực thi câu lệnh SQL thứ hai
+                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
                             DataProvider.Instance.DB.SaveChanges();
-                            mainVM.StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
+
+                            RefreshStockinList(mainVM);
 
                             SelectedStockinDetails = null;
                             StockinDetailsCostPrice = "";
@@ -451,11 +479,23 @@ namespace RestaurantManager.ViewModels
                     }
                     else 
                     {
+
+                        // Thực thi câu lệnh SQL đầu tiên
+                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
+
+                        // Thực thi câu lệnh SQL thứ hai
+                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
+
+                        DataProvider.Instance.DB.SaveChanges();
+                        RefreshStockinList(mainVM);
+
+
                         SelectedStockinDetails = null;
                         StockinDetailsCostPrice = "";
                         StockInDetailsQuantity = "";
                         p.Close();
                     }
+                    mainVM.StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins.ToList());
                 }
             });
 
@@ -674,6 +714,29 @@ namespace RestaurantManager.ViewModels
             {
                 isConfigured = false;
             }
+        }
+        private void RefreshStockinList(MainViewModel mainVM)
+        {
+            // Xóa trạng thái theo dõi để tránh dữ liệu cũ
+            foreach (var entry in DataProvider.Instance.DB.ChangeTracker.Entries())
+            {
+                entry.State = EntityState.Detached;
+            }
+
+            // Cập nhật lại danh sách Stockin
+            mainVM.StockinList = new ObservableCollection<Stockin>(
+                DataProvider.Instance.DB.Stockins.AsNoTracking().ToList());
+
+
+            /*
+             * Xóa trạng thái theo dõi (EntityState.Detached)
+                Nếu thiếu: Entity Framework có thể sử dụng các thực thể cũ được theo dõi (cached). Điều này khiến giao diện không được làm mới, ngay cả khi bạn cập nhật dữ liệu trong cơ sở dữ liệu.
+                Tác động: Mặc dù cơ sở dữ liệu đã được cập nhật, giao diện vẫn hiển thị dữ liệu cũ.
+
+             AsNoTracking() khi làm mới danh sách
+                Nếu thiếu: Entity Framework có thể trả về dữ liệu được lưu trong bộ nhớ (cache) thay vì lấy dữ liệu mới nhất từ cơ sở dữ liệu.
+                Tác động: Giao diện hiển thị thông tin lỗi thời, gây nhầm lẫn.
+             */
         }
     }
 }

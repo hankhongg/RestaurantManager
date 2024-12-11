@@ -153,7 +153,7 @@
                                             Command="{Binding AddStockinCommand}" CommandParameter="AddStockinWindow"/>
                                     <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}"
                                             Command="{Binding DelStockinCommand}" CommandParameter="AddStockinWindow"
-                                            IsEnabled="{Binding isSelectedStockin}"/>
+                                            IsEnabled="{Binding isSelectedStockin}" />
                                     <!--<Button Content="Sửa" BorderThickness="2" Style="{StaticResource configureDataButton}"
                                             Command="{Binding EditStockinCommand}" CommandParameter="AddStockinWindow"/>-->
                                 </StackPanel>
