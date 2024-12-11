@@ -71,6 +71,8 @@ namespace RestaurantManager.ViewModels
             set
             {
                 selectedIdxStockin = value;
+                StockinDetailsCostPrice = "";
+                StockInDetailsQuantity = "";
                 OnPropertyChanged();
                 UpdateStockInType();
             }
@@ -202,7 +204,12 @@ namespace RestaurantManager.ViewModels
             get { return _selectedStockinDetailsIngre; }
             set 
             {
-                _selectedStockinDetailsIngre = value; 
+                _selectedStockinDetailsIngre = value;
+                isReset = false;
+                StockInDetailsQuantity = _selectedStockinDetailsIngre.QuantityKg.ToString();
+                StockinDetailsCostPrice = _selectedStockinDetailsIngre.Cprice.ToString();
+                SelectedStockinDetailsName = _selectedStockinDetailsIngre.Ingre.IngreName;
+
                 OnPropertyChanged();
             }
         }
@@ -214,6 +221,10 @@ namespace RestaurantManager.ViewModels
             set 
             { 
                 _selectedStockinDetailsDrinkOther = value;
+                StockInDetailsQuantity = _selectedStockinDetailsDrinkOther.QuantityUnits.ToString();
+                StockinDetailsCostPrice = _selectedStockinDetailsDrinkOther.Cprice.ToString();
+                SelectedStockinDetailsName = _selectedStockinDetailsDrinkOther.Item.ItemName;
+
                 OnPropertyChanged();
             }
         }
@@ -236,7 +247,7 @@ namespace RestaurantManager.ViewModels
         public ICommand exitBtn { get; set; }
         public ICommand AddStockinDetailsCommand { get; set; }
         public ICommand DelStockinDetailsCommand { get; set; }
-        public ICommand EditStockinCommand { get; set; }
+        public ICommand EditStockinDetailsCommand { get; set; }
 
         private ObservableCollection<StockinDetailsDrinkOther> _stockinDetailsDrinkOtherList;
         public ObservableCollection<StockinDetailsDrinkOther> StockInDetailsDrinkOtherList
@@ -248,6 +259,8 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public bool isReset { get; set; }
 
         private ObservableCollection<StockinDetailsIngre> _stockinDetailsIngresList;
         public ObservableCollection<StockinDetailsIngre> StockInDetailsIngresList
@@ -439,6 +452,13 @@ namespace RestaurantManager.ViewModels
                     MessageBox.Show("Vui lòng nhập đầy đủ thông tin", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return;
                 }
+                //else if ((!string.IsNullOrEmpty(StockInDetailsQuantity) || !string.IsNullOrEmpty(StockinDetailsCostPrice)) && isReset == false)
+                //{
+                //    isReset = true;
+                //    StockInDetailsQuantity = null;
+                //    StockinDetailsCostPrice = null;
+                //    return;
+                //}
                 if (!int.TryParse(StockInID, out int stoId) ||
                     !double.TryParse(StockInDetailsQuantity, out double quantityKg) ||
                     !decimal.TryParse(StockinDetailsCostPrice, out decimal costPrice))
@@ -574,7 +594,7 @@ namespace RestaurantManager.ViewModels
                              Item = item // Gán dữ liệu từ bảng MenuItems    
                          }).Where(x => x.Sto.StoCode == StockInCode));
                 }
-
+                isReset = !isReset;
                 
                 // Will have a save button
                 //IsEnable = true;
@@ -604,6 +624,11 @@ namespace RestaurantManager.ViewModels
                 }
                 DataProvider.Instance.DB.SaveChanges();
             });
+
+            EditStockinDetailsCommand = new RelayCommand<Window>((p) => SelectedStockinDetailsIngre != null || SelectedStockinDetailsDrinkOther != null, (p) =>
+            {
+
+            } );
         }
         public void addStockin(Window p, int StkNumber)
         {

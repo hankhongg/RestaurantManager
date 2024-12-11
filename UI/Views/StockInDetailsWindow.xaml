@@ -91,7 +91,7 @@
                     <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}"
                             Command="{Binding DelStockinDetailsCommand}" CommandParameter="{Binding ElementName=StkDetails}"/>
                     <Button Content="Sửa" BorderThickness="2" Style="{StaticResource configureDataButton}"
-                            Command="{Binding EditStockinCommand}" CommandParameter="{Binding ElementName=StkDetails}"/>
+                            Command="{Binding EditStockinDetailsCommand}" CommandParameter="{Binding ElementName=StkDetails}"/>
                 </StackPanel>
             </Grid>
             
