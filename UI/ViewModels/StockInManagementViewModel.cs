@@ -76,6 +76,7 @@ namespace RestaurantManager.ViewModels
                 StockInDetailsQuantity = "";
                 OnPropertyChanged();
                 UpdateStockInType();
+                ///
             }
         }
         private object _selectedStockinDetails;
