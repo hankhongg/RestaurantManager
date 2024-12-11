@@ -206,10 +206,12 @@ namespace RestaurantManager.ViewModels
             {
                 _selectedStockinDetailsIngre = value;
                 isReset = false;
-                StockInDetailsQuantity = _selectedStockinDetailsIngre.QuantityKg.ToString();
-                StockinDetailsCostPrice = _selectedStockinDetailsIngre.Cprice.ToString();
-                SelectedStockinDetailsName = _selectedStockinDetailsIngre.Ingre.IngreName;
-
+                if (_selectedStockinDetailsIngre != null)
+                {
+                    StockInDetailsQuantity = _selectedStockinDetailsIngre.QuantityKg.ToString();
+                    StockinDetailsCostPrice = _selectedStockinDetailsIngre.Cprice.ToString();
+                    SelectedStockinDetailsName = _selectedStockinDetailsIngre.Ingre.IngreName;
+                }
                 OnPropertyChanged();
             }
         }
@@ -221,9 +223,12 @@ namespace RestaurantManager.ViewModels
             set 
             { 
                 _selectedStockinDetailsDrinkOther = value;
-                StockInDetailsQuantity = _selectedStockinDetailsDrinkOther.QuantityUnits.ToString();
-                StockinDetailsCostPrice = _selectedStockinDetailsDrinkOther.Cprice.ToString();
-                SelectedStockinDetailsName = _selectedStockinDetailsDrinkOther.Item.ItemName;
+                if (_selectedStockinDetailsDrinkOther != null)
+                {
+                    StockInDetailsQuantity = _selectedStockinDetailsDrinkOther.QuantityUnits.ToString();
+                    StockinDetailsCostPrice = _selectedStockinDetailsDrinkOther.Cprice.ToString();
+                    SelectedStockinDetailsName = _selectedStockinDetailsDrinkOther.Item.ItemName;
+                }
 
                 OnPropertyChanged();
             }
@@ -238,6 +243,18 @@ namespace RestaurantManager.ViewModels
             set
             {
                 _selectedStockinDetailsName = value;
+                if (SelectedIdxStockin == 0)
+                {
+                    var selectedStkDetailsIngre = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreName == SelectedStockinDetailsName);
+                    if (selectedStkDetailsIngre != null)
+                        StockinDetailsCostPrice = selectedStkDetailsIngre.IngrePrice.ToString();
+                }
+                else if (SelectedIdxStockin == 1)
+                {
+                    var selectedStkDetailsDrinkOther = DataProvider.Instance.DB.MenuItems.FirstOrDefault(x => x.ItemName == SelectedStockinDetailsName);
+                    if (selectedStkDetailsDrinkOther != null)
+                        StockinDetailsCostPrice = selectedStkDetailsDrinkOther.ItemCprice.ToString();
+                }
                 OnPropertyChanged();
             }
         }
@@ -412,7 +429,9 @@ namespace RestaurantManager.ViewModels
                             {
                                 mainVM.SelectedStockin.StoDate = StockInDate;
                             }
-                            DataProvider.Instance.DB.Stockins.Update(mainVM.SelectedStockin);
+                            if (mainVM.SelectedStockin != null)
+                                DataProvider.Instance.DB.Stockins.Update(mainVM.SelectedStockin);
+                            else DataProvider.Instance.DB.Stockins.Update(NewStockIn);
                             DataProvider.Instance.DB.SaveChanges();
                             mainVM.StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
 
@@ -486,7 +505,7 @@ namespace RestaurantManager.ViewModels
 
                         /// Cập nhật số lượng nguyên liệu
                         isIngreNameExist.QuantityKg = double.Parse(StockInDetailsQuantity);
-                        isIngreNameExist.Cprice = int.Parse(StockinDetailsCostPrice);
+                        isIngreNameExist.Cprice = decimal.Parse(StockinDetailsCostPrice);
                         DataProvider.Instance.DB.StockinDetailsIngre.Update(isIngreNameExist);
                     }
 
@@ -550,7 +569,7 @@ namespace RestaurantManager.ViewModels
 
                         // Cập nhật số lượng nguyên liệu
                         isItemNameExist.QuantityUnits = int.Parse(StockInDetailsQuantity);
-                        isItemNameExist.Cprice = int.Parse(StockinDetailsCostPrice);
+                        isItemNameExist.Cprice = decimal.Parse(StockinDetailsCostPrice);
 
                     }
                     else
@@ -639,16 +658,15 @@ namespace RestaurantManager.ViewModels
                 StoDate = StockInDate,
             };
 
-            StockInDate = DateTime.Now;
-
             StockInID = "";
-            StockInDate = DateTime.Now;
+            
             
             p.Close();
         }
         public void checkConfigured(MainViewModel mainVM)
         {
-            if (NewStockIn != null && StockInDate != NewStockIn.StoDate || StockInDate != mainVM.SelectedStockin.StoDate)
+            if (NewStockIn != null && StockInDate != NewStockIn.StoDate && stockInDetailsManagementID == 0 || 
+                mainVM.SelectedStockin != null && StockInDate != mainVM.SelectedStockin.StoDate && stockInDetailsManagementID == 1)
             {
                 isConfigured = true;
             }

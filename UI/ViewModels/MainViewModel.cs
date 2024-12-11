@@ -489,7 +489,9 @@ namespace RestaurantManager.ViewModels
                             stockInDetailsVM.StockInID = stockInVM.NewStockIn.StoId.ToString();
 
                             stockInDetailsWindow.ShowDialog();
+                            
 
+                            stockInDetailsVM.StockInDate = DateTime.Now;
                             //if (stockInVM.managementID == 2)
                             //{
                             //    if (stockInVM.SelectedIdxStockin == 0)
@@ -622,43 +624,9 @@ namespace RestaurantManager.ViewModels
 
                     stockInDetailsVM.UpdateStockInType();
                     stockInDetailsWindow.ShowDialog();
-                    //stockInDetailsVM.SelectedTable = stockInDetailsVM.StockInDetailsDrinkOtherList;
-                    //stockInDetailsVM.selectedTable();
-                    //stockInDetailsVM.SelectedTable = StockInDetailsIngresList;
-                    //SelectedTable = StockInDetailsDrinkOtherList;
-
-                    //stockInDetailsVM.LoadStockinDetails();
                 }
             });
 
-            //EditStockinCommand = new RelayCommand<object>((p) => SelectedStockin != null, (p) =>
-            //{
-            //    AddStockInWindow EditStockInWindow = new AddStockInWindow();
-            //    var stockInVM = EditStockInWindow.DataContext as StockInManagementViewModel;
-            //    var currStockIn = DataProvider.Instance.DB.Stockins.Where(x => x.StoId == SelectedStockin.StoId).FirstOrDefault();
-
-            //    if (stockInVM != null && currStockIn != null)
-            //    {
-            //        stockInVM.LoadStockin(currStockIn);
-
-            //        EditStockInWindow.ShowDialog();
-
-            //        if (stockInVM.isEdited)
-            //        {
-            //            currStockIn.StoDate = stockInVM.EditedStockIn.StoDate;
-
-            //            DataProvider.Instance.DB.SaveChanges();
-
-            //            var updatedStockIn = StockinList.FirstOrDefault(c => c.StoId == currStockIn.StoId);
-            //            if (updatedStockIn != null)
-            //            {
-            //                updatedStockIn.StoPrice = currStockIn.StoPrice;
-            //                updatedStockIn.StoDate = currStockIn.StoDate;
-            //            }
-            //            StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
-            //        }
-            //    }
-            //});
 
             // Ingredients & Items Management
             AddIngreCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
