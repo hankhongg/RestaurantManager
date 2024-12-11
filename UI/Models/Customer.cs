@@ -14,7 +14,7 @@ public partial class Customer
     public string? CusAddr { get; set; }
 
     public string? CusPhone { get; set; }
-       
+
     public string? CusCccd { get; set; }
 
     public string? CusEmail { get; set; }

@@ -664,10 +664,17 @@ namespace RestaurantManager.ViewModels
             AddIngreCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
                AddIngreWindow addIngreWindow = new AddIngreWindow();
-               addIngreWindow.ShowDialog();
+                var ingreVM = addIngreWindow.DataContext as IngredientsManagementViewModel;
+                if (ingreVM != null)
+                {
+                    ingreVM = new IngredientsManagementViewModel();
+                    ingreVM.AddButtonIngredient = true;
+                    addIngreWindow.DataContext = ingreVM;
+                }
+                addIngreWindow.ShowDialog();
                IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
             });
-            EditIngreCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            EditIngreCommand = new RelayCommand<Window>((p) => SelectedIngre != null, (p) =>
             {
                 AddIngreWindow addIngreWindow = new AddIngreWindow();
                 var ingreVM = addIngreWindow.DataContext as IngredientsManagementViewModel;
@@ -679,6 +686,24 @@ namespace RestaurantManager.ViewModels
                     addIngreWindow.DataContext = ingreVM;
                     addIngreWindow.ShowDialog();
                     IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
+                }
+            });
+            DelIngreCommand = new RelayCommand<object>((p) => SelectedIngre != null, (p) =>
+            {
+                var ingre = DataProvider.Instance.DB.Ingredients.Where(x => x.IngreId == SelectedIngre.IngreId).FirstOrDefault();
+                var DialogResult = MessageBox.Show("Bạn có chắc chắn muốn xóa?", "Thông báo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (ingre != null && DialogResult == MessageBoxResult.Yes)
+                {
+                    DataProvider.Instance.DB.Ingredients.Remove(ingre);
+                    DataProvider.Instance.DB.SaveChanges();
+                    IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
+                    int i = 0;
+                    foreach (Ingredient ingredient in IngredientsList)
+                    {
+                        ingredient.IngreCode = $"NL{++i:D3}";
+                    }
+                    DataProvider.Instance.DB.SaveChanges();
+                    IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
                 }
             });
         }
