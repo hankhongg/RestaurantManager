@@ -527,7 +527,7 @@ namespace RestaurantManager.ViewModels
                 }
                 if (SelectedIdxStockin == 0)
                 {
-                    var isIngreNameExist = DataProvider.Instance.DB.StockinDetailsIngre
+                    var isIngreNameExist = DataProvider.Instance.DB.StockinDetailsIngres
                         .FirstOrDefault(x => x.Ingre.IngreName == SelectedStockinDetailsName
                          && x.StoId == int.Parse(StockInID));
 
@@ -546,7 +546,7 @@ namespace RestaurantManager.ViewModels
                         /// Cập nhật số lượng nguyên liệu
                         isIngreNameExist.QuantityKg = double.Parse(StockInDetailsQuantity);
                         isIngreNameExist.Cprice = decimal.Parse(StockinDetailsCostPrice);
-                        DataProvider.Instance.DB.StockinDetailsIngre.Update(isIngreNameExist);
+                        DataProvider.Instance.DB.StockinDetailsIngres.Update(isIngreNameExist);
                     }
 
                     else
@@ -567,7 +567,7 @@ namespace RestaurantManager.ViewModels
                             Cprice = decimal.Parse(StockinDetailsCostPrice)
                         };
                         StockInDetailsIngresList.Add(NewIngreStockin);
-                        DataProvider.Instance.DB.StockinDetailsIngre.Add(NewIngreStockin);
+                        DataProvider.Instance.DB.StockinDetailsIngres.Add(NewIngreStockin);
                     }
                     DataProvider.Instance.DB.SaveChanges();
 
@@ -577,7 +577,7 @@ namespace RestaurantManager.ViewModels
                     }
 
                     StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(
-                        (from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngre
+                        (from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngres
                             join ingre in DataProvider.Instance.DB.Ingredients
                             on stkInDetailsIngre.IngreId equals ingre.IngreId
                             select new StockinDetailsIngre
@@ -673,7 +673,7 @@ namespace RestaurantManager.ViewModels
                 }
                 if (SelectedIdxStockin == 0)
                 {
-                    DataProvider.Instance.DB.StockinDetailsIngre.Remove(SelectedStockinDetailsIngre);
+                    DataProvider.Instance.DB.StockinDetailsIngres.Remove(SelectedStockinDetailsIngre);
                     StockInDetailsIngresList.Remove(SelectedStockinDetailsIngre);
                 }
                 else

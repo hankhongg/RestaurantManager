@@ -458,7 +458,7 @@ namespace RestaurantManager.ViewModels
                             //stockInDetailsVM.StockInID = (existedStockInNumber + 1).ToString();
 
                             stockInDetailsVM.StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(
-                                (from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngre
+                                (from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngres
                                  join ingre in DataProvider.Instance.DB.Ingredients
                                  on stkInDetailsIngre.IngreId equals ingre.IngreId
                                  select new StockinDetailsIngre
@@ -539,7 +539,7 @@ namespace RestaurantManager.ViewModels
 
 
                     stockInDetailsVM.StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(
-                        (from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngre
+                        (from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngres
                         join ingre in DataProvider.Instance.DB.Ingredients
                         on stkInDetailsIngre.IngreId equals ingre.IngreId
                         select new StockinDetailsIngre

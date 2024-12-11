@@ -1,5 +1,4 @@
 ﻿using RestaurantManager.Models;
-using RestaurantManager.Models.Database;
 using RestaurantManager.Models.DataProvider;
 using RestaurantManager.Views;
 using System;

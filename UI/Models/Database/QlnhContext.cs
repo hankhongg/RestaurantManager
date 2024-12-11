@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace RestaurantManager.Models.Database;
+namespace RestaurantManager.Models;
 
 public partial class QlnhContext : DbContext
 {
@@ -43,11 +43,11 @@ public partial class QlnhContext : DbContext
 
     public virtual DbSet<StockinDetailsDrinkOther> StockinDetailsDrinkOthers { get; set; }
 
-    public virtual DbSet<StockinDetailsIngre> StockinDetailsIngre { get; set; }
+    public virtual DbSet<StockinDetailsIngre> StockinDetailsIngres { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=QLNH;Trusted_Connection=True; TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=hankhongg-LAPTOP;Database=QLNH;Trusted_Connection=True; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -274,7 +274,9 @@ public partial class QlnhContext : DbContext
             entity.ToTable("MENU_ITEMS");
 
             entity.Property(e => e.ItemId).HasColumnName("ITEM_ID");
-            entity.Property(e => e.IsAvailable).HasColumnName("IS_AVAILABLE");
+            entity.Property(e => e.Instock)
+                .HasDefaultValue(0.0)
+                .HasColumnName("INSTOCK");
             entity.Property(e => e.Isdeleted).HasColumnName("ISDELETED");
             entity.Property(e => e.ItemCode)
                 .HasMaxLength(4)
@@ -408,6 +410,10 @@ public partial class QlnhContext : DbContext
                 .HasColumnType("money")
                 .HasColumnName("CPRICE");
             entity.Property(e => e.QuantityUnits).HasColumnName("QUANTITY_UNITS");
+            entity.Property(e => e.TotalCprice)
+                .HasDefaultValue(0m)
+                .HasColumnType("money")
+                .HasColumnName("TOTAL_CPRICE");
 
             entity.HasOne(d => d.Item).WithMany(p => p.StockinDetailsDrinkOthers)
                 .HasForeignKey(d => d.ItemId)
@@ -431,6 +437,10 @@ public partial class QlnhContext : DbContext
                 .HasColumnType("money")
                 .HasColumnName("CPRICE");
             entity.Property(e => e.QuantityKg).HasColumnName("QUANTITY_KG");
+            entity.Property(e => e.TotalCprice)
+                .HasDefaultValue(0m)
+                .HasColumnType("money")
+                .HasColumnName("TOTAL_CPRICE");
 
             entity.HasOne(d => d.Ingre).WithMany(p => p.StockinDetailsIngres)
                 .HasForeignKey(d => d.IngreId)
