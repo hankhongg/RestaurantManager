@@ -16,7 +16,7 @@ namespace RestaurantManager.ViewModels
         public bool AddButtonIngredient { get; set; } = false;
 
         private int ingredientID;
-        public int IngredientID { get { return ingredientID; } set { } }
+        public int IngredientID { get; set; }
 
         private ObservableCollection<Ingredient> ingredientsList;
         public ObservableCollection<Ingredient> IngredientsList
@@ -97,6 +97,7 @@ namespace RestaurantManager.ViewModels
                     return;
                 }
                 SelectedIngreDetails = DataProvider.Instance.DB.Ingredients.Where(x => x.IngreId == IngredientID).FirstOrDefault();
+
 
                 bool checkValidIngre = !String.IsNullOrEmpty(IngreName) && !String.IsNullOrEmpty(IngreCPrice);
                 if (!checkValidIngre) { MessageBox.Show("Không được để trống thông tin!\nThông tin không được lưu.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk); p.Close(); return; }
