@@ -16,7 +16,7 @@ namespace RestaurantManager.ViewModels
         public bool AddButtonIngredient { get; set; } = false;
 
         private int ingredientID;
-        public int IngredientID { get; set; }
+        public int IngredientID { get { return ingredientID; } set { if (ingredientID != value) ingredientID = value; OnPropertyChanged(); } }
 
         private ObservableCollection<Ingredient> ingredientsList;
         public ObservableCollection<Ingredient> IngredientsList

@@ -306,7 +306,7 @@
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
-                                        <DataGridTextColumn Binding="{Binding IngrePrice}" Header="Giá nhập"
+                                        <DataGridTextColumn Binding="{Binding IngrePrice, StringFormat={}{0:N2}}" Header="Giá nhập"
                                                             Width="2.5*"
                                                             HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                                                             >       
@@ -405,9 +405,9 @@
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
                                         <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            Binding="{Binding IsAvailable}" 
+                                                            Binding="{Binding Instock}" 
                                                             Width="1.5*"
-                                                            Header="Còn hàng">
+                                                            Header="Số hàng còn lại">
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="HorizontalAlignment" Value="Center"/>
