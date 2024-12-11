@@ -19,9 +19,9 @@ public partial class MenuItem
 
     public decimal ItemSprice { get; set; }
 
-    public bool IsAvailable { get; set; }
-
     public bool Isdeleted { get; set; }
+
+    public double? Instock { get; set; }
 
     public virtual ICollection<ReceiptDetail> ReceiptDetails { get; set; } = new List<ReceiptDetail>();
 
