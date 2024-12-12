@@ -35,7 +35,7 @@
                     <RowDefinition ></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <Grid Height="280" Width="250" Background="#FFB0E0F0" >
+                    <Grid Height="280" Width="250" Background="#FFB0E0F0" VerticalAlignment="Center" >
                         <Grid Margin="3,3,3,3">
                             <Grid.Background>
                                 <ImageBrush ImageSource="/Views/Images/foodbackground.png" Stretch="UniformToFill" />
@@ -63,14 +63,14 @@
                 <Grid Grid.Row="1">
                     <!-- Các nút hành động -->
                     <Button Content="Lưu" Height="50" Width="100" HorizontalAlignment="Left" Command="{Binding AddItemCommand,Mode=OneWay}"
-                    VerticalAlignment="Top" Background="#4CA3F2" Foreground="White" 
+                    VerticalAlignment="Center" Background="#4CA3F2" Foreground="White" 
                     BorderBrush="Transparent"   BorderThickness="1" FontWeight="Bold" FontSize="14" Margin="112,10,0,0"/>
                     <Button Content="Thoát" Height="50" Width="100" HorizontalAlignment="Left" Command="{Binding ExitCommand,Mode=OneWay}"
-                    VerticalAlignment="Top" Background="#FF5C5C" Foreground="White" 
+                    VerticalAlignment="Center" Background="#FF5C5C" Foreground="White" 
                     BorderBrush="Transparent" BorderThickness="1" FontWeight="Bold" FontSize="14" Margin="255,10,0,0"/>
                 </Grid>
 
-                <Grid Grid.Row="0" Margin="10,10,10,10">
+                <Grid Grid.Row="0" Margin="10,10,10,10" VerticalAlignment="Center">
                     <!-- Các TextBlock và TextBox -->
                     <StackPanel Orientation="Vertical" >
                         <TextBlock Text="Mã món ăn:" FontWeight="SemiBold" FontSize="14" Foreground="#333333"/>
