@@ -118,20 +118,20 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>                        
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Button Content="Món ăn" Height="80" FontSize="15"  Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
+                    <Grid Grid.Row="0" >
+                        <Button Content="Món ăn" FontSize="15"  Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <Button Content="Đồ uống" FontSize="15" Height="80"  Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
+                        <Button Content="Đồ uống" FontSize="15"   Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
                     </Grid>
                     <Grid Grid.Row="2">
-                        <Button Content="Khác" FontSize="15" Height="80"  Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
+                        <Button Content="Khác" FontSize="15"  Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
                     </Grid>
                     <Grid Grid.Row="3">
-                        <Button FontSize="15" Height="80"  BorderThickness="1" BorderBrush="Transparent" Background="#FFB8D0E0"/>
+                        <Button FontSize="15"   BorderThickness="1" BorderBrush="Transparent" Background="#FFB8D0E0"/>
                     </Grid>
                     <Grid Grid.Row="4">
-                        <Button FontSize="15" Height="80"  BorderThickness="1" BorderBrush="Transparent" Background="#FFB8D0E0"/>
+                        <Button FontSize="15"   BorderThickness="1" BorderBrush="Transparent" Background="#FFB8D0E0"/>
                     </Grid>
                 </Grid>
 
