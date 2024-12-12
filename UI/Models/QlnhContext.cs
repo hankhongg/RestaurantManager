@@ -87,7 +87,7 @@ public partial class QlnhContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__ACCOUNT__ROLE_ID__6C190EBB");
+                .HasConstraintName("FK__ACCOUNT__ROLE_ID__3864608B");
         });
 
         modelBuilder.Entity<AccountRole>(entity =>
@@ -127,15 +127,15 @@ public partial class QlnhContext : DbContext
             entity.HasOne(d => d.Cus).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.CusId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__BOOKING__CUS_ID__4D94879B");
+                .HasConstraintName("FK__BOOKING__CUS_ID__19DFD96B");
 
             entity.HasOne(d => d.Emp).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.EmpId)
-                .HasConstraintName("FK__BOOKING__EMP_ID__4CA06362");
+                .HasConstraintName("FK__BOOKING__EMP_ID__18EBB532");
 
             entity.HasOne(d => d.Tab).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.TabId)
-                .HasConstraintName("FK__BOOKING__TAB_ID__4E88ABD4");
+                .HasConstraintName("FK__BOOKING__TAB_ID__1AD3FDA4");
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -176,7 +176,7 @@ public partial class QlnhContext : DbContext
 
             entity.ToTable("DINING_TABLE");
 
-            entity.HasIndex(e => e.TabNum, "UQ__DINING_T__0E575E16E0578BA0").IsUnique();
+            entity.HasIndex(e => e.TabNum, "UQ__DINING_T__0E575E164EF326FD").IsUnique();
 
             entity.Property(e => e.TabId).HasColumnName("TAB_ID");
             entity.Property(e => e.Isdeleted).HasColumnName("ISDELETED");
@@ -221,7 +221,7 @@ public partial class QlnhContext : DbContext
 
         modelBuilder.Entity<FinancialHistory>(entity =>
         {
-            entity.HasKey(e => e.FinId).HasName("PK__FINANCIA__20636AD9D4BC95B6");
+            entity.HasKey(e => e.FinId).HasName("PK__FINANCIA__20636AD9EE10EEF8");
 
             entity.ToTable("FINANCIAL_HISTORY");
 
@@ -324,20 +324,20 @@ public partial class QlnhContext : DbContext
             entity.HasOne(d => d.Cus).WithMany(p => p.Receipts)
                 .HasForeignKey(d => d.CusId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__RECEIPT__CUS_ID__5441852A");
+                .HasConstraintName("FK__RECEIPT__CUS_ID__208CD6FA");
 
             entity.HasOne(d => d.Emp).WithMany(p => p.Receipts)
                 .HasForeignKey(d => d.EmpId)
-                .HasConstraintName("FK__RECEIPT__EMP_ID__534D60F1");
+                .HasConstraintName("FK__RECEIPT__EMP_ID__1F98B2C1");
 
             entity.HasOne(d => d.Tab).WithMany(p => p.Receipts)
                 .HasForeignKey(d => d.TabId)
-                .HasConstraintName("FK__RECEIPT__TAB_ID__5535A963");
+                .HasConstraintName("FK__RECEIPT__TAB_ID__2180FB33");
         });
 
         modelBuilder.Entity<ReceiptDetail>(entity =>
         {
-            entity.HasKey(e => new { e.RecId, e.ItemId }).HasName("PK__RECEIPT___396D79007ABBEB3C");
+            entity.HasKey(e => new { e.RecId, e.ItemId }).HasName("PK__RECEIPT___396D7900334D3661");
 
             entity.ToTable("RECEIPT_DETAILS");
 
@@ -351,16 +351,16 @@ public partial class QlnhContext : DbContext
             entity.HasOne(d => d.Item).WithMany(p => p.ReceiptDetails)
                 .HasForeignKey(d => d.ItemId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RECEIPT_D__ITEM___59FA5E80");
+                .HasConstraintName("FK__RECEIPT_D__ITEM___2645B050");
 
             entity.HasOne(d => d.Rec).WithMany(p => p.ReceiptDetails)
                 .HasForeignKey(d => d.RecId)
-                .HasConstraintName("FK__RECEIPT_D__REC_I__59063A47");
+                .HasConstraintName("FK__RECEIPT_D__REC_I__25518C17");
         });
 
         modelBuilder.Entity<Recipe>(entity =>
         {
-            entity.HasKey(e => new { e.ItemId, e.IngreId }).HasName("PK__RECIPES__51D2FEEFD3FF8CE5");
+            entity.HasKey(e => new { e.ItemId, e.IngreId }).HasName("PK__RECIPES__51D2FEEFBE8E4985");
 
             entity.ToTable("RECIPES");
 
@@ -371,11 +371,11 @@ public partial class QlnhContext : DbContext
             entity.HasOne(d => d.Ingre).WithMany(p => p.Recipes)
                 .HasForeignKey(d => d.IngreId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RECIPES__INGRE_I__49C3F6B7");
+                .HasConstraintName("FK__RECIPES__INGRE_I__160F4887");
 
             entity.HasOne(d => d.Item).WithMany(p => p.Recipes)
                 .HasForeignKey(d => d.ItemId)
-                .HasConstraintName("FK__RECIPES__ITEM_ID__48CFD27E");
+                .HasConstraintName("FK__RECIPES__ITEM_ID__151B244E");
         });
 
         modelBuilder.Entity<Stockin>(entity =>
@@ -400,7 +400,7 @@ public partial class QlnhContext : DbContext
 
         modelBuilder.Entity<StockinDetailsDrinkOther>(entity =>
         {
-            entity.HasKey(e => new { e.StoId, e.ItemId }).HasName("PK__STOCKIN___E3A93569E53CA331");
+            entity.HasKey(e => new { e.StoId, e.ItemId }).HasName("PK__STOCKIN___E3A93569B755CFAA");
 
             entity.ToTable("STOCKIN_DETAILS_DRINK_OTHER");
 
@@ -418,16 +418,16 @@ public partial class QlnhContext : DbContext
             entity.HasOne(d => d.Item).WithMany(p => p.StockinDetailsDrinkOthers)
                 .HasForeignKey(d => d.ItemId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__STOCKIN_D__ITEM___6383C8BA");
+                .HasConstraintName("FK__STOCKIN_D__ITEM___2FCF1A8A");
 
             entity.HasOne(d => d.Sto).WithMany(p => p.StockinDetailsDrinkOthers)
                 .HasForeignKey(d => d.StoId)
-                .HasConstraintName("FK__STOCKIN_D__STO_I__628FA481");
+                .HasConstraintName("FK__STOCKIN_D__STO_I__2EDAF651");
         });
 
         modelBuilder.Entity<StockinDetailsIngre>(entity =>
         {
-            entity.HasKey(e => new { e.StoId, e.IngreId }).HasName("PK__STOCKIN___05599ABCBA6C2305");
+            entity.HasKey(e => new { e.StoId, e.IngreId }).HasName("PK__STOCKIN___05599ABC4FA04A5B");
 
             entity.ToTable("STOCKIN_DETAILS_INGRE");
 
@@ -445,11 +445,11 @@ public partial class QlnhContext : DbContext
             entity.HasOne(d => d.Ingre).WithMany(p => p.StockinDetailsIngres)
                 .HasForeignKey(d => d.IngreId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__STOCKIN_D__INGRE__5FB337D6");
+                .HasConstraintName("FK__STOCKIN_D__INGRE__2BFE89A6");
 
             entity.HasOne(d => d.Sto).WithMany(p => p.StockinDetailsIngres)
                 .HasForeignKey(d => d.StoId)
-                .HasConstraintName("FK__STOCKIN_D__STO_I__5EBF139D");
+                .HasConstraintName("FK__STOCKIN_D__STO_I__2B0A656D");
         });
 
         OnModelCreatingPartial(modelBuilder);

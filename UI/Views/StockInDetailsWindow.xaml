@@ -153,7 +153,8 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Tổng cộng" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                    <DataGridTextColumn Header="Tổng cộng" Width="4*" Binding="{Binding TotalCprice}"
+                                        HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -222,7 +223,8 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Tổng cộng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                    <DataGridTextColumn Header="Tổng cộng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                        Binding="{Binding TotalCprice}">
                         <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
 
                         <DataGridTextColumn.ElementStyle>

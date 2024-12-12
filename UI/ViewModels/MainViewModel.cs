@@ -573,7 +573,7 @@ namespace RestaurantManager.ViewModels
 
 
                     stockInDetailsVM.UpdateStockInType();
-                   stockInDetailsWindow.ShowDialog();
+                    stockInDetailsWindow.ShowDialog();
                 }
 
                 StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
