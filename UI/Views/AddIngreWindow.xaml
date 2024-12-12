@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:RestaurantManager.Views"
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         x:Name="addIngreWindow" DataContext="{StaticResource IngredientsManagementVM}"
-        mc:Ignorable="d" WindowStyle="None" Background="Transparent"
-        Title="Chi tiết nguyên liệu" Height="400" Width="700">
+        mc:Ignorable="d" WindowStyle="None" Background="Transparent" WindowStartupLocation="CenterScreen"
+        Title="Chi tiết nguyên liệu" Height="400" Width="700"> 
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>

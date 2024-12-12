@@ -86,9 +86,9 @@
                     
                 </DatePicker>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">
-                    <Button Content="Thêm" BorderThickness="2" Style="{StaticResource configureDataButton}"
+                    <Button Content="Thêm" BorderThickness="2" Style="{StaticResource configureDataButton}" IsDefault="True"
                             Command="{Binding AddStockinDetailsCommand}" CommandParameter="{Binding ElementName=StkDetails}"/>
-                    <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}"
+                    <Button Content="Xóa" BorderThickness="2" Style="{StaticResource configureDataButton}" 
                             Command="{Binding DelStockinDetailsCommand}" CommandParameter="{Binding ElementName=StkDetails}"/>
                     <!--<Button Content="Sửa" BorderThickness="2" Style="{StaticResource configureDataButton}"
                             Command="{Binding EditStockinDetailsCommand}" CommandParameter="{Binding ElementName=StkDetails}"/>-->
@@ -123,7 +123,6 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
                                 <Setter Property="FontSize" Value="23"/>
-                                
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -145,7 +144,7 @@
                     <!--Đơn giá-->
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Đơn giá" Width="4*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                        Binding="{Binding Cprice, StringFormat={}{0:0}}">
+                                        Binding="{Binding Cprice, StringFormat={}{0:N2}}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -153,7 +152,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Tổng cộng" Width="4*" Binding="{Binding TotalCprice}"
+                    <DataGridTextColumn Header="Tổng cộng" Width="4*" Binding="{Binding TotalCprice, StringFormat={}{0:N2}}"
                                         HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -214,7 +213,7 @@
                     <!--Đơn giá-->
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Đơn giá" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                            Binding="{Binding Cprice, StringFormat={}{0:0}}">
+                            Binding="{Binding Cprice, StringFormat={}{0:N2}}">
                         <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -290,7 +289,7 @@
                     <Border Grid.Row="1" Grid.Column="2"  Margin="0,0,5,0">
                         <TextBox FontSize="18" Width="auto" Margin="0,0,0,25" IsReadOnly="True"
                                 VerticalContentAlignment="Center" Style="{StaticResource txtStyle}"
-                                Text="{Binding StockinDetailsCostPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0}}"
+                                Text="{Binding StockinDetailsCostPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}"
                                 MaxLength="100"/>
                     </Border>
                 </Grid>

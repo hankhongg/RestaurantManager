@@ -469,6 +469,7 @@ namespace RestaurantManager.ViewModels
                                      QuantityKg = stkInDetailsIngre.QuantityKg,
                                      StoId = stkInDetailsIngre.StoId,
                                      Sto = stkInDetailsIngre.Sto,
+                                     TotalCprice = stkInDetailsIngre.TotalCprice,
                                      Ingre = ingre // Gán dữ liệu từ bảng Ingredients
                                  }).Where(x => x.Sto.StoCode == stockInVM.NewStockIn.StoCode));
 
@@ -489,7 +490,10 @@ namespace RestaurantManager.ViewModels
                             stockInDetailsVM.StockInCode = stockInVM.NewStockIn.StoCode;
                             stockInDetailsVM.StockInID = stockInVM.NewStockIn.StoId.ToString();
 
-                            //stockInDetailsWindow.ShowDialog();
+                            stockInDetailsVM.IngredientNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Ingredients.Select(x => x.IngreName));
+                            stockInDetailsVM.MenuItemsNameList = new ObservableCollection<string>(DataProvider.Instance.DB.MenuItems.Where(x => x.ItemType != "FOOD").Select(x => x.ItemName));
+
+                            stockInDetailsWindow.ShowDialog();
                             stockInDetailsVM.StockInDate = DateTime.Now;
                         }
                         catch (Microsoft.EntityFrameworkCore.DbUpdateException)
@@ -500,7 +504,6 @@ namespace RestaurantManager.ViewModels
                     }
                 }
                 StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
-
             });
 
             // Delete a stockin
@@ -550,6 +553,7 @@ namespace RestaurantManager.ViewModels
                             QuantityKg = stkInDetailsIngre.QuantityKg,
                             StoId = stkInDetailsIngre.StoId,
                             Sto = stkInDetailsIngre.Sto,
+                            TotalCprice = stkInDetailsIngre.TotalCprice,
                             Ingre = ingre // Gán dữ liệu từ bảng Ingredients
                         }).Where(x => x.Sto.StoCode == SelectedStockin.StoCode));
 
@@ -564,6 +568,7 @@ namespace RestaurantManager.ViewModels
                             QuantityUnits = stkInDetailsDrinkOther.QuantityUnits,
                             StoId = stkInDetailsDrinkOther.StoId,
                             Sto = stkInDetailsDrinkOther.Sto,
+                            TotalCprice = stkInDetailsDrinkOther.TotalCprice,
                             Item = item // Gán dữ liệu từ bảng MenuItems    
                         }).Where(x => x.Sto.StoCode == SelectedStockin.StoCode));
 
@@ -584,7 +589,7 @@ namespace RestaurantManager.ViewModels
             // Ingredients & Items Management
             AddIngreCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
-               AddIngreWindow addIngreWindow = new AddIngreWindow();
+                AddIngreWindow addIngreWindow = new AddIngreWindow();
                 var ingreVM = addIngreWindow.DataContext as IngredientsManagementViewModel;
                 if (ingreVM != null)
                 {
@@ -593,7 +598,7 @@ namespace RestaurantManager.ViewModels
                     addIngreWindow.DataContext = ingreVM;
                 }
                 addIngreWindow.ShowDialog();
-               IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
+                IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients); // reload database
             });
             EditIngreCommand = new RelayCommand<Window>((p) => SelectedIngre != null, (p) =>
             {

@@ -34,7 +34,12 @@ namespace RestaurantManager.ViewModels
                     //{
                     //    w.Close();
                     //}
-                    w.Close(); 
+                    if (w is MainWindow || w is LoginWindow)
+                    {
+                        Application.Current.Shutdown();
+                    }
+                    else w.Close();
+                    //Application.Current.Shutdown();
                 }
             });
             MoveByMouse = new RelayCommand<UserControl>((p) => { return true; }, (p) =>
