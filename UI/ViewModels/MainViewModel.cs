@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Navigation;
 using UI.Views;
 using XAct;
 
@@ -624,6 +625,19 @@ namespace RestaurantManager.ViewModels
                     }
                     DataProvider.Instance.DB.SaveChanges();
                     IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
+                }
+            });
+            AddItemCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+
+            });
+            EditItemCommand = new RelayCommand<object>((p) => SelectedItem != null, (p) =>
+            {
+                AddItemWindow addItemWindow = new AddItemWindow();
+                var itemVM = addItemWindow.DataContext as MenuItemsManagement;
+                if (itemVM != null)
+                {
+                    addItemWindow.ShowDialog();
                 }
             });
         }

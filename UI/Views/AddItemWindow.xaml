@@ -3,10 +3,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:local="clr-namespace:RestaurantManager.Views"
-        mc:Ignorable="d"
-        Title="AddItemWindow" Height="450" Width="800">
+        mc:Ignorable="d" x:Name="addItemWindow" WindowStyle="None" Background="Transparent"
+        DataContext="{StaticResource MenuItemsVM}"
+        Title="Thêm sản phẩm vào Menu" Height="450" Width="800">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
+    </WindowChrome.WindowChrome>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="1.5*"></RowDefinition>
+            <RowDefinition Height="8.5*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Grid.RowSpan="3" CornerRadius="10">
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSteelBlue" Offset="0.25"/>
+                    <GradientStop Color="GhostWhite" Offset="0.75"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <controlbar:ControlBar Tag="{Binding Title, ElementName=addItemWindow}"></controlbar:ControlBar>
+        <Grid Grid.Row="1">
+            <ComboBox Width="350" Height="30" FontSize="20" FontFamily="Roboto" 
+                      HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15">
+                <ComboBoxItem Content="Món ăn"/>
+                <ComboBoxItem Content="Thức uống"/>
+            </ComboBox>
+        </Grid>
     </Grid>
 </Window>
