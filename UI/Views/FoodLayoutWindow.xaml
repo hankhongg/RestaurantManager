@@ -139,26 +139,23 @@
                 <Grid Grid.Row="1" Background="White">
                     <TextBlock Text="Danh sách đơn" Foreground="DimGray" Width="100" Height="25" FontStyle="Italic" Padding="10" ></TextBlock>
                     <!-- Danh sách món ăn -->
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <!--<ItemsControl ItemsSource="{Binding FoodItems}">
-                                -->
-                        <!-- Sử dụng WrapPanel để tự động sắp xếp -->
-                        <!--
+                    <!--<ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding FoodItems}">
+                                
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel Orientation="Vertical" />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
-                                -->
-                        <!-- Template cho từng món ăn -->
-                        <!--
+                                 
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <fooduc:BillUC DataContext="{Binding}"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
-                            </ItemsControl>-->
-                    </ScrollViewer>
+                            </ItemsControl>
+                        </ScrollViewer>-->
+                    <fooduc:BillUC DataContext="{Binding}" Width="250" Height="110" VerticalAlignment="Top"/>
                 </Grid>
                 <Grid Grid.Row="2"  Background="#FFE4E6E9">
                     <TextBlock Text="" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" Foreground="DimGray">                 
