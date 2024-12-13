@@ -33,7 +33,7 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <controlbar:ControlBar Tag="{Binding Title, ElementName=addBookingWindow}" Grid.ColumnSpan="2"></controlbar:ControlBar>
+        <controlbar:ControlBar Tag="{Binding Title, ElementName=addTableWindow}" Grid.ColumnSpan="2"></controlbar:ControlBar>
         <Grid Grid.Row="1">
             <StackPanel Margin="50" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">

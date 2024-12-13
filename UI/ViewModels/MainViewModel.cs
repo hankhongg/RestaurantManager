@@ -248,13 +248,7 @@ namespace RestaurantManager.ViewModels
             IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
             ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
 
-            TableList = new ObservableCollection<DiningTable>(DataProvider.Instance.DB.DiningTables);
-            TableViewList = new ObservableCollection<TableViewModel>();
-            foreach (DiningTable table in TableList)
-            {
-                if (table.Isdeleted == false)
-                    TableViewList.Add(new TableViewModel(table));
-            }
+            LoadAllTableInformation();
 
             isBooked = Visibility.Hidden;
 
@@ -694,25 +688,41 @@ namespace RestaurantManager.ViewModels
                 DataProvider.Instance.DB.DiningTables.Add(newTable);
                 DataProvider.Instance.DB.SaveChanges();
                 TableViewList.Add(new TableViewModel(newTable));
-            });
-
-            // Booking Management
-            AddBookingCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
-            {
-                BookingWindow bookingWindow = new BookingWindow();
-                bookingWindow.ShowDialog();
+                LoadAllTableInformation();
+                
+                
             });
             EditTableCommand = new RelayCommand<TableViewModel>((p) => { return true; }, (p) =>
             {
                 AddTableWindow addTableWindow = new AddTableWindow();
                 var addTableVM = addTableWindow.DataContext as AddTableViewModel;
                 DiningTable SelectedTable = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == p.TabNumber).FirstOrDefault();
-                if (addTableVM != null) { 
+                if (addTableVM != null)
+                {
                     addTableVM.LoadTableInformation(SelectedTable);
                     addTableWindow.DataContext = addTableVM;
                     addTableWindow.ShowDialog();
                 }
+                LoadAllTableInformation();
             });
+            // Booking Management
+            AddBookingCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                BookingWindow bookingWindow = new BookingWindow();
+                bookingWindow.ShowDialog();
+            });
+           
+        }
+        public void LoadAllTableInformation()
+        {
+            TableList = new ObservableCollection<DiningTable>(DataProvider.Instance.DB.DiningTables);
+            TableViewList = new ObservableCollection<TableViewModel>();
+            byte i = 1;
+            foreach (DiningTable table in TableList)
+            {
+                if (table.Isdeleted == false)
+                    TableViewList.Add(new TableViewModel(i++, table.TabStatus));
+            }
         }
     }
 }

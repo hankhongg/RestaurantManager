@@ -1,9 +1,12 @@
 ﻿using RestaurantManager.Models;
+using RestaurantManager.Models.DataProvider;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RestaurantManager.ViewModels
@@ -21,7 +24,13 @@ namespace RestaurantManager.ViewModels
         public ICommand CancelTableCommand { get; set; }
         public AddTableViewModel()
         {
-
+            DelTableCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            {
+                DiningTable d = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == TabNumber).FirstOrDefault();
+                d.Isdeleted = true;
+                DataProvider.Instance.DB.SaveChanges();
+                p.Close();
+            });
         }
         public void LoadTableInformation(DiningTable d)
         {
@@ -35,5 +44,14 @@ namespace RestaurantManager.ViewModels
                 TabStatus = "Đang trống";
             }
         }
+        //protected FrameworkElement getParentWindow(UserControl p)
+        //{
+        //    FrameworkElement parentWindow = p;
+        //    while (parentWindow.Parent != null)
+        //    {
+        //        parentWindow = parentWindow.Parent as FrameworkElement;
+        //    }
+        //    return parentWindow;
+        //}
     }
 }

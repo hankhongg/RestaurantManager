@@ -37,5 +37,6 @@ namespace RestaurantManager.ViewModels
             TabStatus = d.TabStatus;
             //MessageBox.Show($"Table {TabNumber} status: {TabStatus}");
         }
+        
     }
 }
