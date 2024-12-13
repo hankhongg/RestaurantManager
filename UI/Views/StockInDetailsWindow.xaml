@@ -223,7 +223,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Tổng cộng" Width="3*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                        Binding="{Binding TotalCprice}">
+                                        Binding="{Binding TotalCprice, StringFormat={}{0:N2}}">
                         <!--ElementStyle="{StaticResource ElementStyleConfiguration}">-->
 
                         <DataGridTextColumn.ElementStyle>

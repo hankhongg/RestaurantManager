@@ -781,6 +781,9 @@ namespace RestaurantManager.ViewModels
             mainVM.IngredientsList = new ObservableCollection<Ingredient>(
                 DataProvider.Instance.DB.Ingredients.AsNoTracking().ToList());
 
+            mainVM.ItemsList = new ObservableCollection<MenuItem>(
+                DataProvider.Instance.DB.MenuItems.AsNoTracking().ToList());
+
 
             /*
              * Xóa trạng thái theo dõi (EntityState.Detached)
