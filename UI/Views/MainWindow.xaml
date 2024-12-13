@@ -24,6 +24,10 @@
     <!--Grid của mainWindow-->
 
     <Grid Background="Transparent">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
         <!--Chia dòng trong form-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
@@ -35,7 +39,7 @@
         từ xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" (UserControls)-->
         <controlbar:ControlBar Tag="{Binding Title, ElementName=mainWindow}"></controlbar:ControlBar>
         <!--Thêm thanh điều hướng ở dưới (có hình ngôi nhà)-->
-        <DockPanel Grid.Row="2" Height="80" VerticalAlignment="Bottom">
+        <DockPanel Grid.Row="2" Height="80" VerticalAlignment="Center">
             <DockPanel.Background>
                 <SolidColorBrush Color="SteelBlue"></SolidColorBrush>
             </DockPanel.Background>
@@ -163,7 +167,7 @@
                         <!--Customer Management-->
                         <TabItem Header="Quản lý khách hàng" Style="{StaticResource TabItemStyle}" 
                                   FontWeight="SemiBold" FontSize="30" Padding="30"
-                                 Background="Transparent" BorderThickness="0" Height="104" Margin="-2,0,0,0" VerticalAlignment="Center">
+                                 Background="Transparent" BorderThickness="0" Height="104" Margin="-2,0,0,0" VerticalAlignment="Bottom">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="9*"></RowDefinition>
@@ -226,7 +230,7 @@
                                           SelectedItem="{Binding SelectedEmployee, Mode=OneWayToSource}">
                                     <DataGrid.Columns>
                                         <!--Mã NV-->
-                                        <DataGridTextColumn Header="Mã NV" Width="0.5*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
+                                        <DataGridTextColumn Header="Mã NV" Width="1*" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
                                                             Binding="{Binding EmpCode}">
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
@@ -275,7 +279,7 @@
                                     <RowDefinition Height="9*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                
+
                                 <DataGrid x:Name="ingredientsDataGrid" CanUserDeleteRows="False"
                                           BorderThickness="0"  IsReadOnly="True" SelectedItem="{Binding SelectedIngre, Mode=OneWayToSource}"
                                           AutoGenerateColumns="False" ItemsSource="{Binding IngredientsList}">
@@ -309,7 +313,7 @@
                                         <DataGridTextColumn Binding="{Binding IngrePrice, StringFormat={}{0:N2}}" Header="Giá nhập"
                                                             Width="2.5*"
                                                             HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
-                                                            >       
+                                                            >
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -330,14 +334,14 @@
                                         </DataGridTextColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                
+
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Content="Thêm nguyên liệu" Style="{StaticResource configureDataButton}"
                                             Command="{Binding AddIngreCommand}" CommandParameter="{Binding ElementName=addIngreWindow}"/>
                                     <Button Content="Xóa nguyên liệu" Style="{StaticResource configureDataButton}" IsEnabled="{Binding IsSelectedIngre}"
                                              Command="{Binding DelIngreCommand}" CommandParameter="{Binding ElementName=addIngreWindow}"/>
                                     <Button Content="Sửa nguyên liệu" Style="{StaticResource configureDataButton}" IsEnabled="{Binding IsSelectedIngre}" 
-                                            Command="{Binding EditIngreCommand}" CommandParameter="{Binding ElementName=addIngreWindow}"/>             
+                                            Command="{Binding EditIngreCommand}" CommandParameter="{Binding ElementName=addIngreWindow}"/>
                                 </StackPanel>
 
                             </Grid>
@@ -353,7 +357,7 @@
                                 <DataGrid Grid.Column="1" x:Name="itemsDataGrid" CanUserDeleteRows="False"
                                           BorderThickness="0" IsReadOnly="True" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}"
                                           AutoGenerateColumns="False" ItemsSource="{Binding ItemsList}">
-                                    
+
 
                                     <DataGrid.Columns>
                                         <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"
@@ -426,9 +430,9 @@
                                             Command="{Binding EditItemCommand}" CommandParameter="{Binding ElementName=addItemWindow}"/>
                                 </StackPanel>
                             </Grid>
-                            
+
                         </TabItem>
-                        
+
                     </TabControl>
                 </Grid>
             </TabItem>
@@ -522,16 +526,27 @@
 
                     <!--Booking UC-->
                     <Grid Grid.Column="0">
-                        <WrapPanel Margin="10">
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8"/>
+                        <WrapPanel Margin="10" IsManipulationEnabled="True">
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
                         </WrapPanel>
                     </Grid>
 
@@ -549,7 +564,7 @@
                                 <!--Tạo booking mới-->
                                 <Button Content="Tạo booking (+)" Style="{StaticResource LoginButton}"
                                         Padding="0,20" Margin="20,0,20,10" Width="Auto" Height="Auto"
-                                        Command="{Binding AddNewBooking}">
+                                        Command="{Binding AddBookingCommand}">
                                     <Button.Background>
                                         <LinearGradientBrush>
                                             <GradientStop Color="DarkGreen" Offset="-0.5"/>

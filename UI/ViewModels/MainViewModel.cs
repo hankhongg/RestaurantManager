@@ -196,12 +196,26 @@ namespace RestaurantManager.ViewModels
             }
         }
 
+        // Booking Management
+        private Visibility isBooked;
+
+        public Visibility IsBooked
+        {
+            get { return isBooked; }
+            set
+            {
+                isBooked = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddIngreCommand { get; set; }
         public ICommand DelIngreCommand { get; set; }
         public ICommand EditIngreCommand { get; set; }
         public ICommand AddItemCommand { get; set; }
         public ICommand DelItemCommand { get; set; }
         public ICommand EditItemCommand { get; set; }
+        public ICommand AddBookingCommand { get; set; }
 
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
@@ -218,6 +232,8 @@ namespace RestaurantManager.ViewModels
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
             IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
             ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
+
+            isBooked = Visibility.Hidden;
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {
@@ -644,6 +660,13 @@ namespace RestaurantManager.ViewModels
                 {
                     addItemWindow.ShowDialog();
                 }
+            });
+
+            // Booking Management
+            AddBookingCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                BookingWindow bookingWindow = new BookingWindow();
+                bookingWindow.ShowDialog();
             });
         }
     }

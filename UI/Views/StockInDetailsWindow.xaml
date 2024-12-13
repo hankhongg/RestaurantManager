@@ -82,7 +82,7 @@
                 </ComboBox>
                 <DatePicker Grid.Column="1" VerticalAlignment="Center" FontSize="25" Language="en-GB"
                             SelectedDate="{Binding StockInDate, UpdateSourceTrigger=PropertyChanged,
-                                           StringFormat='dd-MM-yyyy'}">
+                                           StringFormat='dd-MM-yyyy'}" Background="GhostWhite">
                     
                 </DatePicker>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0">

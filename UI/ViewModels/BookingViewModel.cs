@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -35,21 +36,24 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+        private Visibility isBooked;
 
         public ICommand AddCusNum { get; set; }
         public ICommand RemoveCusNum { get; set; }
         public ICommand BookingInfo {  get; set; }
-        public ICommand cancelOrder {  get; set; }
+        public ICommand cancelBooking {  get; set; }
+        public ICommand confirmBooking {  get; set; }
         public ICommand setDate { get; set; }
         public BookingViewModel()
         {
+
             BookingInfo = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {
                     BookingWindow bookingWindow = new BookingWindow(p);
                     bookingWindow.ShowDialog();
                 }
             );
-            cancelOrder = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            cancelBooking = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {
                     p.Close();
                 }
@@ -69,12 +73,15 @@ namespace RestaurantManager.ViewModels
             );
             setDate = new RelayCommand<object>((p) => { return true; }, (p) =>
                 {
-                    DatePicker datePicker = new DatePicker();
-                    changeDateTime = DateTime.Now.ToString("dd/MM/yyyy");
-                    datePicker.SelectedDateChanged += (s, e) =>
-                    {
-                        changeDateTime = datePicker.SelectedDate.Value.ToString("dd/MM/yyyy");
-                    };
+                    
+                }
+            );
+            cancelBooking = new RelayCommand<Window>((p) => { return true; }, (p) =>
+                p.Close()
+            );
+            confirmBooking = new RelayCommand<object>((p) => { return true; }, (p) =>
+                {
+                    MessageBox.Show("Booking confirmed");
                 }
             );
         }

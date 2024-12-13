@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterOwner" Background="Transparent"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="Transparent"
         Title="BookingWindow" Height="700" Width="1000" Name="bookingWindow"
         DataContext="{StaticResource BookingVM}">
     <WindowChrome.WindowChrome>
@@ -85,7 +86,9 @@
                             </Border>
                             
                             <Border Grid.Column="1">
-                                <TextBox Grid.Column="1" Margin="0,0,10,0" Style="{StaticResource rightCornerRadiusTextbox}"/>
+                                <!--<TextBox Grid.Column="1" Margin="0,0,10,0" Style="{StaticResource txtStyle}"/>-->
+                                <xctk:TimePicker Style="{StaticResource TimePickerStyle1}" Grid.Column="1">
+                                </xctk:TimePicker>
                             </Border>
                         </Grid>
                     </Border>
@@ -115,7 +118,7 @@
                         Content="Chọn bàn" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
                         <TextBox Grid.Row="1" Style="{StaticResource txtStyle}" Height="44" VerticalAlignment="Top"
-                                 IsReadOnly="True"/>
+                                 IsReadOnly="True" Text="{Binding SelectedBookingTable}"/>
                     </Border>
                 </Grid>
                 
@@ -128,7 +131,18 @@
                     <Label Grid.Row="0" 
                         Content="Đặt cọc trước" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" FontSize="18" Background="Transparent" FontWeight="SemiBold"
+                                          VerticalContentAlignment="Center">
+                                <ComboBoxItem Content="Tiền mặt"/>
+                                <ComboBoxItem Content="Chuyển khoản"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Style="{StaticResource txtStyle}"/>
+                        </Grid>
                     </Border>
                 </Grid>
             </Grid>
@@ -161,7 +175,7 @@
                                         HorizontalAlignment="Left"
                                         Width="auto" >
                                 <Button Content="-" Width="75" Style="{StaticResource leftCornerRadiusButton}"
-                                        Foreground="Red" HorizontalContentAlignment="Center" 
+                                        Foreground="Red" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                                         Command="{Binding RemoveCusNum}" CommandParameter="{Binding ElementName=bookingWindow}"/>
                                 <TextBox Text="{Binding NumberOfCustomers}" Width="70" FontSize="20" 
                                          VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
@@ -177,15 +191,15 @@
                             <RowDefinition Height="4*"/>
                             <RowDefinition Height="6*"/>
                         </Grid.RowDefinitions>
-                        <Label Grid.Column="0" Margin="0,0,0,5" HorizontalAlignment="Right"
+                        <Label Grid.Column="0" Margin="0,0,9,5" HorizontalAlignment="Right" FontSize="17"
                                 Content="Thời gian dự kiến hoàn tất" Style="{StaticResource labelStyle}"/>
                         <Border Grid.Row="1" Margin="0,0,5,15" CornerRadius="5">
                             <StackPanel Grid.Row="1" Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
                                                 Width="auto" Margin="0,0,5,0">
-                                <TextBox Text="{Binding cusNumber}" Width="110" FontSize="20"
+                                <TextBox Text="{Binding EsTime}" Width="110" FontSize="20"
                                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                         Style="{StaticResource leftCornerRadiusTextbox}"/>
+                                         Style="{StaticResource txtStyle}"/>
                                 <ComboBox SelectedIndex="0" Width="110" FontSize="18" Background="Transparent" FontWeight="SemiBold"
                                           VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
                                     <ComboBoxItem Content="Phút" FontSize="15"/>
@@ -219,7 +233,8 @@
                     <Label Grid.Row="0" 
                         Content="Đặt trước món" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}" IsReadOnly="True"/>
+                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}" IsReadOnly="True"
+                                 Text="{Binding SelectedBookingMenuItem}"/>
                     </Border>
                 </Grid>
 
@@ -246,9 +261,9 @@
             </Grid.ColumnDefinitions>
 
             <Button Style="{StaticResource buttonStyle}" CommandParameter="{Binding ElementName=bookingWindow}"
-                    Content="HỦY ĐƠN HÀNG" Command="{Binding cancelOrder}"/>
+                    Content="HỦY ĐƠN HÀNG" Command="{Binding cancelBooking}"/>
             <Button Grid.Column="1" Style="{StaticResource buttonStyle}"
-                    Content="XÁC NHẬN"/>
+                    Content="XÁC NHẬN" CommandParameter="{Binding ElementName=bookingWindow}"/>
         </Grid>
 
     </Grid>

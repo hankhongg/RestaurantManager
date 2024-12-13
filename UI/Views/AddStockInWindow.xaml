@@ -76,7 +76,7 @@
                     <DatePicker x:Name="txtDate" FontSize="18" Width="auto" Margin="0,0,5,15"
                                 VerticalContentAlignment="Center" Language="en-GB"
                                 SelectedDate="{Binding StockInDate, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding IsEnable}"/>
+                                IsEnabled="{Binding IsEnable}" Background="GhostWhite"/>
                 </Border>
                 
             </Grid>
