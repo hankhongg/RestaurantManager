@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -196,6 +197,25 @@ namespace RestaurantManager.ViewModels
             }
         }
 
+        public ICommand AddIngreCommand { get; set; }
+        public ICommand DelIngreCommand { get; set; }
+        public ICommand EditIngreCommand { get; set; }
+        public ICommand AddItemCommand { get; set; }
+        public ICommand DelItemCommand { get; set; }
+        public ICommand EditItemCommand { get; set; }
+
+        //
+        // --TableViewModel Management
+        private ObservableCollection<TableViewModel> tableViewList;
+        public ObservableCollection<TableViewModel> TableViewList { get { return tableViewList; } set { if (tableViewList != value) tableViewList = value; OnPropertyChanged(); } }
+
+        // --TableViewModel Management
+        private ObservableCollection<DiningTable> tableList;
+        public ObservableCollection<DiningTable> TableList { get { return tableList; } set { if (tableList != value) tableList = value; OnPropertyChanged(); } }
+
+        public ICommand AddTableCommand { get; set; }
+        public ICommand EditTableCommand { get; set; }
+
         // Booking Management
         private Visibility isBooked;
 
@@ -209,12 +229,7 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        public ICommand AddIngreCommand { get; set; }
-        public ICommand DelIngreCommand { get; set; }
-        public ICommand EditIngreCommand { get; set; }
-        public ICommand AddItemCommand { get; set; }
-        public ICommand DelItemCommand { get; set; }
-        public ICommand EditItemCommand { get; set; }
+       
         public ICommand AddBookingCommand { get; set; }
 
         public MainViewModel() {
@@ -232,6 +247,14 @@ namespace RestaurantManager.ViewModels
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
             IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
             ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
+
+            TableList = new ObservableCollection<DiningTable>(DataProvider.Instance.DB.DiningTables);
+            TableViewList = new ObservableCollection<TableViewModel>();
+            foreach (DiningTable table in TableList)
+            {
+                if (table.Isdeleted == false)
+                    TableViewList.Add(new TableViewModel(table));
+            }
 
             isBooked = Visibility.Hidden;
 
@@ -494,14 +517,14 @@ namespace RestaurantManager.ViewModels
                                  join item in DataProvider.Instance.DB.MenuItems
                                  on stkInDetailsDrinkOther.ItemId equals item.ItemId
                                  select new StockinDetailsDrinkOther
-                                {
-                                    Cprice = stkInDetailsDrinkOther.Cprice,
-                                    ItemId = stkInDetailsDrinkOther.ItemId,
-                                    QuantityUnits = stkInDetailsDrinkOther.QuantityUnits,
-                                    StoId = stkInDetailsDrinkOther.StoId,
-                                    Sto = stkInDetailsDrinkOther.Sto,
-                                    Item = item // Gán dữ liệu từ bảng MenuItems    
-                                }).Where(x => x.Sto.StoCode == stockInVM.NewStockIn.StoCode));
+                                 {
+                                     Cprice = stkInDetailsDrinkOther.Cprice,
+                                     ItemId = stkInDetailsDrinkOther.ItemId,
+                                     QuantityUnits = stkInDetailsDrinkOther.QuantityUnits,
+                                     StoId = stkInDetailsDrinkOther.StoId,
+                                     Sto = stkInDetailsDrinkOther.Sto,
+                                     Item = item // Gán dữ liệu từ bảng MenuItems    
+                                 }).Where(x => x.Sto.StoCode == stockInVM.NewStockIn.StoCode));
 
                             stockInDetailsVM.StockInCode = stockInVM.NewStockIn.StoCode;
                             stockInDetailsVM.StockInID = stockInVM.NewStockIn.StoId.ToString();
@@ -553,40 +576,40 @@ namespace RestaurantManager.ViewModels
                 if (stockInDetailsVM != null)
                 {
                     stockInDetailsVM.stockInDetailsManagementID = 1;
-                    
+
                     stockInDetailsVM.StockInCode = SelectedStockin.StoCode;
                     stockInDetailsVM.StockInID = SelectedStockin.StoId.ToString();
 
 
                     stockInDetailsVM.StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(
                         (from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngres
-                        join ingre in DataProvider.Instance.DB.Ingredients
-                        on stkInDetailsIngre.IngreId equals ingre.IngreId
-                        select new StockinDetailsIngre
-                        {
-                            Cprice = stkInDetailsIngre.Cprice,
-                            IngreId = stkInDetailsIngre.IngreId,
-                            QuantityKg = stkInDetailsIngre.QuantityKg,
-                            StoId = stkInDetailsIngre.StoId,
-                            Sto = stkInDetailsIngre.Sto,
-                            TotalCprice = stkInDetailsIngre.TotalCprice,
-                            Ingre = ingre // Gán dữ liệu từ bảng Ingredients
-                        }).Where(x => x.Sto.StoCode == SelectedStockin.StoCode));
+                         join ingre in DataProvider.Instance.DB.Ingredients
+                         on stkInDetailsIngre.IngreId equals ingre.IngreId
+                         select new StockinDetailsIngre
+                         {
+                             Cprice = stkInDetailsIngre.Cprice,
+                             IngreId = stkInDetailsIngre.IngreId,
+                             QuantityKg = stkInDetailsIngre.QuantityKg,
+                             StoId = stkInDetailsIngre.StoId,
+                             Sto = stkInDetailsIngre.Sto,
+                             TotalCprice = stkInDetailsIngre.TotalCprice,
+                             Ingre = ingre // Gán dữ liệu từ bảng Ingredients
+                         }).Where(x => x.Sto.StoCode == SelectedStockin.StoCode));
 
                     stockInDetailsVM.StockInDetailsDrinkOtherList = new ObservableCollection<StockinDetailsDrinkOther>(
                         (from stkInDetailsDrinkOther in DataProvider.Instance.DB.StockinDetailsDrinkOthers
-                        join item in DataProvider.Instance.DB.MenuItems
-                        on stkInDetailsDrinkOther.ItemId equals item.ItemId
-                        select new StockinDetailsDrinkOther
-                        {
-                            Cprice = stkInDetailsDrinkOther.Cprice,
-                            ItemId = stkInDetailsDrinkOther.ItemId,
-                            QuantityUnits = stkInDetailsDrinkOther.QuantityUnits,
-                            StoId = stkInDetailsDrinkOther.StoId,
-                            Sto = stkInDetailsDrinkOther.Sto,
-                            TotalCprice = stkInDetailsDrinkOther.TotalCprice,
-                            Item = item // Gán dữ liệu từ bảng MenuItems    
-                        }).Where(x => x.Sto.StoCode == SelectedStockin.StoCode));
+                         join item in DataProvider.Instance.DB.MenuItems
+                         on stkInDetailsDrinkOther.ItemId equals item.ItemId
+                         select new StockinDetailsDrinkOther
+                         {
+                             Cprice = stkInDetailsDrinkOther.Cprice,
+                             ItemId = stkInDetailsDrinkOther.ItemId,
+                             QuantityUnits = stkInDetailsDrinkOther.QuantityUnits,
+                             StoId = stkInDetailsDrinkOther.StoId,
+                             Sto = stkInDetailsDrinkOther.Sto,
+                             TotalCprice = stkInDetailsDrinkOther.TotalCprice,
+                             Item = item // Gán dữ liệu từ bảng MenuItems    
+                         }).Where(x => x.Sto.StoCode == SelectedStockin.StoCode));
 
                     stockInDetailsVM.IngredientNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Ingredients.Select(x => x.IngreName));
                     stockInDetailsVM.MenuItemsNameList = new ObservableCollection<string>(DataProvider.Instance.DB.MenuItems.Where(x => x.ItemType != "FOOD").Select(x => x.ItemName));
@@ -661,12 +684,34 @@ namespace RestaurantManager.ViewModels
                     addItemWindow.ShowDialog();
                 }
             });
+            // Table Management
+            AddTableCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                byte existedTableNumber = (byte)DataProvider.Instance.DB.DiningTables.Count();
+                //string query = $"DBCC CHECKIDENT ('DININGTABLE', RESEED, {existedTableNumber + 1})";
+                //DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
+                DiningTable newTable = new DiningTable { TabNum = ++existedTableNumber, TabStatus = true, Isdeleted = false };
+                DataProvider.Instance.DB.DiningTables.Add(newTable);
+                DataProvider.Instance.DB.SaveChanges();
+                TableViewList.Add(new TableViewModel(newTable));
+            });
 
             // Booking Management
             AddBookingCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
                 BookingWindow bookingWindow = new BookingWindow();
                 bookingWindow.ShowDialog();
+            });
+            EditTableCommand = new RelayCommand<TableViewModel>((p) => { return true; }, (p) =>
+            {
+                AddTableWindow addTableWindow = new AddTableWindow();
+                var addTableVM = addTableWindow.DataContext as AddTableViewModel;
+                DiningTable SelectedTable = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == p.TabNumber).FirstOrDefault();
+                if (addTableVM != null) { 
+                    addTableVM.LoadTableInformation(SelectedTable);
+                    addTableWindow.DataContext = addTableVM;
+                    addTableWindow.ShowDialog();
+                }
             });
         }
     }

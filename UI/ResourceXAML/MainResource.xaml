@@ -5,8 +5,6 @@
     <viewmodel:ForgotPasswordViewModel x:Key="ForgotPasswordVM"></viewmodel:ForgotPasswordViewModel>
     <viewmodel:LoginViewModel x:Key="LoginVM"></viewmodel:LoginViewModel>
     <viewmodel:ControlBarModel x:Key="ControlBarVM"></viewmodel:ControlBarModel>
-    <viewmodel:MainViewModel x:Key="MainVM"></viewmodel:MainViewModel>
-    <viewmodel:TableViewModel x:Key="TableVM"></viewmodel:TableViewModel>
     <viewmodel:BookingViewModel x:Key="BookingVM"></viewmodel:BookingViewModel>
     <viewmodel:RecoveryPasswordViewModel x:Key="RecoveryVM"></viewmodel:RecoveryPasswordViewModel>
     <viewmodel:CustomerManagementViewModel x:Key="CustomerMangementVM"></viewmodel:CustomerManagementViewModel>
@@ -21,4 +19,7 @@
     <viewmodel:IngredientsManagementViewModel x:Key="IngredientsManagementVM"></viewmodel:IngredientsManagementViewModel>
     <viewmodel:MenuItemsManagement x:Key="MenuItemsVM"></viewmodel:MenuItemsManagement>
     <viewmodel:FoodLayoutViewModel x:Key="FoodLayoutVM"></viewmodel:FoodLayoutViewModel>
+    <viewmodel:TableViewModel x:Key="TableVM"></viewmodel:TableViewModel>
+    <viewmodel:MainViewModel x:Key="MainVM"></viewmodel:MainViewModel>
+    <viewmodel:AddTableViewModel x:Key="AddTableVM"></viewmodel:AddTableViewModel>
 </ResourceDictionary>
