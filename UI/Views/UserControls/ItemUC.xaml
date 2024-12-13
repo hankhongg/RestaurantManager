@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="RestaurantManager.Views.UserControls.ItemUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RestaurantManager.Views.UserControls" 
+             mc:Ignorable="d" Name="itemuc" 
+             d:DesignHeight="200" d:DesignWidth="250">
+    <Border CornerRadius="10" >
+        <Grid>
+
+            <!-- Food Image -->
+            <Image Source="{Binding ItemImg}" Stretch="Fill" Margin="0,0,0,1" />
+
+            <!-- Price Label -->
+            <Border  CornerRadius="10" Width="100" HorizontalAlignment="Left" Background="#FF00BAFF" Height="20" VerticalAlignment="Top" >
+                <TextBlock Text="{Binding ItemSprice}"
+                 FontWeight="Bold"
+                 Foreground="White"                
+                 TextAlignment="Center"
+                 Padding="5"
+                 HorizontalAlignment="Center"
+                 Width="300"
+                 VerticalAlignment="Center" Height="30" />
+            </Border>
+
+            <!-- Nền mờ và text -->
+            <Grid VerticalAlignment="Bottom">
+                <!-- Hình chữ nhật làm nền mờ -->
+                <Rectangle Fill="Black" Opacity="0.7" Height="30"/>
+
+                <!-- TextBlock hiển thị tên món ăn -->
+                <TextBlock Text="{Binding ItemName}" 
+                 Foreground="White" 
+                 HorizontalAlignment="Center" 
+                 VerticalAlignment="Center" 
+                 FontSize="16" 
+                 FontWeight="Bold" />
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

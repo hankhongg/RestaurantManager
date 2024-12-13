@@ -5,18 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="120" d:DesignWidth="400"
+             d:DesignHeight="120" d:DesignWidth="250" 
              Name="billuc" DataContext="{StaticResource BillUCVM}">
     <Border  Background="#FF00C3FF"  CornerRadius="10" Padding="10" Margin="5">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <!-- Tên món ăn và giá -->
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
                 <TextBlock Text="{Binding ItemNumber}" FontWeight="Bold" Foreground="White" />
                 <TextBlock Text="01." FontWeight="Bold" Foreground="White" />
                 <TextBlock Text="{Binding ItemName}" FontWeight="Bold" Foreground="White" />
-                <TextBlock Text=" Cơm chiên tôm " Width="200"  Foreground="White" FontWeight="Bold"/>
+                <TextBlock Text=" Cơm chiên tôm " Width="100"  Foreground="White" FontWeight="Bold"/>
                 <TextBlock Text="{Binding ItemPrice}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Right" />
-                <TextBlock Text="1" Width="50" Foreground="White" FontWeight="Bold" ></TextBlock>
+                <TextBlock Text="1" Width="20" Foreground="White" FontWeight="Bold" ></TextBlock>
                 <TextBlock Foreground="White" FontWeight="Bold" Text="45000" HorizontalAlignment="Right"/>
             </StackPanel>
 
@@ -25,10 +25,10 @@
             <TextBlock Text="Giá thường: 45000" FontStyle="Italic" Foreground="White" Margin="0,0,0,10" />
             <!-- Các nút -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="-" Command="{Binding DecreaseCommand}" Background="White" Width="40" Height="40" Margin="0,0,0,0" BorderThickness="1" BorderBrush="Transparent"/>
-                <Button Content="+" Command="{Binding IncreaseCommand}" Background="White" Width="40" Height="40" Margin="30,0,0,0" BorderThickness="1" BorderBrush="Transparent" />
-                <Button Content="Sửa" Command="{Binding EditCommand}"  Background="White" Width="40" Height="40"  Margin="30,0,0,0" BorderThickness="1" BorderBrush="Transparent"/>
-                <Button Content="Xóa" Command="{Binding DeleteCommand}"  Background="White" Width="40" Height="40" Foreground="Red" Margin="30,0,0,0" BorderThickness="1" BorderBrush="Transparent"/>
+                <Button Content="-" Command="{Binding DecreaseCommand}" Background="White" Width="30" Height="20" Margin="0,0,0,0" BorderThickness="1" BorderBrush="White"/>
+                <Button Content="+" Command="{Binding IncreaseCommand}" Background="White" Width="30" Height="20" Margin="30,0,0,0" BorderThickness="1" BorderBrush="White" />
+                <Button Content="Sửa" Command="{Binding EditCommand}"  Background="White" Width="30" Height="20"  Margin="30,0,0,0" BorderThickness="1" BorderBrush="White"/>
+                <Button Content="Xóa" Command="{Binding DeleteCommand}"  Background="White" Width="30" Height="20" Foreground="Red" Margin="30,0,0,0" BorderThickness="1" BorderBrush="White" />
             </StackPanel>
         </StackPanel>
     </Border>

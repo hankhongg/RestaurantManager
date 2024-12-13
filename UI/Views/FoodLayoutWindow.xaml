@@ -7,22 +7,10 @@
         mc:Ignorable="d"
         Height="450" Width="800" 
         xmlns:fooduc="clr-namespace:RestaurantManager.Views.UserControls"
+        xmlns:fooditemuc="clr-namespace:RestaurantManager.Views.UserControls"
         Title="Màn hình đặt món"
-        Name="foodLayoutWindow" 
-        WindowStyle="None" Background="Transparent" DataContext="{StaticResource FoodLayoutVM}">
-    
-            <!--- các chức năng backend của FoodLayoutWindow:
-            + thêm món ăn: thêm vào database=foodItemWin(1)
-            + sửa món ăn: sửa database/dùng chung foodItemWin hay tách riêng?(4)
-            + xóa món ăn: xóa database(7)
-            + usercontrol fooditem: tự động hiện nội dung trong database(2)
-            + nhấn 1 lần vào fooditemUC> tạo 1 đơn> cộng, trừ , sửa> sửa đơn(5)
-            + nhấn giữ fooditemUC> hiện chức năng xóa/sửa món ăn(6)
-            + chuyển tab(3)
-            + tìm tên: tương tự tabcontrol>chỉ hiện foodituc trùng tên(8)
-            + chọn bàn: chỉ hiện bàn đang trống>chọn>binding lưu và tạm tính(10)
-            + tổng tiền: tính tổng giá trị các đơn hiện có(cập nhập liên tục)(9)
-            + nút thoát, lưu, lưu và tạm tính, thanh toán(11)-->
+        Name="foodLayoutWindow"  DataContext="{StaticResource FoodLayoutVM}"
+        WindowStyle="None" >
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
@@ -69,37 +57,41 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <Button Content="Thêm món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent" Command="{Binding NewDishCommand}"/>
+                        <Button Content="Thêm món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent"
+                        Command="{Binding NewDishCommand}"/>
                     </Grid>
                     <Grid Grid.Column="1" >
                         <Button Content="Xóa món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent"/>
                     </Grid>
                     <Grid Grid.Column="2">
-                        <Button Content="Sửa món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent" Command="{Binding EditDishCommand}"/>
+                        <Button Content="Sửa món ăn"  Style="{StaticResource btnAddFoodStyle}" BorderBrush="Transparent"
+                        Command="{Binding EditDishComand}"/>
                     </Grid>
                 </Grid>
 
                 <Grid Grid.Row="1">
                     <TextBlock Text="Danh sách món ăn" Foreground="White" Width="100" Height="25" FontStyle="Italic" ></TextBlock>
                     <!-- Danh sách món ăn -->
+
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <!--<ItemsControl ItemsSource="{Binding FoodItems}">
-                            --><!-- Sử dụng WrapPanel để tự động sắp xếp --><!--
+                        <ItemsControl ItemsSource="{Binding MenuItems}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            --><!-- Template cho từng món ăn --><!--
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <fooduc:FoodUC DataContext="{Binding}" Width="150" Height="150" Margin="5" />
+                                    <!-- Sử dụng ItemUC -->
+                                    <fooditemuc:ItemUC Height="100" Width="146" Margin="1" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-                        </ItemsControl>-->
+                        </ItemsControl>
                     </ScrollViewer>
+
                 </Grid>
             </Grid>
+
             <Grid Grid.Column="0" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="37.6*"></RowDefinition>
@@ -109,6 +101,7 @@
                     <Border VerticalAlignment="Center"  HorizontalAlignment="Center">
                         <Image Source="Images\logo.png"></Image>
                     </Border>
+
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
@@ -116,22 +109,22 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>                        
+                        <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" >
+                    <Grid Grid.Row="0">
                         <Button Content="Món ăn" FontSize="15"  Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <Button Content="Đồ uống" FontSize="15"   Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
+                        <Button Content="Đồ uống" FontSize="15"  Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
                     </Grid>
                     <Grid Grid.Row="2">
-                        <Button Content="Khác" FontSize="15"  Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
+                        <Button Content="Khác" FontSize="15" Foreground="DimGray" BorderThickness="1" BorderBrush="Transparent" Background="White"/>
                     </Grid>
                     <Grid Grid.Row="3">
-                        <Button FontSize="15"   BorderThickness="1" BorderBrush="Transparent" Background="#FFB8D0E0"/>
+                        <Button FontSize="15" BorderThickness="1" BorderBrush="Transparent" Background="#FFB8D0E0"/>
                     </Grid>
                     <Grid Grid.Row="4">
-                        <Button FontSize="15"   BorderThickness="1" BorderBrush="Transparent" Background="#FFB8D0E0"/>
+                        <Button FontSize="15" BorderThickness="1" BorderBrush="Transparent" Background="#FFB8D0E0"/>
                     </Grid>
                 </Grid>
 
@@ -146,22 +139,23 @@
                 <Grid Grid.Row="1" Background="White">
                     <TextBlock Text="Danh sách đơn" Foreground="DimGray" Width="100" Height="25" FontStyle="Italic" Padding="10" ></TextBlock>
                     <!-- Danh sách món ăn -->
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <!--<ItemsControl ItemsSource="{Binding FoodItems}">
-                            --><!-- Sử dụng WrapPanel để tự động sắp xếp --><!--
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Vertical" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            --><!-- Template cho từng món ăn --><!--
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <fooduc:BillUC DataContext="{Binding}"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>-->
-                    </ScrollViewer>
+                    <!--<ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding FoodItems}">
+                                
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                 
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <fooduc:BillUC DataContext="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>-->
+                    <fooduc:BillUC DataContext="{Binding}" Width="250" Height="110" VerticalAlignment="Top"/>
                 </Grid>
                 <Grid Grid.Row="2"  Background="#FFE4E6E9">
                     <TextBlock Text="" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" Foreground="DimGray">                 
