@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="Transparent"
         Title="BookingWindow" Height="700" Width="1000" Name="bookingWindow"
         DataContext="{StaticResource BookingVM}">
@@ -66,8 +68,23 @@
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="6*"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" 
-                        Content="Thời gian nhận bàn" Style="{StaticResource labelStyle}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Thời gian nhận bàn" Style="{StaticResource labelStyle}"/>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,5">
+                            <TextBlock Text="Giờ" FontSize="15" FontWeight="Medium"/>
+                            <TextBlock Text="Phút" FontSize="15" FontWeight="Medium"
+                                       Margin="93,0,0,0"/>
+                        </StackPanel>
+
+
+
+                    </Grid>
+                    
                     <Border Grid.Row="1" BorderThickness="0" Margin="10,0,0,15">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -84,15 +101,42 @@
                                     </DatePicker.Text>
                                 </DatePicker>
                             </Border>
+
                             
-                            <Border Grid.Column="1">
-                                <!--<TextBox Grid.Column="1" Margin="0,0,10,0" Style="{StaticResource txtStyle}"/>-->
-                                <xctk:TimePicker Style="{StaticResource TimePickerStyle1}" Grid.Column="1">
-                                </xctk:TimePicker>
+                            <!--<Border Grid.Column="1" Margin="0,0,10,0">
+                                <Grid>
+                                    --><!--<Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>--><!--
+
+                                    <TextBox Grid.Column="0" Style="{StaticResource txtStyle}" Text="{Binding SelectedTime}"/>
+                                    
+                                    --><!--<StackPanel Grid.Column="1">
+                                        
+                                        <Button Height="22" BorderThickness="0" Background="Transparent"
+                                                Content="▲" Foreground="Black" FontSize="8"/>
+                                        <Button Height="22" BorderThickness="0" Background="Transparent"
+                                                Content="▼" Foreground="Black" FontSize="8"/>
+                                    </StackPanel>--><!--
+                                    <Border>
+                                        
+                                    </Border>
+                                </Grid>
+                            </Border>-->
+                            <Border Margin="0,0,10,0" Grid.Column="1">
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox Grid.Column="0" Style="{StaticResource txtStyle}" Margin="5,0,5,0"/>
+                                    <TextBox Grid.Column="1" Style="{StaticResource txtStyle}" Margin="10,0,0,0"/>
+                                </Grid>
                             </Border>
                         </Grid>
                     </Border>
-                    
                 </Grid>
                 
                 <!--Số điện thoại-->
@@ -117,8 +161,13 @@
                     <Label Grid.Row="0" 
                         Content="Chọn bàn" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}" Height="44" VerticalAlignment="Top"
-                                 IsReadOnly="True" Text="{Binding SelectedBookingTable}"/>
+                        <Grid>
+                            <TextBox Grid.Row="1" Style="{StaticResource txtStyle}" Height="44" VerticalAlignment="Top"
+                                     IsReadOnly="True" Text="{Binding SelectedBookingTable}"/>
+                            <TextBlock Text=">" FontSize="15" FontWeight="thin" HorizontalAlignment="Right"
+                                       VerticalAlignment="Center" Margin="0,0,10,3" Opacity="0.4"/>
+                        </Grid>
+                        
                     </Border>
                 </Grid>
                 
@@ -168,9 +217,9 @@
                             <RowDefinition Height="4*"/>
                             <RowDefinition Height="6*"/>
                         </Grid.RowDefinitions>
-                        <Label Grid.Column="0" Margin="0,0,0,5"
+                        <Label Grid.Column="0" Margin="5,0,0,5"
                             Content="Số khách" Style="{StaticResource labelStyle}"/>
-                        <Border Grid.Row="1" Margin="5,0,0,15" CornerRadius="5">
+                        <Border Grid.Row="1" Margin="10,0,0,15" CornerRadius="5">
                             <StackPanel Grid.Row="1" Orientation="Horizontal"
                                         HorizontalAlignment="Left"
                                         Width="auto" >
@@ -219,8 +268,38 @@
                     <Label Grid.Row="0" 
                         Content="Khách hàng" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <TextBox Text="{Binding FinishedTime}"
-                            Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                                
+                            <TextBox Text="{Binding FinishedTime}" Margin="0,0,7,0"
+                                     Grid.Row="1" Style="{StaticResource txtStyle}"/>
+
+                            <Button Grid.Column="1" Content="+" FontWeight="Bold" FontSize="15">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="GhostWhite"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="5">
+                                                        <ContentPresenter HorizontalAlignment="Center" 
+                                                                          VerticalAlignment="Center"
+                                                                          Content="{TemplateBinding Content}" />        
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                        </Grid>
+                        
                     </Border>
                 </Grid>
                 
@@ -233,8 +312,13 @@
                     <Label Grid.Row="0" 
                         Content="Đặt trước món" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}" IsReadOnly="True"
-                                 Text="{Binding SelectedBookingMenuItem}"/>
+
+                        <Grid>
+                            <TextBox Grid.Row="1" Style="{StaticResource txtStyle}" IsReadOnly="True"
+                                     Text="{Binding SelectedBookingMenuItem}"/>
+                            <TextBlock Text=">" FontSize="15" FontWeight="thin" HorizontalAlignment="Right"
+                                       VerticalAlignment="Center" Margin="0,0,10,3" Opacity="0.4"/>
+                        </Grid>
                     </Border>
                 </Grid>
 
@@ -245,12 +329,11 @@
                         <RowDefinition Height="6*"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
-                        Content="Ghi chú" Style="{StaticResource labelStyle}"/>
+                        Content="Nhân viên phụ trách" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
                         <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
                     </Border>
                 </Grid>
-
             </Grid>
         </Grid>
 
@@ -262,9 +345,8 @@
 
             <Button Style="{StaticResource buttonStyle}" CommandParameter="{Binding ElementName=bookingWindow}"
                     Content="HỦY ĐƠN HÀNG" Command="{Binding cancelBooking}"/>
-            <Button Grid.Column="1" Style="{StaticResource buttonStyle}"
+            <Button Grid.Column="1" Style="{StaticResource buttonStyle}" Command="{Binding confirmBooking}"
                     Content="XÁC NHẬN" CommandParameter="{Binding ElementName=bookingWindow}"/>
         </Grid>
-
     </Grid>
 </Window>

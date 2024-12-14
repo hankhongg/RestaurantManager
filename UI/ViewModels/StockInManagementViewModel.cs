@@ -260,6 +260,9 @@ namespace RestaurantManager.ViewModels
             }
         }
 
+        public bool IngreCheckConfiguration { get; set; }
+        public bool ItemCheckConfiguration { get; set; }
+
         public ICommand ConfirmInfo { get; set; }
         public ICommand CancelInfo { get; set; }
         public ICommand exitBtn { get; set; }
@@ -380,6 +383,8 @@ namespace RestaurantManager.ViewModels
         public StockInManagementViewModel()
         {
             // Load data from database
+            IngreCheckConfiguration = false;
+            ItemCheckConfiguration = false;
             SelectedIdxStockin = 0;
             isConfirmed = false;
             stockInDetailsManagementID = 0;
@@ -459,11 +464,14 @@ namespace RestaurantManager.ViewModels
                                 DataProvider.Instance.DB.Stockins.Update(mainVM.SelectedStockin);
                             else DataProvider.Instance.DB.Stockins.Update(NewStockIn);
 
+
                             // Thực thi câu lệnh SQL đầu tiên
-                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
+                            if (IngreCheckConfiguration)
+                                DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
 
                             // Thực thi câu lệnh SQL thứ hai
-                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
+                            if (ItemCheckConfiguration)
+                                DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
                             DataProvider.Instance.DB.SaveChanges();
 
                             RefreshStockinList(mainVM);
@@ -485,10 +493,12 @@ namespace RestaurantManager.ViewModels
                     else 
                     {
                         // Thực thi câu lệnh SQL đầu tiên
-                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
+                        if (IngreCheckConfiguration)
+                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
 
                         // Thực thi câu lệnh SQL thứ hai
-                        DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
+                        if (ItemCheckConfiguration)
+                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
 
                         DataProvider.Instance.DB.SaveChanges();
                         RefreshStockinList(mainVM);
@@ -529,6 +539,7 @@ namespace RestaurantManager.ViewModels
                     var isIngreNameExist = DataProvider.Instance.DB.StockinDetailsIngres.Include(x => x.Ingre)
                         .FirstOrDefault(x => x.Ingre.IngreName == SelectedStockinDetailsName
                          && x.StoId == int.Parse(StockInID));
+                    IngreCheckConfiguration = true;
 
                     // Kiểm tra nếu nguyên liệu đã tồn tại
                     if (isIngreNameExist != null)
@@ -624,6 +635,7 @@ namespace RestaurantManager.ViewModels
                 else
                 {
                     var isItemNameExist = DataProvider.Instance.DB.StockinDetailsDrinkOthers.FirstOrDefault(x => x.Item.ItemName == SelectedStockinDetailsName && x.StoId == stoId);
+                    ItemCheckConfiguration = true;
 
                     // Kiểm tra nếu nguyên liệu đã tồn tại
                     if (isItemNameExist != null)

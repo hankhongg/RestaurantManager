@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
                     
-    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+    xmlns:UserControls="clr-namespace:RestaurantManager.Views.UserControls">
     <Style x:Key="labelStyle" TargetType="Label">
         <Setter Property="FontSize" Value="17"/>
         <Setter Property="Margin" Value="5,0"/>
@@ -90,64 +91,7 @@
         <GradientStop Color="GhostWhite" Offset="1.0"/>
     </LinearGradientBrush>
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
-    <Style x:Key="TimePickerStyle1" TargetType="{x:Type xctk:TimePicker}">
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="Gray"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="5"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type xctk:TimePicker}">
-                    <Border Background="{TemplateBinding Background}" 
-                        BorderBrush="{TemplateBinding BorderBrush}" 
-                        BorderThickness="{TemplateBinding BorderThickness}" 
-                        Padding="{TemplateBinding Padding}" 
-                        CornerRadius="5">
-                        <Grid>
-                            <!-- TextBox for time input -->
-                            <TextBox x:Name="PART_TextBox" 
-                                 HorizontalAlignment="Stretch" 
-                                 VerticalAlignment="Center" 
-                                 Text="{TemplateBinding Value}" 
-                                 IsReadOnly="{TemplateBinding IsReadOnly}" 
-                                 BorderThickness="0" 
-                                 Margin="0,0,30,0"/>
-
-                            
-                            <!-- Dropdown button -->
-                            <Button x:Name="PART_Button" 
-                                Content="▼" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Center" 
-                                Width="20" FontSize="8"
-                                Height="20" Padding="0,11,0,0"
-                                Margin="0,0,5,0"
-                                Background="Transparent"
-                                BorderThickness="0"/>
-                            <!--<Button x:Name="PART_Button1" 
-                                Content="▼" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Center" 
-                                Width="20" 
-                                Height="20" 
-                                Margin="0,0,5,0"/>-->          
-                            <!-- Popup for selecting time -->
-                            <Popup x:Name="PART_Popup" 
-                               Placement="Bottom" 
-                               StaysOpen="False">
-                                <Border Background="White" BorderBrush="Gray" BorderThickness="1">
-                                    <!-- Add TimePicker controls here -->
-                                    <!--<xctk:TimePickerPanel x:Name="PART_TimePickerPanel" 
-                                                      SelectedTime="{TemplateBinding Value}" 
-                                                      Is24Hours="{TemplateBinding Is24Hours}" />-->
-                                </Border>
-                            </Popup>
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    
     <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#FF606060"/>
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="#FFFFFFFF"/>
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3"/>
@@ -400,6 +344,18 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="BookingUCStyle1" TargetType="{x:Type UserControls:BookingUC}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type UserControl}">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="5"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style TargetType="{x:Type DatePicker}">
         <Setter Property="Foreground" Value="#FF333333"/>
         <Setter Property="IsTodayHighlighted" Value="True"/>

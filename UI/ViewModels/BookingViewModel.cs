@@ -85,6 +85,5 @@ namespace RestaurantManager.ViewModels
                 }
             );
         }
-        
     }
 }

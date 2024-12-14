@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:UI"
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:tableUC="clr-namespace:RestaurantManager.Views.UserControls"
@@ -527,26 +528,46 @@
                     <!--Booking UC-->
                     <Grid Grid.Column="0">
                         <WrapPanel Margin="10" IsManipulationEnabled="True">
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
-                            <bookingUC:BookingUC Width="190" Height="150" Margin="36, 8" Visibility="{Binding IsBooked}"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
+                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
                         </WrapPanel>
                     </Grid>
 
