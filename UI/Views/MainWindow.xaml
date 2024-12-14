@@ -23,6 +23,9 @@
     </WindowChrome.WindowChrome>
     <!--Grid của mainWindow-->
 
+    
+    <!--NOTE: KHI LƯU DỮ LIỆU TỪ ĐƠN HAY ĐÂU CÓ LIÊN QUAN TỚI BOOKING THÌ LOADTABLEINFORMATION() LẠI-->
+    
     <Grid Background="Transparent">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>

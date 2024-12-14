@@ -16,10 +16,13 @@ namespace RestaurantManager.ViewModels
     class TableViewModel : BaseViewModel
     {
         //public TableUC TableUCControl { get; set; }
-        private byte tabNumber;
-        public byte TabNumber { get { return tabNumber; } set { if (tabNumber != value) tabNumber = value; OnPropertyChanged(nameof(TabNumber)); } }
-        private bool tabStatus;
-        public bool TabStatus { get { return tabStatus; } set { if (tabStatus != value) tabStatus = value; OnPropertyChanged(nameof(TabStatus)); } }
+        private string tabNumber;
+        public string TabNumber { get { return tabNumber; } set { if (tabNumber != value) tabNumber = value; OnPropertyChanged(nameof(TabNumber)); } }
+        private string tabStatus;
+        public string TabStatus { get { return tabStatus; } set { if (tabStatus != value) tabStatus = value; OnPropertyChanged(nameof(TabStatus)); } }
+
+        private bool boolTabStatus;
+        public bool BoolTabStatus { get { return boolTabStatus; } set { if (boolTabStatus != value) boolTabStatus = value; OnPropertyChanged(nameof(BoolTabStatus)); } }
 
         public TableViewModel()
         {
@@ -27,15 +30,30 @@ namespace RestaurantManager.ViewModels
         }
         public TableViewModel(byte tableNumber, bool tableStatus)
         {
-            TabNumber = tableNumber;
-            TabStatus = tableStatus;
-            //MessageBox.Show($"Table {TabNumber} status: {TabStatus}");
+            TabNumber = $"Bàn {tableNumber}";
+            if (tableStatus == true)
+            {
+                TabStatus = "Trống";
+                BoolTabStatus = true;
+            }
+            else { 
+            TabStatus = "Đang có khách";
+                BoolTabStatus = false;
+            }
         }
         public TableViewModel(DiningTable d)
         {
-            TabNumber = (byte)d.TabNum;
-            TabStatus = d.TabStatus;
-            //MessageBox.Show($"Table {TabNumber} status: {TabStatus}");
+            TabNumber = $"Bàn {(byte)d.TabNum}";
+            if (d.TabStatus == true)
+            {
+                TabStatus = "Trống";
+                boolTabStatus = true;
+            }
+            else
+            {
+                TabStatus = "Đang có khách";
+                boolTabStatus = false;
+            }
         }
         
     }

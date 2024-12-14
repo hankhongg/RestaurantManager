@@ -10,6 +10,7 @@ using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -696,7 +697,9 @@ namespace RestaurantManager.ViewModels
             {
                 AddTableWindow addTableWindow = new AddTableWindow();
                 var addTableVM = addTableWindow.DataContext as AddTableViewModel;
-                DiningTable SelectedTable = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == p.TabNumber).FirstOrDefault();
+                string numberPart = Regex.Match(p.TabNumber, @"\d+").Value;
+                byte tableFromString = byte.Parse(numberPart.ToString());
+                DiningTable SelectedTable = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == tableFromString).FirstOrDefault();
                 if (addTableVM != null)
                 {
                     addTableVM.LoadTableInformation(SelectedTable);
@@ -718,10 +721,15 @@ namespace RestaurantManager.ViewModels
             TableList = new ObservableCollection<DiningTable>(DataProvider.Instance.DB.DiningTables);
             TableViewList = new ObservableCollection<TableViewModel>();
             byte i = 1;
+            byte j = 1;
             foreach (DiningTable table in TableList)
             {
                 if (table.Isdeleted == false)
+                {
+                    table.TabNum = j++;
                     TableViewList.Add(new TableViewModel(i++, table.TabStatus));
+                    DataProvider.Instance.DB.SaveChanges();
+                }
             }
         }
     }

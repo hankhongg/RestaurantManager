@@ -22,13 +22,30 @@ namespace RestaurantManager.ViewModels
 
         public ICommand DelTableCommand { get; set; }
         public ICommand CancelTableCommand { get; set; }
+        public ICommand SaveTableCommand { get; set; }
         public AddTableViewModel()
         {
             DelTableCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
                 DiningTable d = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == TabNumber).FirstOrDefault();
                 d.Isdeleted = true;
+                d.TabNum = null;
                 DataProvider.Instance.DB.SaveChanges();
+                p.Close();
+            });
+            CancelTableCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            {
+                p.Close();
+            });
+            SaveTableCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            {
+                DiningTable d = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == TabNumber).FirstOrDefault();
+
+                
+                d.TabStatus = TabStatus == "Đang có khách" ? false : true;
+                
+                DataProvider.Instance.DB.SaveChanges();
+
                 p.Close();
             });
         }

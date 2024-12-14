@@ -47,6 +47,8 @@
                     <ComboBox Width="200" ItemsSource="{Binding TabStatuses}" FontSize="16" x:Name="tableStatusTextBox" SelectedValue="{Binding TabStatus}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="70" Margin="0,40">
+                    <Button Content="Lưu bàn" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}" VerticalContentAlignment="Center"
+                    Command="{Binding SaveTableCommand}" CommandParameter="{Binding ElementName=addTableWindow}" Margin="0,0,10,0"/>
                     <Button Content="Xóa bàn" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}" VerticalContentAlignment="Center"
                     Command="{Binding DelTableCommand}" CommandParameter="{Binding ElementName=addTableWindow}" Margin="0,0,10,0"/>
                     <Button Content="Trở về" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}"
