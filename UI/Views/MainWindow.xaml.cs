@@ -1,4 +1,5 @@
 ﻿using RestaurantManager.Models;
+using RestaurantManager.ViewModels;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,7 @@ namespace UI.Views
         public MainWindow()
         {
             InitializeComponent();
+            //this.DataContext = new MainViewModel();
         }
     }
 }

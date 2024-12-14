@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,21 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RestaurantManager.Views.UserControls
+namespace RestaurantManager.Views
 {
     /// <summary>
-    /// Interaction logic for TableUC.xaml
+    /// Interaction logic for AddTableWindow.xaml
     /// </summary>
-    public partial class TableUC : UserControl
+    public partial class AddTableWindow : Window
     {
-        public TableUC()
+        public AddTableWindow()
         {
             InitializeComponent();
-            //Debug.WriteLine($"DataContext: {this.DataContext}");
-            //this.DataContext = this;
         }
     }
 }

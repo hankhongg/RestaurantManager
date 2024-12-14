@@ -1,0 +1,60 @@
+﻿<Window x:Class="RestaurantManager.Views.AddTableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RestaurantManager.Views"
+        xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls" DataContext="{StaticResource AddTableVM}"
+        mc:Ignorable="d" x:Name="addTableWindow" WindowStyle="None" Background="Transparent"
+        Title="Thông tin bàn" Height="450" Width="800">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Roboto"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Roboto"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Grid.RowSpan="2" CornerRadius="10">
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSteelBlue" Offset="0.25"/>
+                    <GradientStop Color="GhostWhite" Offset="0.75"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <controlbar:ControlBar Tag="{Binding Title, ElementName=addTableWindow}" Grid.ColumnSpan="2"></controlbar:ControlBar>
+        <Grid Grid.Row="1">
+            <StackPanel Margin="50" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
+                    <TextBlock Text="Số bàn: " FontWeight="Bold" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Width="50" Text="{Binding TabNumber}" FontSize="20" x:Name="tableNumberTextBox" IsEnabled="False"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
+                    <TextBlock Text="Trạng thái: " FontWeight="Bold"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Width="200" ItemsSource="{Binding TabStatuses}" FontSize="16" x:Name="tableStatusTextBox" SelectedValue="{Binding TabStatus}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="70" Margin="0,40">
+                    <Button Content="Lưu bàn" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}" VerticalContentAlignment="Center"
+                    Command="{Binding SaveTableCommand}" CommandParameter="{Binding ElementName=addTableWindow}" Margin="0,0,10,0"/>
+                    <Button Content="Xóa bàn" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}" VerticalContentAlignment="Center"
+                    Command="{Binding DelTableCommand}" CommandParameter="{Binding ElementName=addTableWindow}" Margin="0,0,10,0"/>
+                    <Button Content="Trở về" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}"
+                    Command="{Binding CancelTableCommand}" CommandParameter="{Binding ElementName=addTableWindow}" Margin="10,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
