@@ -6,11 +6,78 @@
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         mc:Ignorable="d" x:Name="addItemWindow" WindowStyle="None" Background="Transparent"
-        DataContext="{StaticResource MenuItemsVM}"
+        xmlns:helpers="clr-namespace:RestaurantManager.Helpers"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        DataContext="{StaticResource MenuItemsVM}" WindowStartupLocation="CenterScreen"
         Title="Thêm sản phẩm vào Menu" Height="450" Width="800">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
     </WindowChrome.WindowChrome>
+    <Window.Resources>
+        
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Roboto"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Roboto"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <helpers:ViewTemplateSelector x:Key="TemplateSelector"/>
+        <DataTemplate x:Key="FoodView">
+            <Grid Grid.Row="2" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <!--Thêm nguyên liệu-->
+                <Grid>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ComboBox FontFamily="Roboto" FontSize="16" Margin="0,0,0,20"
+                         ItemsSource="{Binding CurrentIngredientsNames}" SelectedIndex="{Binding CurrentIdxIngredientName}" Width="250"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <TextBlock FontFamily="Roboto" FontSize="20" Text="Số lượng: " Margin="0,0,5,0"/>
+                                <TextBox FontFamily="Roboto" FontSize="20" Width="60" x:Name="quantityTextBox">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <i:InvokeCommandAction Command="{Binding QuantityTextBoxChanged}" CommandParameter="{Binding ElementName=quantityTextBox}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                            </StackPanel>
+                            <Button Style="{StaticResource LoginButton}" FontSize="20" FontWeight="ExtraBold"
+                         Content="Thêm nguyên liệu" Height="Auto" Width="Auto" Foreground="ForestGreen"
+                         Command="{Binding AddIngreIntoRecipe}"
+                         Padding="5"  Margin="0,0,0,10"/>
+                            <Button Style="{StaticResource LoginButton}" FontSize="20" FontWeight="ExtraBold"
+                         Foreground="Crimson" IsEnabled="{Binding IsLVIngreSelected}"
+                         Content="Xóa nguyên liệu" Height="Auto" Width="Auto"
+                         Command="{Binding RemoveIngreFromRecipe}"
+                         Padding="5"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <!--Các nguyên liệu đã thêm cho món ăn-->
+                <Grid Grid.Column="1">
+                    <ListView FontFamily="Roboto" FontSize="20" ItemsSource="{Binding AddedLVIngres}" SelectedItem="{Binding LVIngreSelected}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Tên nguyên liệu" DisplayMemberBinding="{Binding IngreName}"/>
+                                <GridViewColumn Header="Số lượng" DisplayMemberBinding="{Binding InstockKg}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="DrinkView">
+            
+        </DataTemplate>
+        <DataTemplate x:Key="OtherView"></DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
@@ -26,12 +93,68 @@
             </Border.Background>
         </Border>
         <controlbar:ControlBar Tag="{Binding Title, ElementName=addItemWindow}"></controlbar:ControlBar>
+        <Border Grid.Row="1" BorderBrush="CornflowerBlue" BorderThickness="0,0,0,2"/>
         <Grid Grid.Row="1">
-            <ComboBox Width="350" Height="30" FontSize="20" FontFamily="Roboto" 
+            <ComboBox Width="350" Height="30" FontSize="20" FontFamily="Roboto"  SelectedIndex="{Binding SelectedIdxType, UpdateSourceTrigger=PropertyChanged}"
                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15">
                 <ComboBoxItem Content="Món ăn"/>
                 <ComboBoxItem Content="Thức uống"/>
+                <ComboBoxItem Content="Khác"/>
             </ComboBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Thêm / Lưu món ăn" Height="70" VerticalAlignment="Center"
+                        BorderThickness="2" Width="Auto" FontSize="20" Style="{StaticResource configureDataButton}" VerticalContentAlignment="Center"
+                        Command="{Binding AddItemCommand}" CommandParameter="{Binding ElementName=addItemWindow}" Margin="0,0,10,0"/>
+            </StackPanel>
         </Grid>
+        <!--ContentTemplate="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=Window}}"-->
+        <ContentControl Grid.Row="2" Content="{Binding CurrentViewName}" 
+                ContentTemplateSelector="{StaticResource TemplateSelector}" />
+        <!--<Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            --><!--Thêm nguyên liệu--><!--
+            <Grid>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ComboBox FontFamily="Roboto" FontSize="16" Margin="0,0,0,20"
+                                ItemsSource="{Binding CurrentIngredientsNames}" SelectedIndex="{Binding CurrentIdxIngredientName}" Width="250"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <TextBlock FontFamily="Roboto" FontSize="20" Text="Số lượng: " Margin="0,0,5,0"/>
+                            <TextBox FontFamily="Roboto" FontSize="20" Width="60" x:Name="quantityTextBox">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding QuantityTextBoxChanged}" CommandParameter="{Binding ElementName=quantityTextBox}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                        </StackPanel>
+                        <Button Style="{StaticResource LoginButton}" FontSize="20" FontWeight="ExtraBold"
+                                Content="Thêm nguyên liệu" Height="Auto" Width="Auto" Foreground="ForestGreen"
+                                Command="{Binding AddIngreIntoRecipe}"
+                                Padding="5"  Margin="0,0,0,10"/>
+                        <Button Style="{StaticResource LoginButton}" FontSize="20" FontWeight="ExtraBold"
+                                Foreground="Crimson" IsEnabled="{Binding IsLVIngreSelected}"
+                                Content="Xóa nguyên liệu" Height="Auto" Width="Auto"
+                                Command="{Binding RemoveIngreFromRecipe}"
+                                Padding="5"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            --><!--Các nguyên liệu đã thêm cho món ăn--><!--
+            <Grid Grid.Column="1">
+                <ListView FontFamily="Roboto" FontSize="20" ItemsSource="{Binding AddedLVIngres}" SelectedItem="{Binding LVIngreSelected}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Tên nguyên liệu" DisplayMemberBinding="{Binding IngreName}"/>
+                            <GridViewColumn Header="Số lượng" DisplayMemberBinding="{Binding InstockKg}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+
+        </Grid>-->
     </Grid>
 </Window>

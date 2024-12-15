@@ -29,17 +29,6 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        private ObservableCollection<StockinDetailsIngre> stockinDetailsIngres;
-        public ObservableCollection<StockinDetailsIngre> StockinDetailsIngres
-        {
-            get { return stockinDetailsIngres; }
-            set
-            {
-                stockinDetailsIngres = value;
-                OnPropertyChanged();
-            }
-        }
-
         private string ingreName;
         public string IngreName
         {
