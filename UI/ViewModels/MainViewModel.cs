@@ -678,6 +678,7 @@ namespace RestaurantManager.ViewModels
                     addItemWindow.DataContext = itemVM;
                     addItemWindow.ShowDialog();
                 }
+                ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
             });
             EditItemCommand = new RelayCommand<object>((p) => SelectedItem != null, (p) =>
             {
@@ -701,9 +702,11 @@ namespace RestaurantManager.ViewModels
                         itemVM.SelectedIdxType = 2;
                     }
                     itemVM.IsNotEditing = false;
+                    itemVM.ItemID = SelectedItem.ItemId;
                     addItemWindow.DataContext = itemVM;
                     addItemWindow.ShowDialog();
                 }
+                ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
             });
             // Table Management
             AddTableCommand = new RelayCommand<object>((p) => { return true; }, (p) =>

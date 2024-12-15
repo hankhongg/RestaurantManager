@@ -39,13 +39,7 @@
                          ItemsSource="{Binding CurrentIngredientsNames}" SelectedIndex="{Binding CurrentIdxIngredientName}" Width="250"/>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                 <TextBlock FontFamily="Roboto" FontSize="20" Text="Số lượng: " Margin="0,0,5,0"/>
-                                <TextBox FontFamily="Roboto" FontSize="20" Width="60" x:Name="quantityTextBox">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="TextChanged">
-                                            <i:InvokeCommandAction Command="{Binding QuantityTextBoxChanged}" CommandParameter="{Binding ElementName=quantityTextBox}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </TextBox>
+                                <TextBox FontFamily="Roboto" FontSize="20" Width="60" x:Name="quantityTextBox" Text="{Binding CurrentQuantity}"/>
                             </StackPanel>
                             <Button Style="{StaticResource LoginButton}" FontSize="20" FontWeight="ExtraBold"
                          Content="Thêm nguyên liệu" Height="Auto" Width="Auto" Foreground="ForestGreen"
