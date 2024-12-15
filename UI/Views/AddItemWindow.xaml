@@ -96,7 +96,7 @@
         <Border Grid.Row="1" BorderBrush="CornflowerBlue" BorderThickness="0,0,0,2"/>
         <Grid Grid.Row="1">
             <ComboBox Width="350" Height="30" FontSize="20" FontFamily="Roboto"  SelectedIndex="{Binding SelectedIdxType, UpdateSourceTrigger=PropertyChanged}"
-                      HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15">
+                      HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15" IsEnabled="{Binding IsNotEditing}">
                 <ComboBoxItem Content="Món ăn"/>
                 <ComboBoxItem Content="Thức uống"/>
                 <ComboBoxItem Content="Khác"/>
@@ -110,7 +110,7 @@
         <!--ContentTemplate="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=Window}}"-->
         <ContentControl Grid.Row="2" Content="{Binding CurrentViewName}" 
                 ContentTemplateSelector="{StaticResource TemplateSelector}" />
-        <!--<Grid Grid.Row="2">
+        <!--<Grid Grid.Row="2" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -120,7 +120,7 @@
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ComboBox FontFamily="Roboto" FontSize="16" Margin="0,0,0,20"
-                                ItemsSource="{Binding CurrentIngredientsNames}" SelectedIndex="{Binding CurrentIdxIngredientName}" Width="250"/>
+             ItemsSource="{Binding CurrentIngredientsNames}" SelectedIndex="{Binding CurrentIdxIngredientName}" Width="250"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <TextBlock FontFamily="Roboto" FontSize="20" Text="Số lượng: " Margin="0,0,5,0"/>
                             <TextBox FontFamily="Roboto" FontSize="20" Width="60" x:Name="quantityTextBox">
@@ -132,14 +132,14 @@
                             </TextBox>
                         </StackPanel>
                         <Button Style="{StaticResource LoginButton}" FontSize="20" FontWeight="ExtraBold"
-                                Content="Thêm nguyên liệu" Height="Auto" Width="Auto" Foreground="ForestGreen"
-                                Command="{Binding AddIngreIntoRecipe}"
-                                Padding="5"  Margin="0,0,0,10"/>
+             Content="Thêm nguyên liệu" Height="Auto" Width="Auto" Foreground="ForestGreen"
+             Command="{Binding AddIngreIntoRecipe}"
+             Padding="5"  Margin="0,0,0,10"/>
                         <Button Style="{StaticResource LoginButton}" FontSize="20" FontWeight="ExtraBold"
-                                Foreground="Crimson" IsEnabled="{Binding IsLVIngreSelected}"
-                                Content="Xóa nguyên liệu" Height="Auto" Width="Auto"
-                                Command="{Binding RemoveIngreFromRecipe}"
-                                Padding="5"/>
+             Foreground="Crimson" IsEnabled="{Binding IsLVIngreSelected}"
+             Content="Xóa nguyên liệu" Height="Auto" Width="Auto"
+             Command="{Binding RemoveIngreFromRecipe}"
+             Padding="5"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>

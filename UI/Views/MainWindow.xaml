@@ -361,7 +361,11 @@
                                 <DataGrid Grid.Column="1" x:Name="itemsDataGrid" CanUserDeleteRows="False"
                                           BorderThickness="0" IsReadOnly="True" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}"
                                           AutoGenerateColumns="False" ItemsSource="{Binding ItemsList}">
-
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding EditItemCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
 
                                     <DataGrid.Columns>
                                         <DataGridTextColumn HeaderStyle="{StaticResource CenterAlignedHeaderStyle}"

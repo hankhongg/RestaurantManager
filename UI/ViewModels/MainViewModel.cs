@@ -23,7 +23,6 @@ namespace RestaurantManager.ViewModels
     class MainViewModel : BaseViewModel
     {
 
-
         private string usernameForProfileWindow;
         public ICommand WindowIsLoadedCommand { get; set; }
         public ICommand ProfileManagementCommand { get; set; }
@@ -668,20 +667,48 @@ namespace RestaurantManager.ViewModels
             });
             AddItemCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
-
+                AddItemWindow addItemWindow = new AddItemWindow();
+                var itemVM = addItemWindow.DataContext as MenuItemsManagement;
+                //var itemVM = new MenuItemsManagement();
+                if (itemVM != null)
+                {
+                    itemVM.SelectedIdxType = 0;
+                    itemVM.IsNotEditing = true;
+                    itemVM.LoadBlankRecipeInformation();
+                    addItemWindow.DataContext = itemVM;
+                    addItemWindow.ShowDialog();
+                }
             });
             EditItemCommand = new RelayCommand<object>((p) => SelectedItem != null, (p) =>
             {
+                
                 AddItemWindow addItemWindow = new AddItemWindow();
                 var itemVM = addItemWindow.DataContext as MenuItemsManagement;
+                //var itemVM = new MenuItemsManagement();
                 if (itemVM != null)
                 {
+                    itemVM.LoadRecipeInformation(selectedItem.ItemId);
+                    if (SelectedItem.ItemType == "FOOD")
+                    {
+                        itemVM.SelectedIdxType = 0;
+                    }
+                    else if (SelectedItem.ItemType == "DRINK")
+                    {
+                        itemVM.SelectedIdxType = 1;
+                    }
+                    else
+                    {
+                        itemVM.SelectedIdxType = 2;
+                    }
+                    itemVM.IsNotEditing = false;
+                    addItemWindow.DataContext = itemVM;
                     addItemWindow.ShowDialog();
                 }
             });
             // Table Management
             AddTableCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
+                
                 byte existedTableNumber = (byte)DataProvider.Instance.DB.DiningTables.Count();
                 //string query = $"DBCC CHECKIDENT ('DININGTABLE', RESEED, {existedTableNumber + 1})";
                 //DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);

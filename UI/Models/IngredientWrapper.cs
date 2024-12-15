@@ -32,6 +32,16 @@ public class IngredientWrapper : INotifyPropertyChanged
         this.instockKg = ingredient.InstockKg;
     }
 
+    public IngredientWrapper(Ingredient ingredient, double kg)
+    {
+        this.ingredient = ingredient;
+        this.instockKg = kg;
+    }
+    public IngredientWrapper()
+    {
+
+    }
+
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged(string propertyName)
     {

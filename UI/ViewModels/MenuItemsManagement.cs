@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using XAct;
 
 namespace RestaurantManager.ViewModels
 {
     class MenuItemsManagement : BaseViewModel
     {
+
+        //public int ItemID { get; set; } // nếu là edit thì cần tham số của item cần edit
+
         private string currentQuantity = "0";
         public string CurrentQuantity
         {
@@ -67,7 +71,7 @@ namespace RestaurantManager.ViewModels
         }
 
         // added ingres names
-        private ObservableCollection<IngredientWrapper> addedLVIngres = new ObservableCollection<IngredientWrapper>();
+        private ObservableCollection<IngredientWrapper> addedLVIngres;
         public ObservableCollection<IngredientWrapper> AddedLVIngres
         {
             get { return addedLVIngres; }
@@ -88,13 +92,63 @@ namespace RestaurantManager.ViewModels
             set { isLVIngreSelected = value; OnPropertyChanged(nameof(IsLVIngreSelected)); }
         }
 
+        private bool isNotEditing = true;
+        public bool IsNotEditing
+        {
+            get { return isNotEditing; }
+            set { isNotEditing = value; OnPropertyChanged(nameof(IsNotEditing)); }
+        }
+
         // commands
         public ICommand AddIngreIntoRecipe { get; set; }
         public ICommand RemoveIngreFromRecipe { get; set; }
         public ICommand AddItemCommand { get; set; }
         public ICommand QuantityTextBoxChanged { get; set; }
 
+        public void LoadRecipeInformation(int ItemID)
+        {
+            if (ItemID != null)
+            {
+                ObservableCollection<int> ingresIDs = new ObservableCollection<int>();
+                var item = DataProvider.Instance.DB.MenuItems.FirstOrDefault(x => x.ItemId == ItemID);
+                if (item != null)
+                {
+                    ObservableCollection<Recipe> recipes = new ObservableCollection<Recipe>(
+                        DataProvider.Instance.DB.Recipes.Where(x => x.ItemId == item.ItemId)
+                    );
 
+                    if (recipes.Any())  
+                    {
+                        foreach (Recipe recipe in recipes)
+                        {
+                            ingresIDs.Add(recipe.IngreId);
+                        }
+
+                        var ingredientWrappers = new ObservableCollection<IngredientWrapper>(
+                            DataProvider.Instance.DB.Ingredients
+                                .Where(x => ingresIDs.Contains(x.IngreId))  
+                                .Select(x => new IngredientWrapper(x))  
+                        );
+
+                        foreach (var wrapper in ingredientWrappers)
+                        {
+                            var recipe = recipes.FirstOrDefault(r => r.IngreId == wrapper.Ingredient.IngreId);
+                            if (recipe != null)
+                            {
+                                wrapper.InstockKg = recipe.IngreQuantityKg;  
+                            }
+                        }
+                        AddedLVIngres = ingredientWrappers;
+                    }
+                }
+            }
+        }
+
+
+        public void LoadBlankRecipeInformation()
+        {
+            AddedLVIngres = new ObservableCollection<IngredientWrapper>();
+        }
 
         public MenuItemsManagement()
         {
