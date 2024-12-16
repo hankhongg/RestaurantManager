@@ -227,9 +227,15 @@ namespace RestaurantManager.ViewModels
         public void LoadDrinkInformation(int ItemID)
         {
             MenuItem menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(x => x.ItemId == ItemID);
-            DrinkName = menuItem.ItemName;
-            DrinkSellPrice = menuItem.ItemSprice.ToString();
-            DrinkCostPrice = menuItem.ItemCprice.ToString();
+            if (menuItem.ItemName != null)
+                DrinkName = menuItem.ItemName;
+            else DrinkName = string.Empty;
+            if (menuItem.ItemSprice != null)
+                DrinkSellPrice = menuItem.ItemSprice.ToString();
+            else DrinkSellPrice = string.Empty;
+            if (menuItem.ItemCprice != null)
+                DrinkCostPrice = menuItem.ItemCprice.ToString();
+            else DrinkCostPrice = string.Empty;
             if (menuItem.ItemImg != null)
             {
                 DrinkSelectedImagePath = menuItem.ItemImg;
@@ -245,9 +251,15 @@ namespace RestaurantManager.ViewModels
         public void LoadOtherInformation(int ItemID)
         {
             MenuItem menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(x => x.ItemId == ItemID);
-            OtherName = menuItem.ItemName;
-            OtherSellPrice = menuItem.ItemSprice.ToString();
-            OtherCostPrice = menuItem.ItemCprice.ToString();
+            if (menuItem.ItemName != null)
+                OtherName = menuItem.ItemName;
+            else OtherName = string.Empty;
+            if (menuItem.ItemSprice != null)
+                OtherSellPrice = menuItem.ItemSprice.ToString();
+            else OtherSellPrice = string.Empty;
+            if (menuItem.ItemCprice != null)
+                OtherCostPrice = menuItem.ItemCprice.ToString();
+            else OtherCostPrice = string.Empty;
             if (menuItem.ItemImg != null)
             {
                 OtherSelectedImagePath = menuItem.ItemImg;

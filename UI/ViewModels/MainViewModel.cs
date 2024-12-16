@@ -670,7 +670,8 @@ namespace RestaurantManager.ViewModels
             AddItemCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
                 AddItemWindow addItemWindow = new AddItemWindow();
-                var itemVM = addItemWindow.DataContext as MenuItemsManagement;
+                //var itemVM = addItemWindow.DataContext as MenuItemsManagement;
+                var itemVM = new MenuItemsManagement();
                 //var itemVM = new MenuItemsManagement();
                 if (itemVM != null)
                 {
@@ -689,8 +690,8 @@ namespace RestaurantManager.ViewModels
             {
                 
                 AddItemWindow addItemWindow = new AddItemWindow();
-                var itemVM = addItemWindow.DataContext as MenuItemsManagement;
-                //var itemVM = new MenuItemsManagement();
+                //var itemVM = addItemWindow.DataContext as MenuItemsManagement;
+                var itemVM = new MenuItemsManagement();
                 if (itemVM != null)
                 {
                     if (SelectedItem.ItemType == "FOOD")

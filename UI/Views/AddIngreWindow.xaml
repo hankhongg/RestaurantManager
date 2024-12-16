@@ -37,15 +37,20 @@
         <controlbar:ControlBar Tag="{Binding Title, ElementName=addIngreWindow}" Grid.ColumnSpan="2"></controlbar:ControlBar>
         <Grid Grid.Row="1">
             <StackPanel Margin="50" HorizontalAlignment="Center">
-                <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal" Margin="0,20" HorizontalAlignment="Right">
                     <TextBlock Text="Tên nguyên liệu: " FontWeight="Bold" 
                                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBox Width="300" Text="{Binding IngreName}" FontSize="20" x:Name="ingreNameTextBox"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal" Margin="0,20" HorizontalAlignment="Right">
                     <TextBlock Text="Giá bán trên đơn vị: " FontWeight="Bold"
                             HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBox Width="300" Text="{Binding IngreCPrice}" FontSize="20" x:Name="ingreCPriceTextBox"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,20" HorizontalAlignment="Right">
+                    <TextBlock Text="Giá bán trên đơn vị: " FontWeight="Bold"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Width="300" Text="{Binding IngreInstock}" FontSize="20" x:Name="ingreInstockTextBox"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="70" Margin="0,10">
                     <Button Content="Xác nhận" BorderThickness="2" Width="200" FontSize="20" Style="{StaticResource configureDataButton}" VerticalContentAlignment="Center"

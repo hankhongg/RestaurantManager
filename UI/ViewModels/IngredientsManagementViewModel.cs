@@ -56,6 +56,20 @@ namespace RestaurantManager.ViewModels
             }
         }
 
+        private string ingreInstock;
+        public string IngreInstock
+        {
+            get { return ingreInstock; }
+            set
+            {
+                if (ingreInstock != value)
+                {
+                    ingreInstock = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         Ingredient SelectedIngreDetails; 
         public void LoadIngredientInformation()
         {
@@ -67,6 +81,9 @@ namespace RestaurantManager.ViewModels
                 if (SelectedIngreDetails.IngrePrice != null)
                     IngreCPrice = SelectedIngreDetails.IngrePrice.ToString();
                 else IngreCPrice = "0";
+                if (SelectedIngreDetails.InstockKg != null)
+                    IngreInstock = SelectedIngreDetails.InstockKg.ToString();
+                else IngreInstock = "0";
             }
 
         }
@@ -88,7 +105,7 @@ namespace RestaurantManager.ViewModels
                 SelectedIngreDetails = DataProvider.Instance.DB.Ingredients.Where(x => x.IngreId == IngredientID).FirstOrDefault();
 
 
-                bool checkValidIngre = !String.IsNullOrEmpty(IngreName) && !String.IsNullOrEmpty(IngreCPrice);
+                bool checkValidIngre = !String.IsNullOrEmpty(IngreName) && !String.IsNullOrEmpty(IngreCPrice) && !String.IsNullOrEmpty(IngreInstock);
                 if (!checkValidIngre) { MessageBox.Show("Không được để trống thông tin!\nThông tin không được lưu.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Asterisk); p.Close(); return; }
                 int existedIngre = DataProvider.Instance.DB.Ingredients.Count();
               
@@ -99,6 +116,7 @@ namespace RestaurantManager.ViewModels
                         var dbIngre = SelectedIngreDetails;
                         dbIngre.IngreName = IngreName;
                         dbIngre.IngrePrice = decimal.Parse(IngreCPrice);
+                        dbIngre.InstockKg = double.Parse(IngreInstock);
 
                         DataProvider.Instance.DB.SaveChanges(); 
                         p.Close(); 
@@ -112,7 +130,7 @@ namespace RestaurantManager.ViewModels
                 {
                     try
                     {
-                        var newIngre = new Ingredient() { IngreName = IngreName, IngreCode = $"NL{existedIngre + 1:D3}", IngrePrice = decimal.Parse(IngreCPrice) };
+                        var newIngre = new Ingredient() { IngreName = IngreName, IngreCode = $"NL{existedIngre + 1:D3}", IngrePrice = decimal.Parse(IngreCPrice), InstockKg = double.Parse(IngreInstock) };
                         DataProvider.Instance.DB.Ingredients.Add(newIngre);
                         DataProvider.Instance.DB.SaveChanges();
                         MessageBox.Show("Thêm nguyên liệu thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
