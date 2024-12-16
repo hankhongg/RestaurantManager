@@ -353,20 +353,25 @@ namespace RestaurantManager.ViewModels
                                 }
                                 else newItem.ItemImg = null;
                                 newItem.ItemCode = $"MN{existedItem + 1:D2}";
-                                newItem.Isdeleted = false;
+                                newItem.Isdeleted = false; // nên bỏ Isdeleted /////////////////////////////////////////////////////////////////////////// NHỚ XÒA Isdeleted của bảng MENUITEM
                                 newItem.Instock = 0;
                                 DataProvider.Instance.DB.MenuItems.Add(newItem);
                                 DataProvider.Instance.DB.SaveChanges();
-                                foreach (IngredientWrapper ingre in AddedLVIngres)
+                                double minItemInstock = double.MaxValue;
+                                foreach (IngredientWrapper ingrewrapper in AddedLVIngres)
                                 {
                                     Recipe newRecipe = new Recipe();
                                     newRecipe.ItemId = newItem.ItemId;
-                                    newRecipe.IngreId = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreName == ingre.IngreName).IngreId;
-                                    newRecipe.IngreQuantityKg = ingre.InstockKg;
+                                    newRecipe.IngreId = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreName == ingrewrapper.IngreName).IngreId;
+                                    newRecipe.IngreQuantityKg = ingrewrapper.InstockKg;
                                     DataProvider.Instance.DB.Recipes.Add(newRecipe);
+                                    double currentIngreInstock = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreId == newRecipe.IngreId).InstockKg;
+                                    double itemInstock;
+                                    itemInstock =Math.Floor(currentIngreInstock / newRecipe.IngreQuantityKg);
+                                    if (itemInstock < minItemInstock) minItemInstock = itemInstock;
                                 }
+                                newItem.Instock = minItemInstock;
                                 DataProvider.Instance.DB.SaveChanges();
-                                MessageBox.Show("Thêm công thức món ăn khác thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                                 p.Close();
                             }
                             p.Close();
@@ -397,14 +402,21 @@ namespace RestaurantManager.ViewModels
                                         DataProvider.Instance.DB.Recipes.Remove(recipe); // nếu ko có trong list tổng thì đánh dấu xóa và xóa thật
                                         supposedCostPrice -= DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreId == recipe.IngreId).IngrePrice ?? 0;
                                     }
+                                
                                 }
-                                foreach (IngredientWrapper ingre in AddedLVIngres)
+                                double minItemInstock = double.MaxValue;
+                                foreach (IngredientWrapper ingrewrapper in AddedLVIngres)
                                 {
-                                    var recipe = existingRecipes.FirstOrDefault(x => x.IngreId == ingre.Ingredient.IngreId);
+
+                                    var recipe = existingRecipes.FirstOrDefault(x => x.IngreId == ingrewrapper.Ingredient.IngreId);
                                     if (recipe != null)
                                     {
                                         // cập nhật lại số lượng nếu có recipe rồi
-                                        recipe.IngreQuantityKg = ingre.InstockKg;
+                                        recipe.IngreQuantityKg = ingrewrapper.InstockKg;
+                                        double currentIngreInstock = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreId == recipe.IngreId).InstockKg;
+                                        double itemInstock;
+                                        itemInstock = Math.Floor(currentIngreInstock / recipe.IngreQuantityKg);
+                                        if (itemInstock < minItemInstock) minItemInstock = itemInstock;
                                     }
                                     else
                                     {
@@ -412,12 +424,19 @@ namespace RestaurantManager.ViewModels
                                         Recipe newRecipe = new Recipe
                                         {
                                             ItemId = ItemID,
-                                            IngreId = ingre.Ingredient.IngreId,
-                                            IngreQuantityKg = ingre.InstockKg
+                                            IngreId = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreName == ingrewrapper.IngreName).IngreId,
+                                            IngreQuantityKg = ingrewrapper.InstockKg
                                         };
                                         DataProvider.Instance.DB.Recipes.Add(newRecipe);
+                                        double currentIngreInstock = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreId == newRecipe.IngreId).InstockKg;
+                                        double itemInstock;
+                                        itemInstock = Math.Floor(currentIngreInstock / newRecipe.IngreQuantityKg);
+                                        if (itemInstock < minItemInstock) minItemInstock = itemInstock;
+                                        DataProvider.Instance.DB.SaveChanges();
                                     }
+
                                 }
+                                menuItem.Instock = minItemInstock;
                                 DataProvider.Instance.DB.SaveChanges();
 
                                 MessageBox.Show("Chỉnh sửa công thức món ăn thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -605,5 +624,6 @@ namespace RestaurantManager.ViewModels
             }
         }
 
+        
     }
 }

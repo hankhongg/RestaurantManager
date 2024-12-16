@@ -247,6 +247,7 @@ namespace RestaurantManager.ViewModels
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
             IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
             ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
+            LoadAllFOODInstock();
 
             LoadAllTableInformation();
 
@@ -713,6 +714,7 @@ namespace RestaurantManager.ViewModels
                     addItemWindow.ShowDialog();
                 }
                 ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
+                LoadAllFOODInstock();
             });
             DelItemCommand = new RelayCommand<object>((p) => SelectedItem != null, (p) => 
             {
@@ -730,6 +732,7 @@ namespace RestaurantManager.ViewModels
                     }
                     DataProvider.Instance.DB.SaveChanges();
                     ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
+                    LoadAllFOODInstock();
                 }
 
             });
@@ -787,6 +790,26 @@ namespace RestaurantManager.ViewModels
                     DataProvider.Instance.DB.SaveChanges();
                 }
             }
+        }
+
+        public void LoadAllFOODInstock()
+        {
+            ObservableCollection<MenuItem> allCurrentFOODItems = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems.Where(x => x.ItemType == "FOOD"));
+            foreach (MenuItem item in allCurrentFOODItems)
+            {
+                double minItemInstock = double.MaxValue;
+                var recipes = DataProvider.Instance.DB.Recipes.Where(x => x.ItemId == item.ItemId).ToList();
+                foreach (var recipe in recipes)
+                {
+                    double currentIngreInstock = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreId == recipe.IngreId).InstockKg;
+                    double itemInstock;
+                    itemInstock = Math.Floor(currentIngreInstock / recipe.IngreQuantityKg);
+                    if (itemInstock < minItemInstock) minItemInstock = itemInstock;
+                }
+                if (recipes.Count == 0) minItemInstock = 0;
+                item.Instock = minItemInstock;
+            }
+            DataProvider.Instance.DB.SaveChanges();
         }
     }
 }
