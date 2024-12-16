@@ -108,11 +108,6 @@ namespace RestaurantManager.ViewModels
                         MessageBox.Show($"Lỗi: {ex.Message}");
                     }
                 }
-                //else if (SelectedIngreDetails != null && SelectedIngreDetails.IngrePrice == null) 
-                //{
-                //    MessageBox.Show("YES");
-                //    IngreCPrice = "0";
-                //}
                 else // chưa có trong db
                 {
                     try

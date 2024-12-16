@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,8 +33,17 @@ namespace RestaurantManager.ViewModels
             get { return recipeSellPrice; }
             set { recipeSellPrice = value; OnPropertyChanged(nameof(RecipeSellPrice)); }
         }
+
+        private string selectedImagePath = string.Empty;
+        public string SelectedImagePath
+        {
+            get { return selectedImagePath; }
+            set { if (selectedImagePath != value) selectedImagePath = value; OnPropertyChanged(nameof(SelectedImagePath)); }
+        }
+
         public ICommand ConfirmRecipeName { get; set; }
         public ICommand CancelRecipeName { get; set; }
+        public ICommand SelectSaveImageCommand {  get; set; }
         public SetNameRecipeViewModel()
         {
             CancelRecipeName = new RelayCommand<Window>((p) => { return true; }, (p) =>
@@ -45,6 +55,16 @@ namespace RestaurantManager.ViewModels
             ConfirmRecipeName = new RelayCommand<Window>((p) => { return true; }, (p) => {
                 Confirm = true;
                 p.Close();
+            });
+            SelectSaveImageCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg";
+                openFileDialog.Title = "Chọn hình ảnh cho món ăn";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    SelectedImagePath = openFileDialog.FileName;
+                }
             });
         }
     }

@@ -27,7 +27,11 @@
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Border Grid.RowSpan="3" CornerRadius="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3.5*"/>
+            <ColumnDefinition Width="6.5*"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.RowSpan="3" CornerRadius="10" Grid.ColumnSpan="2">
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="LightSteelBlue" Offset="0.25"/>
@@ -36,7 +40,8 @@
             </Border.Background>
         </Border>
         <controlbar:ControlBar Tag="{Binding Title, ElementName=setNameRecipeWindow}" Grid.ColumnSpan="2"></controlbar:ControlBar>
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="WhiteSmoke" BorderThickness="2,0,0,0"/>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
             <StackPanel Orientation="Horizontal" Margin="0,20" HorizontalAlignment="Right">
                 <TextBlock Text="Tên công thức: " FontWeight="Bold" Margin="0,0,10,0"
                             HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -45,12 +50,12 @@
             <StackPanel Orientation="Horizontal" Margin="0,20" HorizontalAlignment="Right">
                 <TextBlock Text="Giá chi: " FontWeight="Bold" Margin="0,0,10,0"
                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBox Width="300" Text="{Binding RecipeCostPrice}" x:Name="recipeCostPriceTextBox"/>
+                <TextBox Width="300" Text="{Binding RecipeCostPrice, StringFormat={}{0:N2}}" x:Name="recipeCostPriceTextBox"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,20" HorizontalAlignment="Right">
                 <TextBlock Text="Giá bán: " FontWeight="Bold" Margin="0,0,10,0"
                             HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBox Width="300" Text="{Binding RecipeSellPrice}" x:Name="recipeSellPriceTextBox"/>
+                <TextBox Width="300" Text="{Binding RecipeSellPrice, StringFormat={}{0:N2}}" x:Name="recipeSellPriceTextBox"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Style="{StaticResource configureDataButton}" Content="Xác nhận" Margin="0,0,20,0" 
@@ -60,6 +65,12 @@
                         Width="150" Height="70" Command="{Binding CancelRecipeName}" CommandParameter="{Binding ElementName=setNameRecipeWindow}"
                         FontSize="20" FontWeight="SemiBold" FontFamily="Roboto"/>
             </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Image Source="{Binding SelectedImagePath}" Margin="10,0,10,30"
+                   Stretch="Uniform"/>
+            <Button Style="{StaticResource LoginButton}" Content="Chọn hình ảnh" IsDefault="True"
+                    FontFamily="Roboto" FontSize="16" Command="{Binding SelectSaveImageCommand}"/>
         </StackPanel>
     </Grid>
 </Window>

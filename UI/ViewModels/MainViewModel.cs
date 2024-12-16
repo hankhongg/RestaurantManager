@@ -665,6 +665,7 @@ namespace RestaurantManager.ViewModels
                     IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
                 }
             });
+            // menu item management
             AddItemCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
                 AddItemWindow addItemWindow = new AddItemWindow();
@@ -675,6 +676,9 @@ namespace RestaurantManager.ViewModels
                     itemVM.SelectedIdxType = 0;
                     itemVM.IsNotEditing = true;
                     itemVM.LoadBlankRecipeInformation();
+                    itemVM.LoadBlankDrinkInformation();
+                    itemVM.LoadBlankOtherInformation();
+                    itemVM.ItemID = -1;
                     addItemWindow.DataContext = itemVM;
                     addItemWindow.ShowDialog();
                 }
@@ -688,18 +692,20 @@ namespace RestaurantManager.ViewModels
                 //var itemVM = new MenuItemsManagement();
                 if (itemVM != null)
                 {
-                    itemVM.LoadRecipeInformation(selectedItem.ItemId);
                     if (SelectedItem.ItemType == "FOOD")
                     {
                         itemVM.SelectedIdxType = 0;
+                        itemVM.LoadRecipeInformation(selectedItem.ItemId);
                     }
                     else if (SelectedItem.ItemType == "DRINK")
                     {
                         itemVM.SelectedIdxType = 1;
+                        itemVM.LoadDrinkInformation(selectedItem.ItemId);
                     }
                     else
                     {
                         itemVM.SelectedIdxType = 2;
+                        itemVM.LoadOtherInformation(selectedItem.ItemId);
                     }
                     itemVM.IsNotEditing = false;
                     itemVM.ItemID = SelectedItem.ItemId;
@@ -707,6 +713,25 @@ namespace RestaurantManager.ViewModels
                     addItemWindow.ShowDialog();
                 }
                 ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
+            });
+            DelItemCommand = new RelayCommand<object>((p) => SelectedItem != null, (p) => 
+            {
+                var item = DataProvider.Instance.DB.MenuItems.Where(x => x.ItemId == SelectedItem.ItemId).FirstOrDefault();
+                var DialogResult = MessageBox.Show("Bạn có chắc chắn muốn xóa?", "Thông báo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (item != null && DialogResult == MessageBoxResult.Yes)
+                {
+                    DataProvider.Instance.DB.MenuItems.Remove(item);
+                    DataProvider.Instance.DB.SaveChanges();
+                    ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
+                    int i = 0;
+                    foreach (MenuItem menuItem in ItemsList)
+                    {
+                        menuItem.ItemCode = $"MN{++i:D2}";
+                    }
+                    DataProvider.Instance.DB.SaveChanges();
+                    ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
+                }
+
             });
             // Table Management
             AddTableCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
@@ -738,6 +763,7 @@ namespace RestaurantManager.ViewModels
                 }
                 LoadAllTableInformation();
             });
+            
             // Booking Management
             AddBookingCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
