@@ -48,7 +48,7 @@
                     <TextBox Width="300" Text="{Binding IngreCPrice}" FontSize="20" x:Name="ingreCPriceTextBox"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,20" HorizontalAlignment="Right">
-                    <TextBlock Text="Giá bán trên đơn vị: " FontWeight="Bold"
+                    <TextBlock Text="Tồn kho (ĐVT): " FontWeight="Bold"
                             HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBox Width="300" Text="{Binding IngreInstock}" FontSize="20" x:Name="ingreInstockTextBox"/>
                 </StackPanel>
