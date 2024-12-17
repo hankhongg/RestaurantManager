@@ -83,7 +83,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <!-- Sử dụng ItemUC -->
-                                    <fooditemuc:ItemUC Height="100" Width="146" Margin="1" />
+                                    <fooditemuc:ItemUC Height="120" Width="146" Margin="1" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
