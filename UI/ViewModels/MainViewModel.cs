@@ -382,13 +382,18 @@ namespace RestaurantManager.ViewModels
             InfoIncomeVMs =
             [
                 new InfoIncomeViewModel("Images/money.png") {
-                    
                     TextToday = string.Format("Doanh thu hôm nay: {0:0,0} VNĐ", IncomeToday),
                     TextYesterday = string.Format("Doanh thu hôm qua: {0:0,0} VNĐ", IncomeYesterday),
+                    ValueToday = IncomeToday,
+                    ValueYesterday = IncomeYesterday,
+                    MaxValue = (double)Math.Max(IncomeToday, IncomeYesterday),
                 },
                 new InfoIncomeViewModel("Images/receipt.png") {
                     TextToday = $"Số hóa đơn hôm nay: {BillToday} hóa đơn",
                     TextYesterday = $"Số hóa đơn hôm qua: {BillYesterday} hóa đơn",
+                    ValueToday = BillToday,
+                    ValueYesterday = BillYesterday,
+                    MaxValue = Math.Max(BillToday, BillYesterday),
                 },
                 new InfoIncomeViewModel("Images/res_worker.png") {
                     TextToday = $"Nhân viên TOP hôm nay: {NhanVienToday}",

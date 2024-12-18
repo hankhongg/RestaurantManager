@@ -40,6 +40,36 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+        private decimal valueToday;
+        public decimal ValueToday
+        {
+            get { return valueToday; }
+            set
+            {
+                valueToday = value;
+                OnPropertyChanged();
+            }
+        }
+        private decimal valueYesterday;
+        public decimal ValueYesterday
+        {
+            get { return valueYesterday; }
+            set
+            {
+                valueYesterday = value;
+                OnPropertyChanged();
+            }
+        }
+        private double maxValue;
+        public double MaxValue
+        {
+            get { return maxValue; }
+            set
+            {
+                maxValue = value;
+                OnPropertyChanged();
+            }
+        }
 
         public InfoIncomeViewModel()
         {

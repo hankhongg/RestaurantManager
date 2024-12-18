@@ -30,13 +30,13 @@ namespace RestaurantManager.Views.UserControls
             double canvasWidth = todayCanvas.ActualWidth;
             double textWidth = todayTextBlock.ActualWidth;
 
-            if (textWidth > canvasWidth) 
+            if (textWidth > canvasWidth)
             {
                 DoubleAnimation animation = new DoubleAnimation
                 {
-                    From = canvasWidth,
-                    To = -textWidth, 
-                    Duration = new Duration(TimeSpan.FromSeconds(5)),
+                    From = canvasWidth, 
+                    To = -textWidth,    
+                    Duration = new Duration(TimeSpan.FromSeconds(7)), 
                     RepeatBehavior = RepeatBehavior.Forever
                 };
                 Storyboard.SetTarget(animation, todayTextBlock);
@@ -46,19 +46,24 @@ namespace RestaurantManager.Views.UserControls
                 storyboard.Children.Add(animation);
                 storyboard.Begin();
             }
+            else
+            {
+                Canvas.SetLeft(todayTextBlock, (canvasWidth - textWidth) / 2);
+            }
         }
+
         private void Canvas_Loaded_Yesterday(object sender, RoutedEventArgs e)
         {
             double canvasWidth = yesterdayCanvas.ActualWidth;
             double textWidth = yesterdayTextBlock.ActualWidth;
 
-            if (textWidth > canvasWidth) 
+            if (textWidth > canvasWidth)
             {
                 DoubleAnimation animation = new DoubleAnimation
                 {
                     From = canvasWidth,
-                    To = -textWidth, 
-                    Duration = new Duration(TimeSpan.FromSeconds(5)),
+                    To = -textWidth,
+                    Duration = new Duration(TimeSpan.FromSeconds(7)),
                     RepeatBehavior = RepeatBehavior.Forever
                 };
                 Storyboard.SetTarget(animation, yesterdayTextBlock);
@@ -68,6 +73,11 @@ namespace RestaurantManager.Views.UserControls
                 storyboard.Children.Add(animation);
                 storyboard.Begin();
             }
+            else
+            {
+                Canvas.SetLeft(yesterdayTextBlock, (canvasWidth - textWidth) / 2);
+            }
         }
+
     }
 }

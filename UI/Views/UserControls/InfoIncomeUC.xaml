@@ -29,14 +29,15 @@
                 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                     <Image Source="{Binding Image}" Margin="0,0,10,0"/>
-                    <Slider x:Name="sldIncomeOld" VerticalAlignment="Center"
-                            Minimum="0" Maximum="1000" IsHitTestVisible="False"
-                            Value="0" Width="220" HorizontalAlignment="Center"/>
+                    <Slider x:Name="sldIncomeYesterday" VerticalAlignment="Center" 
+                            Value="{Binding ValueYesterday}"
+                            Minimum="0" Maximum="{Binding MaxValue}" IsHitTestVisible="False" 
+                            Width="220" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="1" Opacity="0.8">
                 <Border ClipToBounds="True" Height="30" HorizontalAlignment="Center" Width="400">
-                    <Canvas Width="300"  Loaded="Canvas_Loaded_Yesterday" x:Name="yesterdayCanvas">
+                    <Canvas Loaded="Canvas_Loaded_Yesterday" x:Name="yesterdayCanvas" Width="300">
                         <TextBlock x:Name="yesterdayTextBlock" 
                        Text="{Binding TextYesterday}" 
                        FontSize="14" />
@@ -46,14 +47,14 @@
             <Grid Grid.Row="2">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image Source="{Binding Image}" Margin="0,0,10,0"/>
-                    <Slider x:Name="sldIncomeNew" VerticalAlignment="Center"
-                Minimum="0" Maximum="1000" IsHitTestVisible="False"
-                Value="0" Width="250" HorizontalAlignment="Center"/>
+                    <Slider x:Name="sldIncomeToday" VerticalAlignment="Center"
+                Minimum="0" Maximum="{Binding MaxValue}" IsHitTestVisible="False"
+                Value="{Binding ValueToday}" Width="250" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="3">
                 <Border ClipToBounds="True" Height="50" HorizontalAlignment="Center" Width="500">
-                    <Canvas Width="300" Loaded="Canvas_Loaded_Today" x:Name="todayCanvas">
+                    <Canvas Loaded="Canvas_Loaded_Today" x:Name="todayCanvas" Width="400">
                         <TextBlock x:Name="todayTextBlock" VerticalAlignment="Center"
                                    Text="{Binding TextToday}" 
                                    FontSize="20" />
