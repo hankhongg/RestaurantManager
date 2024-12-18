@@ -276,6 +276,92 @@ namespace RestaurantManager.ViewModels
         public ICommand AddBookingCommand { get; set; }
         public ICommand BookingInfo { get; set; }
 
+        // ----------------------------
+        // Income Management
+        private ObservableCollection<InfoIncomeViewModel> infoIncomeVMs;
+        public ObservableCollection<InfoIncomeViewModel> InfoIncomeVMs
+        {
+            get { return infoIncomeVMs; }
+            set
+            {
+                infoIncomeVMs = value;
+                OnPropertyChanged();
+            }
+        }
+        private string nhanVienToday = "Không Huỳnh Ngọc Hân";
+        private string nhanVienYesterday = "Đỗ Hoàng Anh Thư";
+        private decimal incomeToday;
+        private decimal incomeYesterday;
+        private int billToday;
+        private int billYesterday;
+
+        public string NhanVienToday
+        {
+            get { return nhanVienToday; }
+            set
+            {
+                nhanVienToday = value;
+                OnPropertyChanged();
+            }
+        }
+        public string NhanVienYesterday
+        {
+            get { return nhanVienYesterday; }
+            set
+            {
+                nhanVienYesterday = value;
+                OnPropertyChanged();
+            }
+        }
+        public decimal IncomeToday
+        {
+            get { return incomeToday; }
+            set
+            {
+                incomeToday = value;
+                OnPropertyChanged(nameof(IncomeToday));
+            }
+        }
+        public decimal IncomeYesterday
+        {
+            get { return incomeYesterday; }
+            set
+            {
+                incomeYesterday = value;
+                OnPropertyChanged();
+            }
+        }
+        public int BillToday
+        {
+            get { return billToday; }
+            set
+            {
+                billToday = value;
+                OnPropertyChanged();
+            }
+        }
+        public int BillYesterday
+        {
+            get { return billYesterday; }
+            set
+            {
+                billYesterday = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void LoadFinancialData()
+        {
+            var today = DateTime.Now.Day;
+            var yesterday = DateTime.Now.AddDays(-1).Day;
+            IncomeToday = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate.Day == today).Sum(x => x.Amount);
+            
+            //IncomeToday = DataProvider.Instance.DB.FinancialHistories.Sum(x => x.Amount);
+            IncomeYesterday = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate.Day == yesterday).Sum(x => x.Amount);
+            BillToday = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate.Day == today).Count();
+            BillYesterday = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate.Day == yesterday).Count();
+        }
+
 
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
@@ -292,9 +378,27 @@ namespace RestaurantManager.ViewModels
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
             IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
             ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
+            LoadFinancialData();
+            InfoIncomeVMs =
+            [
+                new InfoIncomeViewModel("Images/money.png") {
+                    
+                    TextToday = string.Format("Doanh thu hôm nay: {0:0,0} VNĐ", IncomeToday),
+                    TextYesterday = string.Format("Doanh thu hôm qua: {0:0,0} VNĐ", IncomeYesterday),
+                },
+                new InfoIncomeViewModel("Images/receipt.png") {
+                    TextToday = $"Số hóa đơn hôm nay: {BillToday} hóa đơn",
+                    TextYesterday = $"Số hóa đơn hôm qua: {BillYesterday} hóa đơn",
+                },
+                new InfoIncomeViewModel("Images/res_worker.png") {
+                    TextToday = $"Nhân viên TOP hôm nay: {NhanVienToday}",
+                    TextYesterday = $"Nhân viên TOP hôm qua: {NhanVienYesterday}",
+                },
+            ];
             LoadAllFOODInstock();
             LoadAllBookingInformation();
             LoadAllTableInformation();
+            
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {

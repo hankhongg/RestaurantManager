@@ -10,6 +10,7 @@
         xmlns:bookingUC="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:orderUC="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:inchrt="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:infoUC="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" WindowState="Maximized"
         Title="Phần mềm Quản lý Nhà hàng" Height="1080" Width="1980" DataContext="{StaticResource MainVM}" Background="Transparent">
@@ -93,7 +94,33 @@
                                   FontWeight="SemiBold" FontSize="30" Padding="30"
                                  Background="Transparent" BorderThickness="0">
                             <Grid>
-                                
+                                <Grid.Background>
+                                    <SolidColorBrush Color="#F0F0F0"></SolidColorBrush>
+                                </Grid.Background>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"></RowDefinition>
+                                    <RowDefinition Height="7*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <infoUC:InfoIncomeUC DataContext="{Binding InfoIncomeVMs[0]}" Height="220" Width="400" Margin="30,10" />
+                                        <infoUC:InfoIncomeUC DataContext="{Binding InfoIncomeVMs[1]}" Height="220" Width="400" Margin="30,10"/>
+                                        <infoUC:InfoIncomeUC DataContext="{Binding InfoIncomeVMs[2]}" Height="220" Width="400" Margin="30,10"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"></RowDefinition>
+                                        <RowDefinition Height="9*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="1">
+                                        <inchrt:CartesianChart>
+                                            <inchrt:CartesianChart.Series>
+                                                <inchrt:ColumnSeries Title="Doanh thu" Values="{Binding IncomeList}" DataLabels="True"/>
+                                            </inchrt:CartesianChart.Series>
+                                        </inchrt:CartesianChart>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </TabItem>
 

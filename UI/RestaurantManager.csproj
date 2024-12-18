@@ -25,6 +25,9 @@
     <None Remove="Views\UserControls\Images\client.png" />
     <None Remove="Views\UserControls\Images\clock.png" />
     <None Remove="Views\UserControls\Images\employee.png" />
+    <None Remove="Views\UserControls\Images\money.png" />
+    <None Remove="Views\UserControls\Images\receipt.png" />
+    <None Remove="Views\UserControls\Images\res_worker.png" />
     <None Remove="Views\UserControls\Images\smartphone-call.png" />
   </ItemGroup>
 
@@ -63,6 +66,9 @@
     <Resource Include="Views\Images\menu_black.png" />
     <Resource Include="Views\Images\minimize.png" />
     <Resource Include="Views\UserControls\Images\employee.png" />
+    <Resource Include="Views\UserControls\Images\money.png" />
+    <Resource Include="Views\UserControls\Images\receipt.png" />
+    <Resource Include="Views\UserControls\Images\res_worker.png" />
     <Resource Include="Views\UserControls\Images\smartphone-call.png" />
   </ItemGroup>
 
