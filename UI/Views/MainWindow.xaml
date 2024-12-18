@@ -9,6 +9,7 @@
         xmlns:tableUC="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:bookingUC="clr-namespace:RestaurantManager.Views.UserControls"
         xmlns:orderUC="clr-namespace:RestaurantManager.Views.UserControls"
+        xmlns:inchrt="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d" Name="mainWindow" WindowStartupLocation="CenterOwner" WindowStyle="None"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" WindowState="Maximized"
         Title="Phần mềm Quản lý Nhà hàng" Height="1080" Width="1980" DataContext="{StaticResource MainVM}" Background="Transparent">
@@ -80,9 +81,7 @@
             <TabItem x:Name="mainMenu" Style="{StaticResource TabItemStyle}" Background="GhostWhite">
                 <TabItem.Header>
                     <Border BorderThickness="0">
-                        <Image Source="Images/menu_black.png" Height="70" Cursor="Hand">
-
-                        </Image>
+                        <Image Source="Images/menu_black.png" Height="70" Cursor="Hand"/>
                     </Border>
                 </TabItem.Header>
 
@@ -93,7 +92,9 @@
                         <TabItem Header="Quản lý doanh thu" Style="{StaticResource TabItemStyle}" 
                                   FontWeight="SemiBold" FontSize="30" Padding="30"
                                  Background="Transparent" BorderThickness="0">
-                            <Grid></Grid>
+                            <Grid>
+                                
+                            </Grid>
                         </TabItem>
 
                         <!--Stock-in Management-->
