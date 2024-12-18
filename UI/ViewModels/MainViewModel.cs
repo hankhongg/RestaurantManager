@@ -208,7 +208,17 @@ namespace RestaurantManager.ViewModels
         // --TableViewModel Management
         private ObservableCollection<TableViewModel> tableViewList;
         public ObservableCollection<TableViewModel> TableViewList { get { return tableViewList; } set { if (tableViewList != value) tableViewList = value; OnPropertyChanged(); } }
+        private IEnumerable<string> tableNumbers;
 
+        public IEnumerable<string> TableNumbers
+        {
+            get { return tableNumbers; }
+            set
+            {
+                tableNumbers = value;
+                OnPropertyChanged();
+            }
+        }
         // --TableViewModel Management
         private ObservableCollection<DiningTable> tableList;
         public ObservableCollection<DiningTable> TableList { get { return tableList; } set { if (tableList != value) tableList = value; OnPropertyChanged(); } }
@@ -217,20 +227,55 @@ namespace RestaurantManager.ViewModels
         public ICommand EditTableCommand { get; set; }
 
         // Booking Management
-        private Visibility isBooked;
+        // BookingViewModel Management
+        public ICommand CancelBooking { get; set; }
+        public ICommand ClaimBooking { get; set; }
+        private ObservableCollection<BookingConfigurationViewModel> bookingViewList;
+        public ObservableCollection<BookingConfigurationViewModel> BookingViewList { get { return bookingViewList; } set { if (bookingViewList != value) bookingViewList = value; OnPropertyChanged(); } }
 
-        public Visibility IsBooked
+        private ObservableCollection<Booking> bookingList;
+        public ObservableCollection<Booking> BookingList { get { return bookingList; } set { if (bookingList != value) bookingList = value; OnPropertyChanged(); } }
+
+        private string _selectedTable;
+
+        public string SelectedTable
         {
-            get { return isBooked; }
+            get { return _selectedTable; }
             set
             {
-                isBooked = value;
+                _selectedTable = value;
+                if (_selectedTable != null)
+                {
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private bool _isEnabled;
+
+        public bool isEnabled
+        {
+            get { return _isEnabled; }
+            set
+            {
+                _isEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+        private string existedBooking;
+
+        public string ExistedBooking
+        {
+            get { return existedBooking; }
+            set
+            {
+                existedBooking = value;
                 OnPropertyChanged();
             }
         }
 
-       
         public ICommand AddBookingCommand { get; set; }
+        public ICommand BookingInfo { get; set; }
+
 
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
@@ -248,10 +293,8 @@ namespace RestaurantManager.ViewModels
             IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
             ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
             LoadAllFOODInstock();
-
+            LoadAllBookingInformation();
             LoadAllTableInformation();
-
-            isBooked = Visibility.Hidden;
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {
@@ -768,13 +811,65 @@ namespace RestaurantManager.ViewModels
                 LoadAllTableInformation();
             });
             
-            // Booking Management
+            /// Booking Management
             AddBookingCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
                 BookingWindow bookingWindow = new BookingWindow();
-                bookingWindow.ShowDialog();
+                var bookingVM = bookingWindow.DataContext as BookingViewModel;
+                if (bookingVM != null)
+                {
+                    bookingVM.ReloadFillIn();
+                    SelectedTable = null;
+                    bookingVM.isVisible = Visibility.Hidden;
+                    bookingVM.isClicked = false;
+                    bookingVM.isConfigurationClicked = true;
+                    bookingVM.CustomerNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false).Select(x => x.CusName));
+                    bookingVM.EmpNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false).Select(x => x.EmpName));
+                    bookingVM.BookingCode = $"BK{BookingViewList.Count() + 1:D3}";
+                    bookingVM.bookingManagementID = 0;
+                    isEnabled = true;
+                    //LoadAllTableInformation();
+                    if (TableNumbers.Count() == 0)
+                    {
+                        MessageBox.Show("Không còn bàn trống", "Lỗi đặt bàn", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    bookingWindow.ShowDialog();
+                    // add new booking after being confirmed
+                    if (bookingVM.isConfirmed)
+                    {
+                        DataProvider.Instance.DB.Bookings.Add(bookingVM.NewBooking);
+                        BookingList.Add(bookingVM.NewBooking);
+                        DataProvider.Instance.DB.SaveChanges();
+                        BookingViewList.Add(new BookingConfigurationViewModel(bookingVM.NewBooking));
+                        bookingVM.isConfirmed = false;
+                    }
+                }
+                LoadAllTableInformation();
+                LoadAllBookingInformation();
+                CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
             });
-           
+            BookingInfo = new RelayCommand<BookingConfigurationViewModel>((p) => { return true; }, (p) =>
+            {
+                BookingWindow bookingWindow = new BookingWindow();
+                var bookingVM = bookingWindow.DataContext as BookingViewModel;
+                Booking SelectedBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkCode == p.NewBookingCode && x.BkStatus == 1).FirstOrDefault();
+
+                if (bookingVM != null && SelectedBooking != null)
+                {
+                    bookingVM.isClicked = true;
+                    bookingVM.isConfigurationClicked = false;
+                    bookingVM.isVisible = Visibility.Visible;
+                    bookingVM.CustomerNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false).Select(x => x.CusName));
+                    bookingVM.EmpNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false).Select(x => x.EmpName));
+                    bookingVM.LoadBookingInformation(SelectedBooking);
+                    bookingVM.bookingManagementID = 2;
+                    bookingWindow.ShowDialog();
+                }
+                LoadAllTableInformation();
+                LoadAllBookingInformation();
+            });
         }
         public void LoadAllTableInformation()
         {
@@ -791,6 +886,7 @@ namespace RestaurantManager.ViewModels
                     DataProvider.Instance.DB.SaveChanges();
                 }
             }
+            TableNumbers = TableViewList.Where(x => x.BoolTabStatus == true).Select(x => x.TabNumber);
         }
 
         public void LoadAllFOODInstock()
@@ -811,6 +907,33 @@ namespace RestaurantManager.ViewModels
                 item.Instock = minItemInstock;
             }
             DataProvider.Instance.DB.SaveChanges();
+        }
+        public void LoadAllBookingInformation()
+        {
+            BookingList = new ObservableCollection<Booking>(DataProvider.Instance.DB.Bookings);
+            BookingViewList = new ObservableCollection<BookingConfigurationViewModel>();
+            //BookingWindow bookingWindow = new BookingWindow();
+            //var bookingVM = bookingWindow.DataContext as BookingViewModel;
+            foreach (Booking booking in BookingList)
+            {
+                if (booking.Isdeleted == false)
+                {
+                    if (booking.BkOtime < DateTime.Now.AddMinutes(5))
+                    {
+                        booking.Isdeleted = true;
+                        if (booking.Tab != null)
+                            booking.Tab.TabStatus = true;
+                        DataProvider.Instance.DB.SaveChanges();
+                    }
+                    else
+                    {
+                        BookingViewList.Add(new BookingConfigurationViewModel(booking));
+                        DataProvider.Instance.DB.SaveChanges();
+                    }
+                }
+            }
+            ExistedBooking = $"Booking hiện có ({BookingViewList.Count()})";
+            //BookingViewList.Clear();
         }
     }
 }

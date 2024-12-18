@@ -568,8 +568,8 @@
 
             <!--TabItem thứ 4 (Bookings)-->
             <TabItem x:Name="bookings" Padding="30,0" Background="GhostWhite" 
-                Style="{StaticResource TabItemStyle}" 
-                 FontWeight="SemiBold" FontSize="30" Header="Bookings">
+    Style="{StaticResource TabItemStyle}" 
+     FontWeight="SemiBold" FontSize="30" Header="Bookings">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
@@ -578,47 +578,27 @@
 
                     <!--Booking UC-->
                     <Grid Grid.Column="0">
-                        <WrapPanel Margin="10" IsManipulationEnabled="True">
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
-                            <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Visibility="{Binding IsBooked}" 
-                                                 Width="280" Height="230" Margin="36, 8" BorderThickness="1" BorderBrush="Gray"/>
+                        <WrapPanel Margin="10" x:Name="bookingWrapPanel">
+                            <ItemsControl ItemsSource="{Binding BookingViewList}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Width="280" Height="230" 
+                             Margin="26, 8" BorderThickness="1" BorderBrush="Gray">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.BookingInfo, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                           CommandParameter="{Binding}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </bookingUC:BookingUC>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </WrapPanel>
                     </Grid>
 
@@ -635,8 +615,8 @@
                             <StackPanel Margin="20">
                                 <!--Tạo booking mới-->
                                 <Button Content="Tạo booking (+)" Style="{StaticResource LoginButton}"
-                                        Padding="0,20" Margin="20,0,20,10" Width="Auto" Height="Auto"
-                                        Command="{Binding AddBookingCommand}">
+                            Padding="0,20" Margin="20,0,20,10" Width="Auto" Height="Auto"
+                            Command="{Binding AddBookingCommand}">
                                     <Button.Background>
                                         <LinearGradientBrush>
                                             <GradientStop Color="DarkGreen" Offset="-0.5"/>
@@ -645,16 +625,11 @@
                                     </Button.Background>
                                 </Button>
                                 <!--Booking hiện có-->
-                                <Button Content="Booking hiện có (X)" Style="{StaticResource LoginButton}"
-                                        Padding="0,20" Margin="20,10,20,10" Width="Auto" Height="Auto"
-                                        Command="{Binding ExistingBooking}">
-                                    <Button.Background>
-                                        <LinearGradientBrush>
-                                            <GradientStop Color="DarkGreen" Offset="-0.5"/>
-                                            <GradientStop Color="LimeGreen" Offset="1.0"/>
-                                        </LinearGradientBrush>
-                                    </Button.Background>
-                                </Button>
+                                <TextBox Text="{Binding ExistedBooking}" Style="{StaticResource txtStyle}"
+                             Padding="0,25" Margin="20,10,20,10" Width="Auto" Height="Auto"
+                             HorizontalContentAlignment="Center" Foreground="White"
+                             Background="Transparent" FontSize="30" BorderBrush="White"
+                             BorderThickness="2" IsReadOnly="True" Cursor="Arrow"/>
                             </StackPanel>
                         </Border>
                     </Grid>

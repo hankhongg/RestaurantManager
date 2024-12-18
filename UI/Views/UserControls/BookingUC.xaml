@@ -5,18 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             mc:Ignorable="d" DataContext="{StaticResource MainVM}"
+             mc:Ignorable="d" x:Name="UC" 
              d:DesignHeight="230" d:DesignWidth="280">
+
     <Grid>
         <!--3 main sections-->
-        
-        
         <!--Background UC-->
-        <Border CornerRadius="5" BorderThickness="1.5">
+        <Border CornerRadius="5" Grid.RowSpan="3">
             <Border.Background>
-                <LinearGradientBrush Opacity="0.9">
-                    <GradientStop Color="SkyBlue" Offset="0.03"/>
-                    <GradientStop Color="GhostWhite" Offset="1.0"/>
+                <LinearGradientBrush Opacity="1">
+                    <GradientStop Color="SkyBlue" Offset="0.1"/>
+                    <GradientStop Color="GhostWhite" Offset="0.50"/>
+                    <GradientStop Color="LightBlue" Offset="0.8"/>
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
@@ -29,8 +29,8 @@
                 <Border Grid.Row="1">
                     <Border.Background>
                         <LinearGradientBrush>
-                            <GradientStop Color="GhostWhite" Offset="0.25" />
-                            <GradientStop Color="SkyBlue" Offset="1.25"/>
+                            <GradientStop Color="GhostWhite" Offset="0.12" />
+                            <GradientStop Color="SeaShell" Offset="1"/>
 
                         </LinearGradientBrush>
                     </Border.Background>
@@ -39,7 +39,7 @@
                 <!--TextBlock at Main Row 0-->
                 <TextBlock Grid.Row="0" VerticalAlignment="Center" FontWeight="Medium"
                            HorizontalAlignment="Center" Margin="3,0"
-                           Text="Đơn đặt bàn 1" FontSize="13"/>
+                           Text="{Binding NewBookingCode}" FontSize="17"/>
 
                 <!--Grid at Row 1-->
                 <Grid Grid.Row="1">
@@ -49,7 +49,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Name="tbTableNumber" Grid.Row="0" VerticalAlignment="Center"
-                               HorizontalAlignment="Center" FontSize="28" Text="?"/>
+                               HorizontalAlignment="Center" FontSize="28" Text="{Binding NewTableNumber}"/>
 
                     <!--Grid at Row 1 -> Column 1 -->
                     <Grid Grid.Column="1">
@@ -62,37 +62,38 @@
                         </Grid.RowDefinitions>
                         <Grid>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="images\client.png" Width="15" Height="15"/>
-                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="Nguyễn Văn A"
-                                         FontSize="13" BorderBrush="Black" IsReadOnly="True"/>
-                            </StackPanel>  
+                                <Image Source="images\client.png" Width="25" Height="25"/>
+                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" 
+                                         Text="{Binding NewSelectedCustomerName, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="13" BorderBrush="Black" IsReadOnly="True" Cursor="Arrow" TextDecorations="None"/>
+                            </StackPanel>
                         </Grid>
                         <Grid Grid.Row="1">
                             <StackPanel Orientation="Horizontal" >
-                                <Image Source="images\smartphone-call.png" Width="15" Height="15"/>
-                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="0123456789"
-                                         FontSize="13" BorderBrush="Black" IsReadOnly="True"/>
+                                <Image Source="images\smartphone-call.png" Width="25" Height="25"/>
+                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="{Binding NewCusPhoneNumber, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="13" BorderBrush="Black" IsReadOnly="True" Cursor="Arrow" TextDecorations="None"/>
                             </StackPanel>
                         </Grid>
                         <Grid Grid.Row="2">
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="images\calendar.png" Width="15" Height="15"/>
-                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="15/6/2024"
-                                         FontSize="13" BorderBrush="Black" IsReadOnly="True"/>
+                                <Image Source="images\calendar.png" Width="25" Height="25"/>
+                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="{Binding NewSelectedBookingDate, StringFormat=dd/MM/yyyy, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="13" BorderBrush="Black" IsReadOnly="True" Cursor="Arrow" TextDecorations="None"/>
                             </StackPanel>
                         </Grid>
                         <Grid Grid.Row="3">
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="images\clock.png" Width="15" Height="15"/>
-                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="09:00"
-                                         FontSize="13" BorderBrush="Black" IsReadOnly="True"/>
+                                <Image Source="images\clock.png" Width="25" Height="25"/>
+                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="{Binding NewSelectedTime, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="13" BorderBrush="Black" IsReadOnly="True" Cursor="Arrow" TextDecorations="None"/>
                             </StackPanel>
                         </Grid>
                         <Grid Grid.Row="4">
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="images\employee.png" Width="15" Height="15"/>
-                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="Nguyễn Văn B"
-                                         FontSize="13" BorderBrush="Black" IsReadOnly="True"/>
+                                <Image Source="images\employee.png" Width="25" Height="25"/>
+                                <TextBox Width="140" Margin="10,5,0,6" Background="Transparent" BorderThickness="0,0,0,0.25" Text="{Binding NewSelectedEmpName, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="13" BorderBrush="Black" IsReadOnly="True" Cursor="Arrow" TextDecorations="None"/>
                             </StackPanel>
                         </Grid>
 
@@ -105,22 +106,73 @@
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
 
+
+                    <!--<ListView ItemsSource="{Binding BookingList}" Background="Transparent">
+                        <Button Grid.Column="0" VerticalAlignment="Center"
+                                HorizontalAlignment="Stretch" Padding="0,9.15" Content="✗" Foreground="Red"
+                                FontSize="18" Background="Transparent" BorderThickness="0"
+                                Command="{Binding CancelBooking}" DataContext="{StaticResource BookingConfigurationVM}"
+                                CommandParameter="{Binding}" />
+                    </ListView>-->
+
+
+
                     <!--More ComboBox-->
-                    <Button Grid.Column="0" VerticalAlignment="Center"
+                    <!--<Button Grid.Column="0" VerticalAlignment="Center"
+                                 HorizontalAlignment="Stretch" Padding="0,9.15" Content="✗" Foreground="Red"
+                                 FontSize="18" Background="Transparent" BorderThickness="0"
+                                 Command="{Binding CancelBooking}" DataContext="{StaticResource BookingConfigurationVM}"
+                                 CommandParameter="{Binding NewBookingCode}"/>-->
+
+                    <!--<Button Grid.Column="0" VerticalAlignment="Center"
                             HorizontalAlignment="Stretch" Padding="0,9.15" Content="✗" Foreground="Red"
-                            FontSize= "18" Background="Transparent" BorderThickness="0"/>       
+                            FontSize="18" Background="Transparent" BorderThickness="0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding ApproveBookingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                   CommandParameter="{Binding BookingData, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>-->
+
                     <!--ClaimOrder Button-->
-                    <Button Grid.Column="1" VerticalAlignment="Center" 
-                            HorizontalAlignment="Stretch" Padding="0,8" Content="✓" Foreground="Green"
-                            FontSize= "20" Background="Transparent" BorderThickness="0" Click="Button_Click"/>
+
+                    <!--<ItemsControl ItemsSource="{Binding BookingViewList}" DataContext="{StaticResource MainVM}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Grid.Column="0" VerticalAlignment="Center" Padding="0,9.15" Content="✗" Foreground="Red"
+                                            FontSize="18" Background="Transparent" BorderThickness="0"
+                                            Command="{Binding DataContext.CancelBooking, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding NewBookingCode}" Width="138.5"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>-->
+
+                    <!--<ItemsControl x:Name="claimBK" ItemsSource="{Binding BookingViewList}" DataContext="{StaticResource MainVM}" Grid.Column="1">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button VerticalAlignment="Center" Padding="0,9.15" 
+                                            Content="✓" Foreground="Green" BorderThickness="0"
+                                            FontSize= "20" Background="Transparent" Width="138.5"
+                                            Command="{Binding DataContext.ClaimBooking, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}"/>     
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>-->
+
+
                 </Grid>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseLeftButtonDown">
-                        <i:InvokeCommandAction Command="{Binding BookingInfo}"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
             </Grid>
         </Border>
+        <!--<i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding BookingInfo}"
+                               CommandParameter="{Binding ElementName=bookingWindow}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>-->
     </Grid>
 </UserControl>

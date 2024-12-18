@@ -3,13 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:RestaurantManager.Views"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="CenterScreen" Background="Transparent"
-        Title="BookingWindow" Height="700" Width="1000" Name="bookingWindow"
+        Title="BookingWindow" Height="600" Width="1000" Name="bookingWindow"
         DataContext="{StaticResource BookingVM}">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>
@@ -22,9 +21,9 @@
             <RowDefinition Height="8.5*"/>
             <RowDefinition Height="0.75*"/>
         </Grid.RowDefinitions>
-        
+
         <!--Background-->
-        <Border Grid.RowSpan="3" CornerRadius="10">
+        <Border Grid.RowSpan="3" CornerRadius="20">
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="LightSteelBlue" Offset="0.25"/>
@@ -32,9 +31,9 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        
+
         <!--Title-->
-        <Border Grid.Row="0" CornerRadius="10">
+        <Border Grid.Row="0">
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="LightSteelBlue" Offset="0"/>
@@ -59,7 +58,6 @@
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 <!--Sub Content-->
                 <!--Thời gian nhận bàn-->
@@ -78,13 +76,13 @@
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,5">
                             <TextBlock Text="Giờ" FontSize="15" FontWeight="Medium"/>
                             <TextBlock Text="Phút" FontSize="15" FontWeight="Medium"
-                                       Margin="93,0,0,0"/>
+                                       Margin="94,0,0,0"/>
                         </StackPanel>
 
 
 
                     </Grid>
-                    
+
                     <Border Grid.Row="1" BorderThickness="0" Margin="10,0,0,15">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -94,31 +92,35 @@
 
                             <Border Grid.Column="0">
                                 <!--<DatePickerTextBox VerticalContentAlignment="Center" FontSize="20" Margin="/>-->
-                                <DatePicker VerticalContentAlignment="Center" FontSize="20"
-                                            Background="GhostWhite">
+                                <DatePicker VerticalContentAlignment="Center" FontSize="20" Language="en-GB" IsEnabled="{Binding isConfigurationClicked}"
+                                            Background="GhostWhite" SelectedDate="{Binding SelectedBookingDate}">
                                     <DatePicker.Text>
                                         <Binding Path="SelectedDate" StringFormat="dd-MM-yyyy" RelativeSource="{RelativeSource Self}" />
                                     </DatePicker.Text>
                                 </DatePicker>
                             </Border>
 
-                            
+
                             <!--<Border Grid.Column="1" Margin="0,0,10,0">
                                 <Grid>
-                                    --><!--<Grid.ColumnDefinitions>
+                                    -->
+                            <!--<Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="9*"/>
                                         <ColumnDefinition Width="1*"/>
-                                    </Grid.ColumnDefinitions>--><!--
+                                    </Grid.ColumnDefinitions>-->
+                            <!--
 
                                     <TextBox Grid.Column="0" Style="{StaticResource txtStyle}" Text="{Binding SelectedTime}"/>
                                     
-                                    --><!--<StackPanel Grid.Column="1">
+                                    -->
+                            <!--<StackPanel Grid.Column="1">
                                         
                                         <Button Height="22" BorderThickness="0" Background="Transparent"
                                                 Content="▲" Foreground="Black" FontSize="8"/>
                                         <Button Height="22" BorderThickness="0" Background="Transparent"
                                                 Content="▼" Foreground="Black" FontSize="8"/>
-                                    </StackPanel>--><!--
+                                    </StackPanel>-->
+                            <!--
                                     <Border>
                                         
                                     </Border>
@@ -131,27 +133,67 @@
                                         <ColumnDefinition Width="5*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Grid.Column="0" Style="{StaticResource txtStyle}" Margin="5,0,5,0"/>
-                                    <TextBox Grid.Column="1" Style="{StaticResource txtStyle}" Margin="10,0,0,0"/>
+                                    <TextBox Grid.Column="0" Style="{StaticResource txtStyle}" Margin="5,0,5,0"
+                                             Text="{Binding SelectedHour}" IsEnabled="{Binding isConfigurationClicked}"/>
+                                    <TextBox Grid.Column="1" Style="{StaticResource txtStyle}" Margin="10,0,0,0"
+                                             Text="{Binding SelectedMinute}"  IsEnabled="{Binding isConfigurationClicked}"/>
                                 </Grid>
                             </Border>
                         </Grid>
                     </Border>
                 </Grid>
-                
-                <!--Số điện thoại-->
+
+                <!--Khách hàng-->
                 <Grid Grid.Row="1" Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="6*"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
-                        Content="Số điện thoại" Style="{StaticResource labelStyle}"/>
+                        Content="Khách hàng" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Grid.Column="1" Margin="10,0,10,15" CornerRadius="10">
-                        <TextBox Style="{StaticResource txtStyle}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox ItemsSource="{Binding CustomerNameList}" VerticalContentAlignment="Center"
+                                      FontSize="18" SelectedItem="{Binding SelectedCustomerName}"
+                                      IsEnabled="{Binding isConfigurationClicked}"/>
+
+                            <Button Grid.Column="1" Content="+" FontWeight="Bold" IsEnabled="{Binding isConfigurationClicked}"
+                                    FontSize="15" Command="{Binding AddNewCustomer}" CommandParameter="{Binding ElementName=bookingWindow}" >
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="GhostWhite"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="5">
+                                                        <ContentPresenter HorizontalAlignment="Center" 
+                                                                          VerticalAlignment="Center"
+                                                                          Content="{TemplateBinding Content}" />
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="SkyBlue"/>
+                                                <Setter Property="BorderBrush" Value="LightSteelBlue"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                        </Grid>
                     </Border>
                 </Grid>
-                
+
                 <!--Chọn bàn-->
                 <Grid Grid.Row="2" Margin="10">
                     <Grid.RowDefinitions>
@@ -161,44 +203,18 @@
                     <Label Grid.Row="0" 
                         Content="Chọn bàn" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <Grid>
-                            <TextBox Grid.Row="1" Style="{StaticResource txtStyle}" Height="44" VerticalAlignment="Top"
-                                     IsReadOnly="True" Text="{Binding SelectedBookingTable}"/>
-                            <TextBlock Text=">" FontSize="15" FontWeight="thin" HorizontalAlignment="Right"
-                                       VerticalAlignment="Center" Margin="0,0,10,3" Opacity="0.4"/>
-                        </Grid>
-                        
+                        <ComboBox ItemsSource="{Binding TableNumbers}" VerticalContentAlignment="Center"
+                                  FontSize="18" SelectedItem="{Binding SelectedTable}" IsEnabled="{Binding isEnabled}"
+                                  DataContext="{StaticResource MainVM}"/>
                     </Border>
                 </Grid>
-                
-                <!--Đặt cọc trước-->
-                <Grid Grid.Row="3" Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"/>
-                        <RowDefinition Height="6*"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" 
-                        Content="Đặt cọc trước" Style="{StaticResource labelStyle}"/>
-                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5*"/>
-                                <ColumnDefinition Width="5*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" FontSize="18" Background="Transparent" FontWeight="SemiBold"
-                                          VerticalContentAlignment="Center">
-                                <ComboBoxItem Content="Tiền mặt"/>
-                                <ComboBoxItem Content="Chuyển khoản"/>
-                            </ComboBox>
-                            <TextBox Grid.Column="1" Style="{StaticResource txtStyle}"/>
-                        </Grid>
-                    </Border>
-                </Grid>
+
+
+
             </Grid>
-            
+
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
@@ -213,12 +229,8 @@
                     </Grid.ColumnDefinitions>
                     <!--Số khách-->
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="4*"/>
-                            <RowDefinition Height="6*"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Column="0" Margin="5,0,0,5"
-                            Content="Số khách" Style="{StaticResource labelStyle}"/>
+                        <!--
+                        
                         <Border Grid.Row="1" Margin="10,0,0,15" CornerRadius="5">
                             <StackPanel Grid.Row="1" Orientation="Horizontal"
                                         HorizontalAlignment="Left"
@@ -232,20 +244,32 @@
                                         Foreground="DarkBlue" HorizontalContentAlignment="Center" 
                                         Command="{Binding AddCusNum}" CommandParameter="{Binding ElementName=bookingWindow}"/>
                             </StackPanel>
-                        </Border>
-                    </Grid>
-                    <!--Thời gian dự kiến hoàn tất-->
-                    <Grid Grid.Column="1">
+                        </Border>-->
                         <Grid.RowDefinitions>
                             <RowDefinition Height="4*"/>
                             <RowDefinition Height="6*"/>
                         </Grid.RowDefinitions>
-                        <Label Grid.Column="0" Margin="0,0,9,5" HorizontalAlignment="Right" FontSize="17"
+                        <Label Grid.Column="0" Margin="5,5,0,0"
+                               Content="Mã đặt bàn" Style="{StaticResource labelStyle}"/>
+                        <Border Grid.Row="1" Margin="10,0,0,15" CornerRadius="5">
+                            <TextBox Style="{StaticResource txtStyle}" IsReadOnly="True" Text="{Binding BookingCode}" Margin="0,-4,0,8.5"/>
+                        </Border>
+                    </Grid>
+                    <Button Content="Sửa thông tin" Style="{StaticResource configureDataButton}" FontSize="14"
+                            Command="{Binding ConfigureBookingInfo}" Grid.Column="1" Margin="85,24,0,9"
+                            IsEnabled="{Binding isClicked}" Visibility="{Binding isVisible}"/>
+                    <!--Thời gian dự kiến hoàn tất-->
+                    <!--<Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="6*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Margin="17,4,0,1" HorizontalAlignment="Left" FontSize="17"
                                 Content="Thời gian dự kiến hoàn tất" Style="{StaticResource labelStyle}"/>
-                        <Border Grid.Row="1" Margin="0,0,5,15" CornerRadius="5">
+                        <Border Margin="0,39,5,22.5" CornerRadius="5" Grid.RowSpan="2">
                             <StackPanel Grid.Row="1" Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
-                                                Width="auto" Margin="0,0,5,0">
+                                                Width="auto" Margin="0,0,5,1">
                                 <TextBox Text="{Binding EsTime}" Width="110" FontSize="20"
                                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
                                          Style="{StaticResource txtStyle}"/>
@@ -257,54 +281,23 @@
                                 </ComboBox>
                             </StackPanel>
                         </Border>
-                    </Grid>
+                    </Grid>-->
                 </Grid>
-                <!--Khách hàng-->
+                <!--Số điện thoại-->
                 <Grid Grid.Row="1" Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="6*"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
-                        Content="Khách hàng" Style="{StaticResource labelStyle}"/>
+                        Content="Số điện thoại" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="8*"/>
-                                <ColumnDefinition Width="2*"/>
-                            </Grid.ColumnDefinitions>
-                                
-                            <TextBox Text="{Binding FinishedTime}" Margin="0,0,7,0"
-                                     Grid.Row="1" Style="{StaticResource txtStyle}"/>
-
-                            <Button Grid.Column="1" Content="+" FontWeight="Bold" FontSize="15">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border Background="GhostWhite"
-                                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                                            CornerRadius="5">
-                                                        <ContentPresenter HorizontalAlignment="Center" 
-                                                                          VerticalAlignment="Center"
-                                                                          Content="{TemplateBinding Content}" />        
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-
-                        </Grid>
-                        
+                        <TextBox IsReadOnly="True" Style="{StaticResource txtStyle}" Text="{Binding CusPhoneNumber}"/>
                     </Border>
                 </Grid>
-                
+
                 <!--Đặt trước món-->
-                <Grid Grid.Row="2" Margin="10">
+                <!--<Grid Grid.Row="2" Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="6*"/>
@@ -322,16 +315,43 @@
                     </Border>
                 </Grid>
 
-                <!--Ghi chú-->
+                -->
+                <!--Đặt cọc trước-->
+                <!--
                 <Grid Grid.Row="3" Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="6*"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" 
-                        Content="Nhân viên phụ trách" Style="{StaticResource labelStyle}"/>
+                           Content="Đặt cọc trước" Style="{StaticResource labelStyle}"/>
                     <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
-                        <TextBox Grid.Row="1" Style="{StaticResource txtStyle}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" FontSize="18" Background="Transparent" FontWeight="SemiBold"
+                          VerticalContentAlignment="Center">
+                                <ComboBoxItem Content="Tiền mặt"/>
+                                <ComboBoxItem Content="Chuyển khoản"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Style="{StaticResource txtStyle}"/>
+                        </Grid>
+                    </Border>
+                </Grid>-->
+                <!--Nhân viên phụ trách-->
+                <Grid Grid.Row="2" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                           Content="Nhân viên phụ trách" Style="{StaticResource labelStyle}"/>
+                    <Border Grid.Row="1" Margin="10,0,10,15" CornerRadius="5">
+                        <ComboBox ItemsSource="{Binding EmpNameList}" VerticalContentAlignment="Center"
+                                  FontSize="18" SelectedItem="{Binding SelectedEmpName}"
+                                  IsEnabled="{Binding isConfigurationClicked}"/>
                     </Border>
                 </Grid>
             </Grid>
@@ -339,14 +359,22 @@
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Style="{StaticResource buttonStyle}" CommandParameter="{Binding ElementName=bookingWindow}"
-                    Content="HỦY ĐƠN HÀNG" Command="{Binding cancelBooking}"/>
-            <Button Grid.Column="1" Style="{StaticResource buttonStyle}" Command="{Binding confirmBooking}"
-                    Content="XÁC NHẬN" CommandParameter="{Binding ElementName=bookingWindow}"/>
+            <Button Grid.Column="0" Style="{StaticResource buttonStyle}" Command="{Binding ExitConfiguration}"
+                    Content="THOÁT" CommandParameter="{Binding ElementName=bookingWindow}" Background="White"
+                    FontWeight="Bold" BorderThickness="0.5" BorderBrush="Black"/>
+
+            <Button Grid.Column="1" Style="{StaticResource buttonStyle}" CommandParameter="{Binding ElementName=bookingWindow}"
+                    Content="HỦY ĐẶT BÀN" Command="{Binding CancelBookingInfo}" Background="Red" Foreground="White"
+                    FontWeight="Bold" IsEnabled="{Binding isClicked}" BorderThickness="0.5" BorderBrush="Black"/>
+            <Button Grid.Column="2" Style="{StaticResource buttonStyle}" Command="{Binding ConfirmBookingInfo}"
+                    Content="XÁC NHẬN" CommandParameter="{Binding ElementName=bookingWindow}"
+                    Background="Green" Foreground="White" FontWeight="Bold" BorderThickness="0.5" BorderBrush="Black"/>
         </Grid>
+
     </Grid>
 </Window>
