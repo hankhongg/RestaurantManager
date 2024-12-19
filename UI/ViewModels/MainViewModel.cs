@@ -459,7 +459,7 @@ namespace RestaurantManager.ViewModels
 
         public void LoadChartData()
         {
-
+            YFormatter = value => value.ToString("N0");
             var calculatedProfit = DataProvider.Instance.DB.FinancialHistories.Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date).GroupBy(x => x.FinDate).Select(g => new
             {
                 Date = g.Key,
