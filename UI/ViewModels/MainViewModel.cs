@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using iTextSharp.text.pdf;
+using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
 using RestaurantManager.Views;
@@ -8,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,6 +20,9 @@ using System.Windows.Input;
 using System.Windows.Navigation;
 using UI.Views;
 using XAct;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
+using System.Globalization;
 
 namespace RestaurantManager.ViewModels
 {
@@ -979,6 +985,7 @@ namespace RestaurantManager.ViewModels
                 LoadAllTableInformation();
                 LoadAllBookingInformation();
             });
+
         }
         public void LoadAllTableInformation()
         {
@@ -1043,6 +1050,73 @@ namespace RestaurantManager.ViewModels
             }
             ExistedBooking = $"Booking hiện có ({BookingViewList.Count()})";
             //BookingViewList.Clear();
+        }
+        public void ExportOrderToPDF(int ordernum, decimal bill, DateTime recTime)
+        {
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = "Chọn nơi lưu hóa đơn",
+                Filter = "PDF Files (*.pdf)|*.pdf",
+                DefaultExt = ".pdf",
+                OverwritePrompt = true
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string filePath = saveFileDialog.FileName;
+
+                try
+                {
+
+                    PdfDocument pdfDoc = new PdfDocument();
+                    pdfDoc.Info.Title = "Hóa đơn thanh toán";
+                    PdfPage page = pdfDoc.AddPage();
+                    XGraphics gfx = XGraphics.FromPdfPage(page);
+
+
+                    XFont titleFont = new XFont("Arial", 24, XFontStyle.Bold);
+                    XFont headerFont = new XFont("Arial", 12, XFontStyle.Bold);
+                    XFont regularFont = new XFont("Arial", 10);
+
+
+                    gfx.DrawString("Hóa đơn thanh toán", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
+
+
+                    XImage logo = XImage.FromFile("D:\\UIT\\năm 2hk1\\LTTQ\\RestaurantManager-master\\UI\\Views\\Images\\logo.png");
+                    gfx.DrawImage(logo, 20, 20, 50, 50);
+
+
+                    gfx.DrawString($"Mã hóa đơn: {ordernum}", regularFont, XBrushes.Black, new XPoint(50, 100));
+                    gfx.DrawString($"Ngày giờ: {recTime.ToString("dd/MM/yyyy HH:mm:ss")}", regularFont, XBrushes.Black, new XPoint(50, 120));
+
+
+                    int yPosition = 150;
+
+                    var items = new List<(string, int, decimal, decimal)>
+                        {
+                            ("Món 1", 2, 50, 100),
+                            ("Món 2", 1, 30, 30)
+                        };
+                    yPosition += 10;
+
+
+                    yPosition += 10;
+                    gfx.DrawString($"Tổng tiền: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center); // Định dạng tiền tệ VND
+
+                    pdfDoc.Save(filePath);
+
+                    MessageBox.Show($"Hóa đơn đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Orderuc.Remove(SelectedFoodItemBill);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Đã xảy ra lỗi khi lưu file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Bạn đã hủy lưu hóa đơn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }
