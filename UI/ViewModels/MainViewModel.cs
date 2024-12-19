@@ -413,8 +413,7 @@ namespace RestaurantManager.ViewModels
         public Func<double, string> YFormatter { get; set; }
         private DateTime startDate = DateTime.Now.Date;
         private DateTime endDate = DateTime.Now.Date.AddDays(1) ;
-        //private DateTime startDate = DateTime.ParseExact("16/12/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-        //private DateTime endDate = DateTime.ParseExact("19/12/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
 
         public DateTime StartDate 
         {
@@ -508,15 +507,40 @@ namespace RestaurantManager.ViewModels
             BillToday = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == today).Count();
             BillYesterday = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == yesterday).Count();
 
+            //Stockin stockin = DataProvider.Instance.DB.Stockins.OrderByDescending(x => x.StoDate).FirstOrDefault();
+            //var newFinancial = new FinancialHistory { ReferenceType = "STOCKIN", ReferenceId = stockin.StoId,Description="Chi phí nhập kho" ,Amount = stockin.StoPrice, FinDate = stockin.StoDate, Type = "EXPENSE" };
+
             // truy dữ liệu cho nhân viên có hiệu suất làm việc cao nhất hôm nay và hôm qua
             // lấy số lượng booking và receipt của các nhân viên theo ngày
             var todayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == today && x.BkStatus == 0).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
             var todayNhanViensReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == today).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, ReceiptCount = g.Count() });
             var yesterdayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == yesterday && x.BkStatus == 0).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
             var yesterdayNhanViensReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == yesterday).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, ReceiptCount = g.Count() });
+
             // cộng lại số lượng booking và receipt của mỗi nhân viên
-            var todayNhanViensPer = todayNhanViensBooking.Join(todayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
-            var yesterdayNhanViensPer = yesterdayNhanViensBooking.Join(yesterdayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
+            //var todayNhanViensPer = todayNhanViensBooking.Join(todayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
+            var todayNhanViensBookingData = todayNhanViensBooking.Select(x => new { x.EmpId, PerformanceCount = x.BookingCount });
+            var todayNhanViensReceiptData = todayNhanViensReceipt.Select(x => new { x.EmpId, PerformanceCount = x.ReceiptCount });
+            var todayNhanViensPer = todayNhanViensBookingData
+                            .Union(todayNhanViensReceiptData)
+                            .GroupBy(x => x.EmpId)  
+                            .Select(g => new
+                            {
+                                EmpId = g.Key,
+                                PerformanceCount = g.Sum(x => x.PerformanceCount)  
+                            });
+            var yesterdayNhanViensBookingData = yesterdayNhanViensBooking.Select(x => new { x.EmpId, PerformanceCount = x.BookingCount });
+            var yesterdayNhanViensReceiptData = yesterdayNhanViensReceipt.Select(x => new { x.EmpId, PerformanceCount = x.ReceiptCount });
+            var yesterdayNhanViensPer = yesterdayNhanViensBookingData
+                            .Union(yesterdayNhanViensReceiptData)
+                            .GroupBy(x => x.EmpId)
+                            .Select(g => new
+                            {
+                                EmpId = g.Key,
+                                PerformanceCount = g.Sum(x => x.PerformanceCount)
+                            });
+
+
             // tìm id của nhân viên có hiệu suất cao nhất
             int? todayPerEmpID = todayNhanViensPer.Count() > 0 ? todayNhanViensPer.OrderByDescending(x => x.PerformanceCount).FirstOrDefault().EmpId : 0;
             int? yesterdayPerEmpID = yesterdayNhanViensPer.Count() > 0 ? yesterdayNhanViensPer.OrderByDescending(x => x.PerformanceCount).FirstOrDefault().EmpId : 0;
