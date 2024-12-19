@@ -486,10 +486,25 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
-                    <Grid Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,592,0">
-                        <WrapPanel Margin="30" x:Name="tablePanel">
-                            <orderUC:OrderUC Height="210" Width="320"></orderUC:OrderUC>
-                        </WrapPanel>
+                    <Grid Grid.Column="0" Margin="0,0,0,0" >
+
+                        <!-- Danh sách món ăn -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                            <ItemsControl ItemsSource="{Binding Orderuc}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <orderUC:OrderUC Height="200" Width="300" Margin="10" DataContext="{Binding}"></orderUC:OrderUC>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </Grid>
 
                     <!--Cột 2 là nút tạo đơn mới-->
@@ -508,8 +523,19 @@
                             <StackPanel Margin="20">
                                 <!--Nút thêm đơn mới-->
                                 <Button Content="Thêm đơn mới (+)" Style="{StaticResource LoginButton}" 
-                                        Command="{Binding AddOrderCommand}"
-                                        Padding="0,20" Margin="20,0" Width="Auto" Height="Auto">
+                     Command="{Binding AddOrderCommand }"
+                     Padding="0,20" Margin="20,0" Width="Auto" Height="Auto">
+                                    <Button.Background>
+                                        <LinearGradientBrush>
+                                            <GradientStop Color="DarkGreen" Offset="-0.5"></GradientStop>
+                                            <GradientStop Color="LimeGreen" Offset="1.0"></GradientStop>
+                                        </LinearGradientBrush>
+                                    </Button.Background>
+                                </Button>
+                                <Button Content="Thanh toán hóa đơn" Style="{StaticResource LoginButton}" 
+                 Command="{Binding PayBillCommand}"    
+                 Padding="0,20" Margin="20,50" Width="Auto" Height="Auto">
+
                                     <Button.Background>
                                         <LinearGradientBrush>
                                             <GradientStop Color="DarkGreen" Offset="-0.5"></GradientStop>
