@@ -13,13 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using XAct;
-using PdfSharpCore.Drawing;
-using PdfSharpCore.Pdf;
-using System;
-using System.IO;
-using iText.Commons.Bouncycastle.Cms;
-using Microsoft.Identity.Client;
+
 
 namespace RestaurantManager.ViewModels
 {
