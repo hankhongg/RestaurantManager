@@ -23,4 +23,5 @@
     <viewmodel:MainViewModel x:Key="MainVM"></viewmodel:MainViewModel>
     <viewmodel:AddTableViewModel x:Key="AddTableVM"></viewmodel:AddTableViewModel>
     <viewmodel:SetNameRecipeViewModel x:Key="SetNameRecipeVM"></viewmodel:SetNameRecipeViewModel>
+    <viewmodel:InfoIncomeViewModel x:Key="InfoIncomeVM"></viewmodel:InfoIncomeViewModel>
 </ResourceDictionary>

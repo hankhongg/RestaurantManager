@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LiveCharts;
+using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
 using RestaurantManager.Views;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -276,6 +278,256 @@ namespace RestaurantManager.ViewModels
         public ICommand AddBookingCommand { get; set; }
         public ICommand BookingInfo { get; set; }
 
+        // ----------------------------
+        // Income Management
+        private ObservableCollection<InfoIncomeViewModel> infoIncomeVMs;
+        public ObservableCollection<InfoIncomeViewModel> InfoIncomeVMs
+        {
+            get { return infoIncomeVMs; }
+            set
+            {
+                infoIncomeVMs = value;
+                OnPropertyChanged();
+            }
+        }
+        private string nhanVienToday;
+        private string nhanVienYesterday;
+        private decimal incomeToday;
+        private decimal incomeYesterday;
+        private int billToday;
+        private int billYesterday;
+
+        public string NhanVienToday
+        {
+            get { return nhanVienToday; }
+            set
+            {
+                nhanVienToday = value;
+                OnPropertyChanged();
+            }
+        }
+        public string NhanVienYesterday
+        {
+            get { return nhanVienYesterday; }
+            set
+            {
+                nhanVienYesterday = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int nhanVienTodayPer;
+        public int NhanVienTodayPer
+        {
+            get { return nhanVienTodayPer; }
+            set
+            {
+                nhanVienTodayPer = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int nhanVienYesterdayPer;
+        public int NhanVienYesterdayPer { get => nhanVienYesterdayPer; set { nhanVienYesterdayPer = value; OnPropertyChanged(); } }
+
+        public decimal IncomeToday
+        {
+            get { return incomeToday; }
+            set
+            {
+                incomeToday = value;
+                OnPropertyChanged(nameof(IncomeToday));
+            }
+        }
+        public decimal IncomeYesterday
+        {
+            get { return incomeYesterday; }
+            set
+            {
+                incomeYesterday = value;
+                OnPropertyChanged();
+            }
+        }
+        public int BillToday
+        {
+            get { return billToday; }
+            set
+            {
+                billToday = value;
+                OnPropertyChanged();
+            }
+        }
+        public int BillYesterday
+        {
+            get { return billYesterday; }
+            set
+            {
+                billYesterday = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // ----------------------------
+        // Income chart management
+        private ChartValues<decimal> incomeValues;
+        private ChartValues<decimal> expenseValues;
+        private ChartValues<decimal> profitValues;
+        private List<string> labels;
+        public ChartValues<decimal> IncomeValues
+        {
+            get { return incomeValues; }
+            set
+            {
+                incomeValues = value;
+                OnPropertyChanged();
+            }
+        }
+        public ChartValues<decimal> ExpenseValues
+        {
+            get { return expenseValues; }
+            set
+            {
+                expenseValues = value;
+                OnPropertyChanged();
+            }
+        }
+        public ChartValues<decimal> ProfitValues
+        {
+            get { return profitValues; }
+            set
+            {
+                profitValues = value;
+                OnPropertyChanged();
+            }
+        }
+        public List<string> Labels
+        {
+            get { return labels; }
+            set
+            {
+                labels = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Func<double, string> YFormatter { get; set; }
+        private DateTime startDate = DateTime.Now.Date;
+        private DateTime endDate = DateTime.Now.Date.AddDays(1) ;
+        //private DateTime startDate = DateTime.ParseExact("16/12/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        //private DateTime endDate = DateTime.ParseExact("19/12/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+        public DateTime StartDate 
+        {
+            get { return startDate; }
+            set
+            {
+                startDate = value;
+                OnPropertyChanged();
+                LoadChartData();
+            }
+        }
+        public DateTime EndDate
+        {
+            get { return endDate; }
+            set
+            {
+                if (value < startDate)
+                {
+                    MessageBox.Show("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                endDate = value;
+                OnPropertyChanged();
+                LoadChartData();
+            }
+        }
+        private void UpdateLabels()
+        {
+            if (StartDate.Date == EndDate.Date)
+            {
+                Labels = new List<string> { StartDate.ToString("dd-MM") };
+            }
+            else if (StartDate.Year == EndDate.Year && StartDate.Month == EndDate.Month)
+            {
+                Labels = Enumerable.Range(0, (EndDate - StartDate).Days + 1).Select(o => StartDate.AddDays(o).ToString("dd-MM")).ToList();
+            }
+            else
+            {
+                Labels = Enumerable.Range(0, (EndDate.Year - StartDate.Year) * 12 + EndDate.Month - StartDate.Month + 1).Select(o => StartDate.AddMonths(o).ToString("MM-yyyy")).ToList();
+            }
+        }
+
+        public void LoadChartData()
+        {
+
+            var calculatedProfit = DataProvider.Instance.DB.FinancialHistories.Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date).GroupBy(x => x.FinDate).Select(g => new
+            {
+                Date = g.Key,
+                Income = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount),
+                Expense = g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount),
+                Profit = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount) - g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount)
+            }).ToList();
+            if (calculatedProfit.Count == 0)
+            {
+                IncomeValues = new ChartValues<decimal> { 0};
+                ExpenseValues = new ChartValues<decimal> { 0};
+                ProfitValues = new ChartValues<decimal> { 0 };
+                Labels = new List<string> { "Không có dữ liệu" };
+                return;
+            }
+            IncomeValues = new ChartValues<decimal>(calculatedProfit.Select(x => x.Income));
+            ExpenseValues = new ChartValues<decimal>(calculatedProfit.Select(x => x.Expense));
+            foreach (var profit in calculatedProfit)
+            {
+                var existedProfit = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate == profit.Date && x.Type == "PROFIT").FirstOrDefault();
+                if (existedProfit != null)
+                {
+                    existedProfit.Amount = profit.Profit;
+                }
+                else
+                {
+                    var entryProfit = new FinancialHistory { Amount = profit.Profit, FinDate = profit.Date, Type = "PROFIT" };
+                    DataProvider.Instance.DB.FinancialHistories.Add(entryProfit);
+                }
+            }
+            DataProvider.Instance.DB.SaveChanges();
+
+            ProfitValues = new ChartValues<decimal>(DataProvider.Instance.DB.FinancialHistories.Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date && con.Type == "PROFIT").GroupBy(x => x.FinDate).Select(g => g.Sum(x => x.Amount)));
+            //MessageBox.Show($"Income: {IncomeValues[0]}\n Expense: {ExpenseValues[0]}\n Profit: {ProfitValues[0]} ");
+            UpdateLabels();
+        }
+
+        public void LoadFinancialData()
+        {
+            var today = DateTime.Now.Date;
+            var yesterday = DateTime.Now.Date.AddDays(-1);
+
+            // truy dữ liệu cho doanh thu hôm nay và hôm qua, số hóa đơn hôm nay và hôm qua
+            IncomeToday = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate.Date == today && x.Type == "INCOME").Sum(x => x.Amount);            
+            IncomeYesterday = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate.Date == yesterday && x.Type == "INCOME").Sum(x => x.Amount);
+            BillToday = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == today).Count();
+            BillYesterday = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == yesterday).Count();
+
+            // truy dữ liệu cho nhân viên có hiệu suất làm việc cao nhất hôm nay và hôm qua
+            // lấy số lượng booking và receipt của các nhân viên theo ngày
+            var todayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == today).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
+            var todayNhanViensReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == today).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, ReceiptCount = g.Count() });
+            var yesterdayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == yesterday).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
+            var yesterdayNhanViensReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == yesterday).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, ReceiptCount = g.Count() });
+            // cộng lại số lượng booking và receipt của mỗi nhân viên
+            var todayNhanViensPer = todayNhanViensBooking.Join(todayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
+            var yesterdayNhanViensPer = yesterdayNhanViensBooking.Join(yesterdayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
+            // tìm id của nhân viên có hiệu suất cao nhất
+            int? todayPerEmpID = todayNhanViensPer.Count() > 0 ? todayNhanViensPer.OrderByDescending(x => x.PerformanceCount).FirstOrDefault().EmpId : 0;
+            int? yesterdayPerEmpID = yesterdayNhanViensPer.Count() > 0 ? yesterdayNhanViensPer.OrderByDescending(x => x.PerformanceCount).FirstOrDefault().EmpId : 0;
+            // lấy hiệu suất của nhân viên có hiệu suất cao nhất
+            NhanVienTodayPer = todayPerEmpID != 0 ? todayNhanViensPer.Where(x => x.EmpId == todayPerEmpID).Select(x => x.PerformanceCount).FirstOrDefault() : 0;
+            NhanVienYesterdayPer = yesterdayPerEmpID != 0 ? yesterdayNhanViensPer.Where(x => x.EmpId == yesterdayPerEmpID).Select(x => x.PerformanceCount).FirstOrDefault() : 0;
+            // lấy tên của nhân viên có hiệu suất cao nhất
+            NhanVienToday = todayPerEmpID != 0 ? DataProvider.Instance.DB.Employees.Where(x => x.EmpId == todayPerEmpID).Select(x => x.EmpName).FirstOrDefault() : "Không có";
+            NhanVienYesterday = yesterdayPerEmpID != 0 ? DataProvider.Instance.DB.Employees.Where(x => x.EmpId == yesterdayPerEmpID).Select(x => x.EmpName).FirstOrDefault() : "Không có";
+        }
+
 
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
@@ -292,9 +544,35 @@ namespace RestaurantManager.ViewModels
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
             IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
             ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
+            LoadFinancialData();
+            LoadChartData();
+            InfoIncomeVMs =
+            [
+                new InfoIncomeViewModel("Images/money.png") {
+                    TextToday = string.Format("Doanh thu hôm nay: {0:0,0} VNĐ", IncomeToday),
+                    TextYesterday = string.Format("Doanh thu hôm qua: {0:0,0} VNĐ", IncomeYesterday),
+                    ValueToday = IncomeToday,
+                    ValueYesterday = IncomeYesterday,
+                    MaxValue = (double)Math.Max(IncomeToday, IncomeYesterday),
+                },
+                new InfoIncomeViewModel("Images/receipt.png") {
+                    TextToday = $"Số hóa đơn hôm nay: {BillToday} hóa đơn",
+                    TextYesterday = $"Số hóa đơn hôm qua: {BillYesterday} hóa đơn",
+                    ValueToday = BillToday,
+                    ValueYesterday = BillYesterday,
+                    MaxValue = Math.Max(BillToday, BillYesterday),
+                },
+                new InfoIncomeViewModel("Images/res_worker.png") {
+                    TextToday = $"Nhân viên của hôm nay: {NhanVienToday}",
+                    TextYesterday = $"Nhân viên của hôm qua: {NhanVienYesterday}",
+                    ValueToday = NhanVienTodayPer,
+                    ValueYesterday = NhanVienYesterdayPer,
+                },
+            ];
             LoadAllFOODInstock();
             LoadAllBookingInformation();
             LoadAllTableInformation();
+            
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
                 {

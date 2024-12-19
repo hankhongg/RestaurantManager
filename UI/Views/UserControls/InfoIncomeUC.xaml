@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="RestaurantManager.Views.UserControls.InfoIncomeUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RestaurantManager.Views.UserControls"
+             x:Name="infoCard" DataContext="{StaticResource InfoIncomeVM}"
+             mc:Ignorable="d" 
+             d:DesignHeight="260" d:DesignWidth="530">
+    <Grid>
+        <Border Grid.RowSpan="2" CornerRadius="20" BorderBrush="SteelBlue" BorderThickness="5">
+            <Border.Background>
+                <SolidColorBrush Color="White"/>
+            </Border.Background>
+        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="3.5*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <Border CornerRadius="20,20,0,0" BorderThickness="5" Grid.RowSpan="2">
+                <Border.Background>
+                    <SolidColorBrush Color="WhiteSmoke"/>
+                </Border.Background>
+            </Border>
+            <Grid Grid.Row="0" Opacity="0.8">
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                    <Image Source="{Binding Image}" Margin="0,0,10,0"/>
+                    <Slider x:Name="sldIncomeYesterday" VerticalAlignment="Center" 
+                            Value="{Binding ValueYesterday}"
+                            Minimum="0" Maximum="{Binding MaxValue}" IsHitTestVisible="False" 
+                            Width="220" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Opacity="0.8">
+                <Border ClipToBounds="True" Height="30" HorizontalAlignment="Center" Width="400">
+                    <Canvas Loaded="Canvas_Loaded_Yesterday" x:Name="yesterdayCanvas" Width="300">
+                        <TextBlock x:Name="yesterdayTextBlock" 
+                       Text="{Binding TextYesterday}" 
+                       FontSize="14" />
+                    </Canvas>
+                </Border>
+            </Grid>
+            <Grid Grid.Row="2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Source="{Binding Image}" Margin="0,0,10,0"/>
+                    <Slider x:Name="sldIncomeToday" VerticalAlignment="Center"
+                Minimum="0" Maximum="{Binding MaxValue}" IsHitTestVisible="False"
+                Value="{Binding ValueToday}" Width="250" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Border ClipToBounds="True" Height="50" HorizontalAlignment="Center" Width="500">
+                    <Canvas Loaded="Canvas_Loaded_Today" x:Name="todayCanvas" Width="400">
+                        <TextBlock x:Name="todayTextBlock" VerticalAlignment="Center"
+                                   Text="{Binding TextToday}" 
+                                   FontSize="20" />
+                    </Canvas>
+                </Border>
+            </Grid>
+        </Grid>
+        
+    </Grid>
+</UserControl>
