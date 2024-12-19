@@ -925,7 +925,7 @@ namespace RestaurantManager.ViewModels
                             booking.Tab.TabStatus = true;
                         DataProvider.Instance.DB.SaveChanges();
                     }
-                    else
+                    else if (booking.BkStatus == 1)
                     {
                         BookingViewList.Add(new BookingConfigurationViewModel(booking));
                         DataProvider.Instance.DB.SaveChanges();

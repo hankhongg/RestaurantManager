@@ -16,7 +16,7 @@ namespace RestaurantManager.ViewModels
     public class BookingConfigurationViewModel : BaseViewModel
     {
         private string newBookingCode;
-
+        
         public string NewBookingCode
         {
             get { return newBookingCode; }

@@ -225,7 +225,7 @@ namespace RestaurantManager.ViewModels
         public ICommand CancelBookingInfo { get; set; }
         public ICommand ConfirmBookingInfo { get; set; }
         public ICommand AddNewCustomer { get; set; }
-        public ICommand ConfigureBookingInfo { get; set; }
+        public ICommand ConfigureBookingInfo { get; set; }  
         public ICommand ExitConfiguration { get; set; }
 
 
@@ -256,7 +256,7 @@ namespace RestaurantManager.ViewModels
                     var diaResult = MessageBox.Show("Bạn có muốn hủy đặt bàn không?", "Thông báo", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                     if (diaResult == MessageBoxResult.Yes)
                     {
-                        var booking = DataProvider.Instance.DB.Bookings.Where(x => x.BkCode == BookingCode).FirstOrDefault();
+                        var booking = DataProvider.Instance.DB.Bookings.Where(x => x.BkCode == BookingCode && x.Isdeleted == false && x.BkStatus == 1).FirstOrDefault();
                         if (booking != null && mainVM != null)
                         {
                             if (booking.Tab != null)
@@ -266,7 +266,7 @@ namespace RestaurantManager.ViewModels
                             int i = 0;
                             foreach (Booking bk in mainVM.BookingList)
                             {
-                                if (bk.Isdeleted == false)
+                                if (bk.Isdeleted == false && bk.BkStatus == 1)
                                 {
                                     bk.BkCode = $"BK{++i:D3}";
                                 }
@@ -293,13 +293,14 @@ namespace RestaurantManager.ViewModels
                     return;
                 }
                 var currTime = DateTime.Now;
-                var selectedDateTime = SelectedBookingDate;
-                if (selectedDateTime < currTime)
+                var CurrTime = new DateTime(currTime.Year, currTime.Month, currTime.Day, currTime.Hour, currTime.Minute, 0);
+                var selectedDateTime = new DateTime(SelectedBookingDate.Year, SelectedBookingDate.Month, SelectedBookingDate.Day, SelectedBookingDate.Hour, SelectedBookingDate.Minute, 0); 
+                if (selectedDateTime < CurrTime)
                 {
                     MessageBox.Show("Thời gian đặt phải sau thời gian hiện tại", "Lỗi đặt bàn", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                if (int.Parse(SelectedHour) > 24 || int.Parse(SelectedMinute) > 60)
+                if (int.Parse(SelectedHour) >= 24 || int.Parse(SelectedMinute) > 60)
                 {
                     MessageBox.Show("Thời gian nhập không hợp lệ!", "Lỗi đặt bàn", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -323,7 +324,8 @@ namespace RestaurantManager.ViewModels
                 {
                     if (mainVM != null)
                     {
-                        Booking bk = DataProvider.Instance.DB.Bookings.Where(x => x.BkCode == BookingCode).FirstOrDefault();
+                        //SelectedTable = mainVM.SelectedTable;
+                        Booking bk = DataProvider.Instance.DB.Bookings.Where(x => x.BkCode == BookingCode && x.Isdeleted == false && x.BkStatus == 1).FirstOrDefault();
                         if (bk != null)
                         {
                             bk = EditBookingInfo(bk);
@@ -342,17 +344,19 @@ namespace RestaurantManager.ViewModels
                 }
                 else
                 {
-                    var booking = DataProvider.Instance.DB.Bookings.Where(x => x.BkCode == BookingCode).FirstOrDefault();
+                    var booking = DataProvider.Instance.DB.Bookings.Where(x => x.BkCode == BookingCode && x.Isdeleted == false && x.BkStatus == 1).FirstOrDefault();
                     if (booking != null && mainVM != null)
                     {
+                        //SelectedTable = mainVM.SelectedTable;
                         RestoreStatus(mainVM.SelectedTable);
-                        booking.Isdeleted = true;
+                        //booking.Isdeleted = true;
+                        booking.BkStatus = 0;
                         //booking.BkCode = $"{BookingCode} (Booked)";
                         DataProvider.Instance.DB.SaveChanges();
                         int i = 0;
                         foreach (Booking bk in mainVM.BookingList)
                         {
-                            if (bk.Isdeleted == false)
+                            if (bk.Isdeleted == false && bk.BkStatus == 1)
                             {
                                 bk.BkCode = $"BK{++i:D3}";
                             }
@@ -413,7 +417,7 @@ namespace RestaurantManager.ViewModels
                 isClicked = true;
                 p.Close();
             });
-        }
+    }
 
 
         public void AddNewBooking(Window p, int bookingNumber)
