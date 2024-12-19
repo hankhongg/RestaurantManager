@@ -510,9 +510,9 @@ namespace RestaurantManager.ViewModels
 
             // truy dữ liệu cho nhân viên có hiệu suất làm việc cao nhất hôm nay và hôm qua
             // lấy số lượng booking và receipt của các nhân viên theo ngày
-            var todayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == today).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
+            var todayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == today && x.BkStatus == 0).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
             var todayNhanViensReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == today).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, ReceiptCount = g.Count() });
-            var yesterdayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == yesterday).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
+            var yesterdayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == yesterday && x.BkStatus == 0).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
             var yesterdayNhanViensReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == yesterday).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, ReceiptCount = g.Count() });
             // cộng lại số lượng booking và receipt của mỗi nhân viên
             var todayNhanViensPer = todayNhanViensBooking.Join(todayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
@@ -528,6 +528,7 @@ namespace RestaurantManager.ViewModels
             NhanVienYesterday = yesterdayPerEmpID != 0 ? DataProvider.Instance.DB.Employees.Where(x => x.EmpId == yesterdayPerEmpID).Select(x => x.EmpName).FirstOrDefault() : "Không có";
         }
 
+        public ICommand RefreshChartDataCommand { get; set; }
 
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
@@ -1148,6 +1149,7 @@ namespace RestaurantManager.ViewModels
                 LoadAllTableInformation();
                 LoadAllBookingInformation();
             });
+            RefreshChartDataCommand = new RelayCommand<object>((p) => { return true; }, (p) => { LoadFinancialData(); LoadChartData(); });
         }
         public void LoadAllTableInformation()
         {

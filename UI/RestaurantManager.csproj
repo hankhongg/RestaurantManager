@@ -21,6 +21,7 @@
     <None Remove="Views\Images\logo.png" />
     <None Remove="Views\Images\menu_black.png" />
     <None Remove="Views\Images\minimize.png" />
+    <None Remove="Views\Images\refresh.png" />
     <None Remove="Views\UserControls\Images\calendar.png" />
     <None Remove="Views\UserControls\Images\client.png" />
     <None Remove="Views\UserControls\Images\clock.png" />
@@ -53,6 +54,7 @@
   <ItemGroup>
     <Resource Include="Views\Images\account_black.png" />
     <Resource Include="Views\Images\account_circle.png" />
+    <Resource Include="Views\Images\refresh.png" />
     <Resource Include="Views\UserControls\Images\calendar.png" />
     <Resource Include="Views\UserControls\Images\client.png" />
     <Resource Include="Views\UserControls\Images\clock.png" />
