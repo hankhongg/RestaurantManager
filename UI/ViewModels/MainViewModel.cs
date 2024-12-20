@@ -468,10 +468,9 @@ namespace RestaurantManager.ViewModels
         {
             YFormatter = value => value.ToString("N0");
 
-            // Fetch and filter the financial data
             var calculatedProfit = DataProvider.Instance.DB.FinancialHistories
                 .Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date)
-                .GroupBy(x => x.FinDate.Date)  // Group by just the date part (ignores time)
+                .GroupBy(x => x.FinDate.Date)  
                 .Select(g => new
                 {
                     Date = g.Key,
@@ -489,7 +488,6 @@ namespace RestaurantManager.ViewModels
                 return;
             }
 
-            // Group by day if the range is exactly one month (31 days)
             if ((EndDate - StartDate).Days == 31)
             {
                 calculatedProfit = calculatedProfit
@@ -502,25 +500,22 @@ namespace RestaurantManager.ViewModels
                         Profit = g.Sum(x => x.Profit)
                     }).ToList();
             }
-            // Group by month if the range is exactly one year (365 days)
             else if ((EndDate - StartDate).Days == 365)
             {
                 calculatedProfit = calculatedProfit
                     .GroupBy(x => new { x.Date.Year, x.Date.Month })
                     .Select(g => new
                     {
-                        Date = new DateTime(g.Key.Year, g.Key.Month, 1), // Start of the month
+                        Date = new DateTime(g.Key.Year, g.Key.Month, 1),
                         Income = g.Sum(x => x.Income),
                         Expense = g.Sum(x => x.Expense),
                         Profit = g.Sum(x => x.Profit)
                     }).ToList();
             }
 
-            // Assign chart values
             IncomeValues = new ChartValues<decimal>(calculatedProfit.Select(x => x.Income));
             ExpenseValues = new ChartValues<decimal>(calculatedProfit.Select(x => x.Expense));
 
-            // Update profit records in the database
             foreach (var profit in calculatedProfit)
             {
                 var existedProfit = DataProvider.Instance.DB.FinancialHistories
@@ -542,18 +537,15 @@ namespace RestaurantManager.ViewModels
                 }
             }
 
-            // Save changes to the database
             DataProvider.Instance.DB.SaveChanges();
 
-            // Retrieve and set ProfitValues
             ProfitValues = new ChartValues<decimal>(
                 DataProvider.Instance.DB.FinancialHistories
                     .Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date && con.Type == "PROFIT")
-                    .GroupBy(x => x.FinDate.Date)  // Group by the date (not DateTime)
+                    .GroupBy(x => x.FinDate.Date)  
                     .Select(g => g.Sum(x => x.Amount))
             );
 
-            // Update labels (e.g., day or month labels)
             UpdateLabels();
         }
 
