@@ -419,8 +419,8 @@ namespace RestaurantManager.ViewModels
         }
 
         public Func<double, string> YFormatter { get; set; }
-        private DateTime startDate = DateTime.Now.Date;
-        private DateTime endDate = DateTime.Now.Date.AddDays(1) ;
+        private DateTime startDate = DateTime.Now.Date.AddDays(-7);
+        private DateTime endDate = DateTime.Now.Date;
 
 
         public DateTime StartDate 
@@ -1329,6 +1329,7 @@ namespace RestaurantManager.ViewModels
                     foodLayoutVM.IsEditing = true;
                     foodLayoutVM.InputTabNum = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == selectedReceipt.TabId).FirstOrDefault().TabNum;
                     foodLayoutVM.InputReceipt = selectedReceipt;
+                    foodLayoutVM.LoadMenuItems();
                     selectedFoodLayout.ShowDialog();
                 }
                 LoadOrderUC();
