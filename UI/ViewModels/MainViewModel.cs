@@ -791,6 +791,8 @@ namespace RestaurantManager.ViewModels
                 var stockInVM = stockInManagementWindow.DataContext as StockInManagementViewModel;
                 if (stockInVM != null)
                 {
+                    stockInVM.IngreCheckConfiguration = false;
+                    stockInVM.ItemCheckConfiguration = false;
                     stockInVM.stockInDetailsManagementID = 0;
 
                     stockInVM.StockInID = (DataProvider.Instance.DB.Stockins.Count() + 1).ToString();
@@ -847,9 +849,13 @@ namespace RestaurantManager.ViewModels
 
                             stockInDetailsVM.IngredientNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Ingredients.Select(x => x.IngreName));
                             stockInDetailsVM.MenuItemsNameList = new ObservableCollection<string>(DataProvider.Instance.DB.MenuItems.Where(x => x.ItemType != "FOOD").Select(x => x.ItemName));
-
+                            
+                            stockInDetailsVM.UpdateStockInType();
                             stockInDetailsWindow.ShowDialog();
                             stockInDetailsVM.StockInDate = DateTime.Now;
+
+                            stockInDetailsVM.UpdateExpenseFinancialHistory();
+
                         }
                         catch (Microsoft.EntityFrameworkCore.DbUpdateException)
                         {
@@ -878,6 +884,7 @@ namespace RestaurantManager.ViewModels
                     {
                         stkIn.StoCode = $"ST{++i:D6}";
                     }
+
                     DataProvider.Instance.DB.SaveChanges();
 
                     StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
@@ -892,9 +899,12 @@ namespace RestaurantManager.ViewModels
                 if (stockInDetailsVM != null)
                 {
                     stockInDetailsVM.stockInDetailsManagementID = 1;
-
+                    stockInDetailsVM.IngreCheckConfiguration = false;
+                    stockInDetailsVM.ItemCheckConfiguration = false;
                     stockInDetailsVM.StockInCode = SelectedStockin.StoCode;
                     stockInDetailsVM.StockInID = SelectedStockin.StoId.ToString();
+                    //stockInDetailsVM.TemporaryStockin = SelectedStockin;
+                    //stockInDetailsVM.changeDateID = 0;
 
 
                     stockInDetailsVM.StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(
@@ -935,8 +945,10 @@ namespace RestaurantManager.ViewModels
 
                     stockInDetailsVM.UpdateStockInType();
                     stockInDetailsWindow.ShowDialog();
-                }
 
+                    stockInDetailsVM.UpdateExpenseFinancialHistory();
+                }
+                //FinancialHistory = new ObservableCollection<FinancialHistory>(DataProvider.Instance.DB.FinancialHistories);
                 StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
             });
 

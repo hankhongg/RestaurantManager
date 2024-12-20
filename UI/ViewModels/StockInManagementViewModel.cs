@@ -422,30 +422,33 @@ namespace RestaurantManager.ViewModels
             {
                 MainWindow mainWindow = new MainWindow();
                 var mainVM = mainWindow.DataContext as MainViewModel;
-                if (mainVM != null)
+                RefreshStockinList(mainVM);
+
+                var tempStockin = DataProvider.Instance.DB.Stockins.FirstOrDefault(x => x.StoCode == StockInCode);
+                if (mainVM != null && tempStockin != null)
                 {
                     // Cập nhật STO_PRICE từ STOCKIN_DETAILS_DRINK_OTHER
-                    string query1 = @"
-                                UPDATE STOCKIN
-                                SET STO_PRICE = (
-                                    SELECT SUM(SI.TOTAL_CPRICE)
-                                    FROM STOCKIN_DETAILS_INGRE SI
-                                    WHERE SI.STO_ID = STOCKIN.STO_ID
-                                )
-                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_INGRE);
-                            ";
-                    string query2 = @"
-                                UPDATE STOCKIN
-                                SET STO_PRICE = COALESCE(STO_PRICE, 0) + (
-                                    SELECT SUM(SD.TOTAL_CPRICE)
-                                    FROM STOCKIN_DETAILS_DRINK_OTHER SD
-                                    WHERE SD.STO_ID = STOCKIN.STO_ID
-                                )
-                                WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_DRINK_OTHER);
-                            ";
+                    //string query1 = @"
+                    //            UPDATE STOCKIN
+                    //            SET STO_PRICE = (
+                    //                SELECT SUM(SI.TOTAL_CPRICE)
+                    //                FROM STOCKIN_DETAILS_INGRE SI
+                    //                WHERE SI.STO_ID = STOCKIN.STO_ID
+                    //            )
+                    //            WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_INGRE);
+                    //        ";
+                    //string query2 = @"
+                    //            UPDATE STOCKIN
+                    //            SET STO_PRICE = COALESCE(STO_PRICE, 0) + (
+                    //                SELECT SUM(SD.TOTAL_CPRICE)
+                    //                FROM STOCKIN_DETAILS_DRINK_OTHER SD
+                    //                WHERE SD.STO_ID = STOCKIN.STO_ID
+                    //            )
+                    //            WHERE STO_ID IN (SELECT STO_ID FROM STOCKIN_DETAILS_DRINK_OTHER);
+                    //        ";
 
 
-                    checkConfigured(mainVM);
+                    checkConfigured(tempStockin);
                     if (isConfigured)
                     {
                         var dialogResult = MessageBox.Show("Bạn có muốn lưu thay đổi không?", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
@@ -455,26 +458,22 @@ namespace RestaurantManager.ViewModels
                             if (stockInDetailsManagementID == 0)
                             {
                                 NewStockIn.StoDate = StockInDate;
+                                DataProvider.Instance.DB.Stockins.Update(NewStockIn);
                             }
                             else if (stockInDetailsManagementID == 1)
                             {
-                                mainVM.SelectedStockin.StoDate = StockInDate;
+                                tempStockin.StoDate = StockInDate;
+                                DataProvider.Instance.DB.Stockins.Update(tempStockin);
                             }
-                            if (mainVM.SelectedStockin != null)
-                                DataProvider.Instance.DB.Stockins.Update(mainVM.SelectedStockin);
-                            else DataProvider.Instance.DB.Stockins.Update(NewStockIn);
 
-
+                            UpdateStockPrice(tempStockin);
                             // Thực thi câu lệnh SQL đầu tiên
-                            if (IngreCheckConfiguration)
-                                DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
+                            //if (IngreCheckConfiguration || ItemCheckConfiguration)
+                            //    DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
 
-                            // Thực thi câu lệnh SQL thứ hai
-                            if (ItemCheckConfiguration)
-                                DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
-                            DataProvider.Instance.DB.SaveChanges();
-
-                            RefreshStockinList(mainVM);
+                            //// Thực thi câu lệnh SQL thứ hai
+                            //if (IngreCheckConfiguration || ItemCheckConfiguration)
+                            //    DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
 
                             SelectedStockinDetails = null;
                             StockinDetailsCostPrice = "";
@@ -492,24 +491,21 @@ namespace RestaurantManager.ViewModels
                     }
                     else
                     {
-                        // Thực thi câu lệnh SQL đầu tiên
-                        if (IngreCheckConfiguration)
-                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
+                        //// Thực thi câu lệnh SQL đầu tiên
+                        //if (IngreCheckConfiguration || ItemCheckConfiguration)
+                        //    DataProvider.Instance.DB.Database.ExecuteSqlRaw(query1);
 
-                        // Thực thi câu lệnh SQL thứ hai
-                        if (ItemCheckConfiguration)
-                            DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
-
-                        DataProvider.Instance.DB.SaveChanges();
-                        RefreshStockinList(mainVM);
-
+                        //// Thực thi câu lệnh SQL thứ hai
+                        //if (IngreCheckConfiguration || ItemCheckConfiguration)
+                        //    DataProvider.Instance.DB.Database.ExecuteSqlRaw(query2);
+                        UpdateStockPrice(tempStockin);
 
                         SelectedStockinDetails = null;
                         StockinDetailsCostPrice = "";
                         StockInDetailsQuantity = "";
                         p.Close();
                     }
-
+                    //RefreshStockinList(mainVM);
                     mainVM.StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins.ToList());
                 }
             });
@@ -539,6 +535,9 @@ namespace RestaurantManager.ViewModels
                     var isIngreNameExist = DataProvider.Instance.DB.StockinDetailsIngres.Include(x => x.Ingre)
                         .FirstOrDefault(x => x.Ingre.IngreName == SelectedStockinDetailsName
                          && x.StoId == int.Parse(StockInID));
+
+                    var getIngreElement = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreName == SelectedStockinDetailsName);
+
                     IngreCheckConfiguration = true;
 
                     // Kiểm tra nếu nguyên liệu đã tồn tại
@@ -563,13 +562,13 @@ namespace RestaurantManager.ViewModels
                         isIngreNameExist.TotalCprice = decimal.Parse(StockinDetailsCostPrice) * decimal.Parse(StockInDetailsQuantity);
                         DataProvider.Instance.DB.StockinDetailsIngres.Update(isIngreNameExist);
 
+
                         DataProvider.Instance.DB.SaveChanges();
-                        DataProvider.Instance.DB.Entry(isIngreNameExist).Reload();
+                        //DataProvider.Instance.DB.Entry(isIngreNameExist).Reload();
                     }
 
                     else
                     {
-                        var getIngreElement = DataProvider.Instance.DB.Ingredients.FirstOrDefault(x => x.IngreName == SelectedStockinDetailsName);
 
                         if (getIngreElement == null)
                         {
@@ -606,13 +605,23 @@ namespace RestaurantManager.ViewModels
                             ";
 
                         DataProvider.Instance.DB.Database.ExecuteSqlRaw(query3);
+                        //isIngreNameExist = null;
+                        //getIngreElement = null;
                     }
 
-                    foreach (var entry in DataProvider.Instance.DB.ChangeTracker.Entries())
+                    using (var context = new QlnhContext())
                     {
-                        if (entry.Entity != isIngreNameExist)
+                        var ingreDetailsStockin1 = isIngreNameExist;
+
+                        if (ingreDetailsStockin1 != null)
                         {
-                            entry.State = EntityState.Detached;
+                            context.Entry(ingreDetailsStockin1).State = EntityState.Detached;
+                        }
+
+                        var ingreDetailsStockin2 = getIngreElement;
+                        if (ingreDetailsStockin2 != null)
+                        {
+                            context.Entry(ingreDetailsStockin2).State = EntityState.Detached;
                         }
                     }
 
@@ -629,12 +638,18 @@ namespace RestaurantManager.ViewModels
                              Sto = stkInDetailsIngre.Sto,
                              TotalCprice = stkInDetailsIngre.TotalCprice,
                              Ingre = ingre // Gán dữ liệu từ bảng Ingredients
-                         }).Where(x => x.Sto.StoCode == StockInCode));
+                         }).AsNoTracking().Where(x => x.Sto.StoCode == StockInCode));
+
+                    mainVM.IngredientsList = new ObservableCollection<Ingredient>(
+                    DataProvider.Instance.DB.Ingredients.AsNoTracking().ToList());
                 }
 
                 else
                 {
                     var isItemNameExist = DataProvider.Instance.DB.StockinDetailsDrinkOthers.FirstOrDefault(x => x.Item.ItemName == SelectedStockinDetailsName && x.StoId == stoId);
+                    var getItemElement = DataProvider.Instance.DB.MenuItems.Where(x => x.ItemName == SelectedStockinDetailsName).FirstOrDefault();
+
+
                     ItemCheckConfiguration = true;
 
                     // Kiểm tra nếu nguyên liệu đã tồn tại
@@ -655,15 +670,13 @@ namespace RestaurantManager.ViewModels
                         isItemNameExist.Cprice = decimal.Parse(StockinDetailsCostPrice);
                         isItemNameExist.TotalCprice = decimal.Parse(StockinDetailsCostPrice) * int.Parse(StockInDetailsQuantity);
                         DataProvider.Instance.DB.StockinDetailsDrinkOthers.Update(isItemNameExist);
-
                         DataProvider.Instance.DB.SaveChanges();
-                        DataProvider.Instance.DB.Entry(isItemNameExist).Reload();
+
+                        //DataProvider.Instance.DB.Entry(isItemNameExist).Reload();
 
                     }
                     else
                     {
-                        var getItemElement = DataProvider.Instance.DB.MenuItems.Where(x => x.ItemName == SelectedStockinDetailsName).FirstOrDefault();
-
                         if (getItemElement == null)
                         {
                             MessageBox.Show("Mặt hàng không tồn tại trong danh sách.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -696,16 +709,29 @@ namespace RestaurantManager.ViewModels
                             ";
 
                         DataProvider.Instance.DB.Database.ExecuteSqlRaw(query4);
+                        //getItemElement = null;
+                        //isItemNameExist = null;
                     }
 
-
-                    foreach (var entry in DataProvider.Instance.DB.ChangeTracker.Entries())
+                    using (var context = new QlnhContext())
                     {
-                        if (entry.Entity != isItemNameExist)
+                        var itemDetailsStockin1 = isItemNameExist;
+                        if (itemDetailsStockin1 != null)
                         {
-                            entry.State = EntityState.Detached;
+                            context.Entry(itemDetailsStockin1).State = EntityState.Detached;
+                        }
+
+                        var itemDetailsStockin2 = getItemElement;
+                        if (itemDetailsStockin2 != null)
+                        {
+                            context.Entry(itemDetailsStockin2).State = EntityState.Detached;
                         }
                     }
+
+                    //foreach (var entry in DataProvider.Instance.DB.ChangeTracker.Entries())
+                    //{
+                    //    entry.State = EntityState.Detached;
+                    //}
 
                     StockInDetailsDrinkOtherList = new ObservableCollection<StockinDetailsDrinkOther>(
                         (from stkInDetailsDrinkOther in DataProvider.Instance.DB.StockinDetailsDrinkOthers
@@ -720,31 +746,53 @@ namespace RestaurantManager.ViewModels
                              Sto = stkInDetailsDrinkOther.Sto,
                              TotalCprice = stkInDetailsDrinkOther.TotalCprice,
                              Item = item // Gán dữ liệu từ bảng MenuItems    
-                         }).Where(x => x.Sto.StoCode == StockInCode));
+                         }).AsNoTracking().Where(x => x.Sto.StoCode == StockInCode));
+
+                    mainVM.ItemsList = new ObservableCollection<MenuItem>(
+                    DataProvider.Instance.DB.MenuItems.AsNoTracking().ToList());
                 }
-                if (mainVM != null)
-                    RefreshStockinList(mainVM);
+                //if (mainVM != null)
+                //    RefreshStockinList(mainVM);
             });
             DelStockinDetailsCommand = new RelayCommand<Window>((p) => SelectedStockinDetailsIngre != null || SelectedStockinDetailsDrinkOther != null, (p) =>
             {
+                MainWindow mainWindow = new MainWindow();
+                var mainVM = mainWindow.DataContext as MainViewModel;
+
+                //RefreshStockinList(mainVM);
                 foreach (var entry in DataProvider.Instance.DB.ChangeTracker.Entries())
                 {
-                    if (entry.Entity != SelectedStockinDetailsIngre && entry.Entity != SelectedStockinDetailsDrinkOther)
-                    {
-                        entry.State = EntityState.Detached;
-                    }
+                    entry.State = EntityState.Detached;
                 }
                 if (SelectedIdxStockin == 0)
                 {
+                    IngreCheckConfiguration = true;
                     DataProvider.Instance.DB.StockinDetailsIngres.Remove(SelectedStockinDetailsIngre);
                     StockInDetailsIngresList.Remove(SelectedStockinDetailsIngre);
                 }
                 else
                 {
                     DataProvider.Instance.DB.StockinDetailsDrinkOthers.Remove(SelectedStockinDetailsDrinkOther);
+                    ItemCheckConfiguration = true;
                     StockInDetailsDrinkOtherList.Remove(SelectedStockinDetailsDrinkOther);
                 }
                 DataProvider.Instance.DB.SaveChanges();
+
+                using (var context = new QlnhContext())
+                {
+                    var markedStockinDetailsIngre = SelectedStockinDetailsIngre;
+                    if (markedStockinDetailsIngre != null)
+                    {
+                        context.Entry(markedStockinDetailsIngre).State = EntityState.Detached;
+                    }
+                    var markedStockinDetailsDrinkOther = SelectedStockinDetailsDrinkOther;
+                    if (markedStockinDetailsDrinkOther != null)
+                    {
+                        context.Entry(markedStockinDetailsDrinkOther).State = EntityState.Detached;
+                    }
+                }
+                //RefreshStockinList(mainVM);
+
             });
 
             EditStockinDetailsCommand = new RelayCommand<Window>((p) => SelectedStockinDetailsIngre != null || SelectedStockinDetailsDrinkOther != null, (p) =>
@@ -766,10 +814,15 @@ namespace RestaurantManager.ViewModels
 
             p.Close();
         }
-        public void checkConfigured(MainViewModel mainVM)
+        public void checkConfigured(Stockin stk)
         {
+            if (stk == null)
+            {
+                isConfigured = false;
+                return;
+            }
             if (NewStockIn != null && StockInDate != NewStockIn.StoDate && stockInDetailsManagementID == 0 ||
-                mainVM.SelectedStockin != null && StockInDate != mainVM.SelectedStockin.StoDate && stockInDetailsManagementID == 1)
+                stk.StoDate != null && StockInDate != stk.StoDate && stockInDetailsManagementID == 1)
             {
                 isConfigured = true;
             }
@@ -806,6 +859,71 @@ namespace RestaurantManager.ViewModels
                 Nếu thiếu: Entity Framework có thể trả về dữ liệu được lưu trong bộ nhớ (cache) thay vì lấy dữ liệu mới nhất từ cơ sở dữ liệu.
                 Tác động: Giao diện hiển thị thông tin lỗi thời, gây nhầm lẫn.
              */
+        }
+        public void UpdateExpenseFinancialHistory()
+        {
+            var booking = DataProvider.Instance.DB.Stockins.FirstOrDefault(x => x.StoCode == StockInCode);
+            if (booking != null)
+            {
+                // Thêm mới FinancialHistory nếu chưa tồn tại stockin
+                if (stockInDetailsManagementID == 0)
+                {
+                    FinancialHistory expenseFinancialHistory = new FinancialHistory
+                    {
+                        FinDate = booking.StoDate,
+                        Description = "Chi phí nhập kho",
+                        Type = "EXPENSE",
+                        Amount = booking.StoPrice,
+                        ReferenceId = booking.StoId,
+                        ReferenceType = "STOCKIN"
+                    };
+                    DataProvider.Instance.DB.FinancialHistories.Add(expenseFinancialHistory);
+                }
+                else
+                {
+                    var currFinancialHistory = DataProvider.Instance.DB.FinancialHistories.FirstOrDefault(x => x.ReferenceId == booking.StoId);
+                    if (currFinancialHistory != null)
+                    {
+                        currFinancialHistory.Amount = booking.StoPrice;
+                        DataProvider.Instance.DB.FinancialHistories.Update(currFinancialHistory);
+                    }
+                }
+                DataProvider.Instance.DB.SaveChanges();
+            }
+        }
+        public void UpdateStockPrice(Stockin stockin)
+        {
+            decimal totalCprice = 0;
+
+            var stkIngreDetailsList = DataProvider.Instance.DB.StockinDetailsIngres.Where(x => x.StoId == stockin.StoId);
+            var stkItemDetailsList = DataProvider.Instance.DB.StockinDetailsDrinkOthers.Where(x => x.StoId == stockin.StoId);
+
+            if (stockin != null)
+            {
+                foreach (var stkIngreDetails in stkIngreDetailsList)
+                {
+                    totalCprice += stkIngreDetails.TotalCprice ?? 0;
+                }
+                for (int i = 0; i < stkItemDetailsList.Count(); i++)
+                {
+                    totalCprice += stkItemDetailsList.ElementAt(i).TotalCprice ?? 0;
+                }
+                stockin.StoPrice = totalCprice;
+                DataProvider.Instance.DB.Stockins.Update(stockin);
+                DataProvider.Instance.DB.SaveChanges();
+            }
+        }
+        public void DeleteStockinDetails(Stockin stockin)
+        {
+
+
+            var stkIngreDetailsList = DataProvider.Instance.DB.StockinDetailsIngres.Where(x => x.StoId == stockin.StoId);
+            var stkItemDetailsList = DataProvider.Instance.DB.StockinDetailsDrinkOthers.Where(x => x.StoId == stockin.StoId);
+
+            if (stockin != null)
+            {
+
+            }
         }
     }
 }

@@ -162,7 +162,7 @@
                                 </Grid.RowDefinitions>
                                 <DataGrid CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True" 
                                           BorderThickness="0" AutoGenerateColumns="False" ItemsSource="{Binding StockinList}"
-                                          SelectedItem="{Binding SelectedStockin}" >
+                                          SelectedItem="{Binding SelectedStockin, UpdateSourceTrigger=PropertyChanged}" >
 
                                     <DataGrid.Resources>
                                         <Style TargetType="DataGridColumnHeader">

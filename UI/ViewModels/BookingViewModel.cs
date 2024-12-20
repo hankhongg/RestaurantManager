@@ -293,9 +293,9 @@ namespace RestaurantManager.ViewModels
                     return;
                 }
                 var currTime = DateTime.Now;
-                var CurrTime = new DateTime(currTime.Year, currTime.Month, currTime.Day, currTime.Hour, currTime.Minute, 0);
-                var selectedDateTime = new DateTime(SelectedBookingDate.Year, SelectedBookingDate.Month, SelectedBookingDate.Day, SelectedBookingDate.Hour, SelectedBookingDate.Minute, 0); 
-                if (selectedDateTime < CurrTime)
+                //var CurrTime = new DateTime(currTime.Year, currTime.Month, currTime.Day, currTime.Hour, currTime.Minute, 0);
+                var selectedDateTime = new DateTime(SelectedBookingDate.Year, SelectedBookingDate.Month, SelectedBookingDate.Day, int.Parse(SelectedHour), int.Parse(SelectedMinute), 0); 
+                if (selectedDateTime < currTime)
                 {
                     MessageBox.Show("Thời gian đặt phải sau thời gian hiện tại", "Lỗi đặt bàn", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -305,7 +305,6 @@ namespace RestaurantManager.ViewModels
                     MessageBox.Show("Thời gian nhập không hợp lệ!", "Lỗi đặt bàn", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                selectedDateTime = SelectedBookingDate.AddHours(int.Parse(SelectedHour)).AddMinutes(int.Parse(SelectedMinute));
 
                 if (bookingManagementID == 0)
                 {
@@ -318,7 +317,6 @@ namespace RestaurantManager.ViewModels
                             .FirstOrDefault();
                     }
                     AddNewBooking(p, newBookingNumber);
-                    ReloadFillIn();
                 }
                 else if (bookingManagementID == 1)
                 {
@@ -366,9 +364,8 @@ namespace RestaurantManager.ViewModels
                         //mainVM.LoadAllBookingInformation();
                     }
                     mainVM.SelectedTable = null;
-                    ReloadFillIn();
                 }
-
+                ReloadFillIn();
                 p.Close();
             });
             AddNewCustomer = new RelayCommand<Window>((p) => { return true; }, (p) =>
