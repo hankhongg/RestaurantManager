@@ -165,8 +165,6 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        public ICommand PayBillCommand { get; set; }
-
 
 
         public void LoadMenuItems()

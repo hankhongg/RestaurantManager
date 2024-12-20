@@ -670,6 +670,7 @@ namespace RestaurantManager.ViewModels
             LoadAllFOODInstock();
             LoadAllBookingInformation();
             LoadAllTableInformation();
+            LoadOrderUC();
             
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
@@ -1246,7 +1247,34 @@ namespace RestaurantManager.ViewModels
                 LoadAllTableInformation();
                 LoadAllBookingInformation();
             });
-            RefreshChartDataCommand = new RelayCommand<object>((p) => { return true; }, (p) => { LoadFinancialData(); LoadChartData(); });
+            RefreshChartDataCommand = new RelayCommand<object>((p) => { return true; }, (p) => { LoadFinancialData(); LoadChartData(); OnPropertyChanged(nameof(InfoIncomeVMs));
+                    InfoIncomeVMs = new ObservableCollection<InfoIncomeViewModel>
+                    {
+                        new InfoIncomeViewModel("Images/money.png")
+                        {
+                            TextToday = string.Format("Doanh thu hôm nay: {0:0,0} VNĐ", IncomeToday),
+                            TextYesterday = string.Format("Doanh thu hôm qua: {0:0,0} VNĐ", IncomeYesterday),
+                            ValueToday = IncomeToday,
+                            ValueYesterday = IncomeYesterday,
+                            MaxValue = (double)Math.Max(IncomeToday, IncomeYesterday),
+                        },
+                        new InfoIncomeViewModel("Images/receipt.png")
+                        {
+                            TextToday = $"Số hóa đơn hôm nay: {BillToday} hóa đơn",
+                            TextYesterday = $"Số hóa đơn hôm qua: {BillYesterday} hóa đơn",
+                            ValueToday = BillToday,
+                            ValueYesterday = BillYesterday,
+                            MaxValue = Math.Max(BillToday, BillYesterday),
+                        },
+                        new InfoIncomeViewModel("Images/res_worker.png")
+                        {
+                            TextToday = $"Nhân viên của hôm nay: {NhanVienToday}",
+                            TextYesterday = $"Nhân viên của hôm qua: {NhanVienYesterday}",
+                            ValueToday = NhanVienTodayPer,
+                            ValueYesterday = NhanVienYesterdayPer,
+                        }
+                    };
+            });
 
             // order management
             AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
@@ -1323,9 +1351,7 @@ namespace RestaurantManager.ViewModels
 
                     SelectedFoodItemBill = p;
 
-                    var receipt = DataProvider.Instance.DB.Receipts
-
-                                         .FirstOrDefault(r => r.RecId == SelectedFoodItemBill.RecId);
+                    var receipt = DataProvider.Instance.DB.Receipts.FirstOrDefault(r => r.RecId == SelectedFoodItemBill.RecId);
 
                     if (receipt != null)
 
@@ -1335,10 +1361,17 @@ namespace RestaurantManager.ViewModels
 
                         receipt.Isdeleted = true; // Cập nhật trạng thái hóaddon
 
-                        DiningTable table = DataProvider.Instance.DB.DiningTables
-
-                            .FirstOrDefault(t => t.TabId == receipt.TabId);
-
+                        FinancialHistory financialHistory = new FinancialHistory
+                        {
+                            FinDate = receipt.RecTime,
+                            Amount = receipt.RecPay,
+                            Type = "INCOME",
+                            Description = $"Thanh toán hóa đơn {receipt.RecId}",
+                            ReferenceId = receipt.RecId,
+                            ReferenceType = "RECEIPT"
+                        };
+                        DataProvider.Instance.DB.FinancialHistories.Add(financialHistory);
+                        DiningTable table = DataProvider.Instance.DB.DiningTables.FirstOrDefault(t => t.TabId == receipt.TabId);
                         table.TabStatus = true; // Cập nhật trạng thái bàn
 
                         DataProvider.Instance.DB.SaveChanges();
@@ -1354,11 +1387,7 @@ namespace RestaurantManager.ViewModels
                             order.OrderNumber = index++;
 
                         }
-
-
-
                         OnPropertyChanged(nameof(Orderuc));
-
                     }
 
 
@@ -1408,6 +1437,7 @@ namespace RestaurantManager.ViewModels
                 }
 
                 LoadAllTableInformation();
+                LoadOrderUC();
 
             });
 
