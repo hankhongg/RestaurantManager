@@ -467,42 +467,96 @@ namespace RestaurantManager.ViewModels
         public void LoadChartData()
         {
             YFormatter = value => value.ToString("N0");
-            var calculatedProfit = DataProvider.Instance.DB.FinancialHistories.Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date).GroupBy(x => x.FinDate).Select(g => new
-            {
-                Date = g.Key,
-                Income = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount),
-                Expense = g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount),
-                Profit = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount) - g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount)
-            }).ToList();
+
+            // Fetch and filter the financial data
+            var calculatedProfit = DataProvider.Instance.DB.FinancialHistories
+                .Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date)
+                .GroupBy(x => x.FinDate.Date)  // Group by just the date part (ignores time)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Income = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount),
+                    Expense = g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount),
+                    Profit = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount) - g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount)
+                }).ToList();
+
             if (calculatedProfit.Count == 0)
             {
-                IncomeValues = new ChartValues<decimal> { 0};
-                ExpenseValues = new ChartValues<decimal> { 0};
+                IncomeValues = new ChartValues<decimal> { 0 };
+                ExpenseValues = new ChartValues<decimal> { 0 };
                 ProfitValues = new ChartValues<decimal> { 0 };
                 Labels = new List<string> { "Không có dữ liệu" };
                 return;
             }
+
+            // Group by day if the range is exactly one month (31 days)
+            if ((EndDate - StartDate).Days == 31)
+            {
+                calculatedProfit = calculatedProfit
+                    .GroupBy(x => x.Date.Day)
+                    .Select(g => new
+                    {
+                        Date = g.First().Date,
+                        Income = g.Sum(x => x.Income),
+                        Expense = g.Sum(x => x.Expense),
+                        Profit = g.Sum(x => x.Profit)
+                    }).ToList();
+            }
+            // Group by month if the range is exactly one year (365 days)
+            else if ((EndDate - StartDate).Days == 365)
+            {
+                calculatedProfit = calculatedProfit
+                    .GroupBy(x => new { x.Date.Year, x.Date.Month })
+                    .Select(g => new
+                    {
+                        Date = new DateTime(g.Key.Year, g.Key.Month, 1), // Start of the month
+                        Income = g.Sum(x => x.Income),
+                        Expense = g.Sum(x => x.Expense),
+                        Profit = g.Sum(x => x.Profit)
+                    }).ToList();
+            }
+
+            // Assign chart values
             IncomeValues = new ChartValues<decimal>(calculatedProfit.Select(x => x.Income));
             ExpenseValues = new ChartValues<decimal>(calculatedProfit.Select(x => x.Expense));
+
+            // Update profit records in the database
             foreach (var profit in calculatedProfit)
             {
-                var existedProfit = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate == profit.Date && x.Type == "PROFIT").FirstOrDefault();
+                var existedProfit = DataProvider.Instance.DB.FinancialHistories
+                    .Where(x => x.FinDate.Date == profit.Date && x.Type == "PROFIT").FirstOrDefault();
+
                 if (existedProfit != null)
                 {
                     existedProfit.Amount = profit.Profit;
                 }
                 else
                 {
-                    var entryProfit = new FinancialHistory { Amount = profit.Profit, FinDate = profit.Date, Type = "PROFIT" };
+                    var entryProfit = new FinancialHistory
+                    {
+                        Amount = profit.Profit,
+                        FinDate = profit.Date,
+                        Type = "PROFIT"
+                    };
                     DataProvider.Instance.DB.FinancialHistories.Add(entryProfit);
                 }
             }
+
+            // Save changes to the database
             DataProvider.Instance.DB.SaveChanges();
 
-            ProfitValues = new ChartValues<decimal>(DataProvider.Instance.DB.FinancialHistories.Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date && con.Type == "PROFIT").GroupBy(x => x.FinDate).Select(g => g.Sum(x => x.Amount)));
-            //MessageBox.Show($"Income: {IncomeValues[0]}\n Expense: {ExpenseValues[0]}\n Profit: {ProfitValues[0]} ");
+            // Retrieve and set ProfitValues
+            ProfitValues = new ChartValues<decimal>(
+                DataProvider.Instance.DB.FinancialHistories
+                    .Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date && con.Type == "PROFIT")
+                    .GroupBy(x => x.FinDate.Date)  // Group by the date (not DateTime)
+                    .Select(g => g.Sum(x => x.Amount))
+            );
+
+            // Update labels (e.g., day or month labels)
             UpdateLabels();
         }
+
 
         public void LoadFinancialData()
         {
