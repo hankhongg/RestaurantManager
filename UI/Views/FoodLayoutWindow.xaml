@@ -331,7 +331,7 @@
                         </Button>
                     </Grid>
                     <Grid Grid.Column="2">
-                        <Button Style="{StaticResource btnExistFoodStyle}"  BorderBrush="White" Command="{Binding SaveTemporaryInvoiceCommand}">
+                        <Button Style="{StaticResource btnExistFoodStyle}"  BorderBrush="White" Command="{Binding SaveTemporaryInvoiceCommand}" CommandParameter="{Binding ElementName=foodLayoutWindow}">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="Lưu và" HorizontalAlignment="Center" FontSize="15"/>
                                 <TextBlock Text="Tạm tính" HorizontalAlignment="Center" FontSize="15"/>

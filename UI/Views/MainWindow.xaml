@@ -505,6 +505,11 @@
                                                         <i:InvokeCommandAction Command="{Binding DataContext.EditOrderCommand , RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                                                 CommandParameter="{Binding}"/>
                                                     </i:EventTrigger>
+                                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding DataContext.PayBillCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                                               CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+
                                                 </i:Interaction.Triggers>
                                             </orderUC:OrderUC>
                                         </StackPanel>

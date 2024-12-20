@@ -25,6 +25,7 @@ using PdfSharpCore.Pdf;
 using System.Globalization;
 using PdfDocument = PdfSharpCore.Pdf.PdfDocument;
 using PdfPage = PdfSharpCore.Pdf.PdfPage;
+using System.Windows.Diagnostics;
 
 namespace RestaurantManager.ViewModels
 {
@@ -380,7 +381,14 @@ namespace RestaurantManager.ViewModels
                 CommandManager.InvalidateRequerySuggested();
             }
         }
+        private bool areYouSure()
+        {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn thanh toán hóa đơn?", "Thông báo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            return result == MessageBoxResult.Yes;
+        }
+
         public ICommand EditOrderCommand { get; set; }
+        public ICommand PayBillCommand { get; set; }
         //--
 
         public void LoadFinancialData()
@@ -471,15 +479,7 @@ namespace RestaurantManager.ViewModels
                     }
                 }
             );
-            AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
-                {
-                    FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
-                    FoodLayoutViewModel foodLayoutViewModel = new FoodLayoutViewModel();
-                    foodLayoutWindow.DataContext = foodLayoutViewModel;
-                    foodLayoutWindow.ShowDialog();
-                    LoadOrderUC();
-                }
-            );
+
 
             //Customer Management
             AddCusCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
@@ -1168,6 +1168,15 @@ namespace RestaurantManager.ViewModels
             // });
 
             // order management
+            AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
+                FoodLayoutViewModel foodLayoutViewModel = new FoodLayoutViewModel();
+                foodLayoutWindow.DataContext = foodLayoutViewModel;
+                foodLayoutWindow.ShowDialog();
+                LoadOrderUC();
+            }
+            );
             EditOrderCommand = new RelayCommand<OrderViewModel>((p) => { return true; }, (p) =>
             {
                 FoodLayoutWindow selectedFoodLayout = new FoodLayoutWindow();
@@ -1177,10 +1186,65 @@ namespace RestaurantManager.ViewModels
                 {
                     foodLayoutVM.LoadOrderInformation(selectedReceipt);
                     //foodLayoutVM.OrderManagementID = 1;
-                    
+                    foodLayoutVM.IsEditing = true;
+                    foodLayoutVM.InputReceipt = selectedReceipt;
                     selectedFoodLayout.ShowDialog();
                 }
                 LoadOrderUC();
+            });
+            PayBillCommand = new RelayCommand<OrderViewModel>(
+            (p) => { return true; }, // CanExecute
+            (p) =>
+            {
+                if (areYouSure() == true)
+                {
+                    if (p != null)
+                    {
+                        MessageBox.Show("p not null");
+                        SelectedFoodItemBill = p;
+                        var receipt = DataProvider.Instance.DB.Receipts
+                                             .FirstOrDefault(r => r.RecId == SelectedFoodItemBill.RecId);
+                        if (receipt != null)
+                        {
+                            receipt.Isdeleted = true; // Cập nhật trạng thái
+                            DataProvider.Instance.DB.SaveChanges();
+
+
+
+                            // Tính lại số thứ tự cho danh sách
+                            int index = 1;
+                            foreach (var order in Orderuc)
+                            {
+                                order.OrderNumber = index++;
+                            }
+
+                            OnPropertyChanged(nameof(Orderuc));
+                        }
+
+                        // Tạo file PDF hóa đơn
+                        try
+                        {
+                            var receiptDetails = DataProvider.Instance.DB.ReceiptDetails
+                                .Where(rd => rd.RecId == SelectedFoodItemBill.RecId)
+                                .ToList();
+
+                            ExportOrderToPDF(
+                                SelectedFoodItemBill.OrderNumber,
+                                SelectedFoodItemBill.OrderBill,
+                                SelectedFoodItemBill.OrderTimer,
+                                receiptDetails
+                            );
+                            // Xóa hóa đơn khỏi danh sách hiển thị
+
+                            //  MessageBox.Show("Hóa đơn đã được thanh toán và lưu thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Đã xảy ra lỗi khi tạo hóa đơn: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    else MessageBox.Show("p null");
+                }
             });
 
         }
@@ -1248,7 +1312,7 @@ namespace RestaurantManager.ViewModels
             ExistedBooking = $"Booking hiện có ({BookingViewList.Count()})";
             //BookingViewList.Clear();
         }
-        public void ExportOrderToPDF(int ordernum, decimal bill, DateTime recTime)
+        public void ExportOrderToPDF(int ordernum, decimal bill, DateTime recTime, List<ReceiptDetail> receiptDetails)
         {
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog
             {
@@ -1264,42 +1328,62 @@ namespace RestaurantManager.ViewModels
 
                 try
                 {
-
                     PdfDocument pdfDoc = new PdfDocument();
                     pdfDoc.Info.Title = "Hóa đơn thanh toán";
                     PdfPage page = pdfDoc.AddPage();
                     XGraphics gfx = XGraphics.FromPdfPage(page);
 
-
                     XFont titleFont = new XFont("Arial", 24, XFontStyle.Bold);
                     XFont headerFont = new XFont("Arial", 12, XFontStyle.Bold);
                     XFont regularFont = new XFont("Arial", 10);
 
-
+                    // Draw title
                     gfx.DrawString("Hóa đơn thanh toán", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
 
-
-                    XImage logo = XImage.FromFile("D:\\UIT\\năm 2hk1\\LTTQ\\RestaurantManager-master\\UI\\Views\\Images\\logo.png");
+                    // Draw logo
+                    XImage logo = XImage.FromFile("C:\\Users\\Admin\\Downloads\\KTPM\\3rd Semester\\VP\\BCCK\\RestaurantManager-master\\UI\\Views\\Images\\logo.png");
                     gfx.DrawImage(logo, 20, 20, 50, 50);
 
-
+                    // Draw general receipt information
                     gfx.DrawString($"Mã hóa đơn: {ordernum}", regularFont, XBrushes.Black, new XPoint(50, 100));
                     gfx.DrawString($"Ngày giờ: {recTime.ToString("dd/MM/yyyy HH:mm:ss")}", regularFont, XBrushes.Black, new XPoint(50, 120));
 
-
+                    // Draw table headers
                     int yPosition = 150;
+                    gfx.DrawString("STT", headerFont, XBrushes.Black, new XPoint(50, yPosition));
+                    gfx.DrawString("Tên món", headerFont, XBrushes.Black, new XPoint(100, yPosition));
+                    gfx.DrawString("SL", headerFont, XBrushes.Black, new XPoint(250, yPosition));
+                    gfx.DrawString("Đơn giá", headerFont, XBrushes.Black, new XPoint(300, yPosition));
+                    gfx.DrawString("Thành tiền", headerFont, XBrushes.Black, new XPoint(400, yPosition));
+                    yPosition += 20;
 
-                    var items = new List<(string, int, decimal, decimal)>
+                    // Draw receipt details
+                    int index = 1;
+                    foreach (var detail in receiptDetails)
+                    {
+                        string itemName = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemId == detail.ItemId)?.ItemName ?? "Không tìm thấy";
+                        gfx.DrawString(index.ToString(), regularFont, XBrushes.Black, new XPoint(50, yPosition));
+                        gfx.DrawString(itemName, regularFont, XBrushes.Black, new XPoint(100, yPosition));
+                        gfx.DrawString(detail.Quantity.ToString(), regularFont, XBrushes.Black, new XPoint(250, yPosition));
+                        gfx.DrawString(detail.Price.ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(300, yPosition));
+                        gfx.DrawString((detail.Price * detail.Quantity).ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(400, yPosition));
+                        yPosition += 20;
+
+                        // Move to the next page if needed
+                        if (yPosition > page.Height - 50)
                         {
-                            ("Món 1", 2, 50, 100),
-                            ("Món 2", 1, 30, 30)
-                        };
-                    yPosition += 10;
+                            page = pdfDoc.AddPage();
+                            gfx = XGraphics.FromPdfPage(page);
+                            yPosition = 50; // Reset Y position for new page
+                        }
+                        index++;
+                    }
 
+                    // Draw total amount
+                    yPosition += 20;
+                    gfx.DrawString($"Tổng tiền: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center);
 
-                    yPosition += 10;
-                    gfx.DrawString($"Tổng tiền: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center); // Định dạng tiền tệ VND
-
+                    // Save PDF
                     pdfDoc.Save(filePath);
 
                     MessageBox.Show($"Hóa đơn đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1315,6 +1399,7 @@ namespace RestaurantManager.ViewModels
                 MessageBox.Show("Bạn đã hủy lưu hóa đơn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
         public void LoadOrderUC()
         {
             var items = DataProvider.Instance.DB.Receipts

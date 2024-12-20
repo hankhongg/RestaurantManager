@@ -64,7 +64,9 @@
     <Resource Include="Views\Images\key.png" />
     <Resource Include="Views\Images\login.png" />
     <Resource Include="Views\Images\login_black.png" />
-    <Resource Include="Views\Images\logo.png" />
+    <Resource Include="Views\Images\logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Views\Images\menu_black.png" />
     <Resource Include="Views\Images\minimize.png" />
     <Resource Include="Views\UserControls\Images\employee.png" />
