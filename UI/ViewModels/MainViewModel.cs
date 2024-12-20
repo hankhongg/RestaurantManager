@@ -1,4 +1,5 @@
 ﻿using LiveCharts;
+using iTextSharp.text.pdf;
 using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
@@ -17,6 +18,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
+using System.Drawing;
+using System.Globalization;
+using PdfDocument = PdfSharpCore.Pdf.PdfDocument;
+using PdfPage = PdfSharpCore.Pdf.PdfPage;
+using System.Windows.Diagnostics;
 using UI.Views;
 using XAct;
 
@@ -413,8 +421,7 @@ namespace RestaurantManager.ViewModels
         public Func<double, string> YFormatter { get; set; }
         private DateTime startDate = DateTime.Now.Date;
         private DateTime endDate = DateTime.Now.Date.AddDays(1) ;
-        //private DateTime startDate = DateTime.ParseExact("16/12/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-        //private DateTime endDate = DateTime.ParseExact("19/12/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
 
         public DateTime StartDate 
         {
@@ -459,43 +466,89 @@ namespace RestaurantManager.ViewModels
 
         public void LoadChartData()
         {
+            YFormatter = value => value.ToString("N0");
 
-            var calculatedProfit = DataProvider.Instance.DB.FinancialHistories.Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date).GroupBy(x => x.FinDate).Select(g => new
-            {
-                Date = g.Key,
-                Income = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount),
-                Expense = g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount),
-                Profit = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount) - g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount)
-            }).ToList();
+            var calculatedProfit = DataProvider.Instance.DB.FinancialHistories
+                .Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date)
+                .GroupBy(x => x.FinDate.Date)  
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Income = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount),
+                    Expense = g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount),
+                    Profit = g.Where(x => x.Type == "INCOME").Sum(x => x.Amount) - g.Where(x => x.Type == "EXPENSE").Sum(x => x.Amount)
+                }).ToList();
+
             if (calculatedProfit.Count == 0)
             {
-                IncomeValues = new ChartValues<decimal> { 0};
-                ExpenseValues = new ChartValues<decimal> { 0};
+                IncomeValues = new ChartValues<decimal> { 0 };
+                ExpenseValues = new ChartValues<decimal> { 0 };
                 ProfitValues = new ChartValues<decimal> { 0 };
                 Labels = new List<string> { "Không có dữ liệu" };
                 return;
             }
+
+            if ((EndDate - StartDate).Days == 31)
+            {
+                calculatedProfit = calculatedProfit
+                    .GroupBy(x => x.Date.Day)
+                    .Select(g => new
+                    {
+                        Date = g.First().Date,
+                        Income = g.Sum(x => x.Income),
+                        Expense = g.Sum(x => x.Expense),
+                        Profit = g.Sum(x => x.Profit)
+                    }).ToList();
+            }
+            else if ((EndDate - StartDate).Days == 365)
+            {
+                calculatedProfit = calculatedProfit
+                    .GroupBy(x => new { x.Date.Year, x.Date.Month })
+                    .Select(g => new
+                    {
+                        Date = new DateTime(g.Key.Year, g.Key.Month, 1),
+                        Income = g.Sum(x => x.Income),
+                        Expense = g.Sum(x => x.Expense),
+                        Profit = g.Sum(x => x.Profit)
+                    }).ToList();
+            }
+
             IncomeValues = new ChartValues<decimal>(calculatedProfit.Select(x => x.Income));
             ExpenseValues = new ChartValues<decimal>(calculatedProfit.Select(x => x.Expense));
+
             foreach (var profit in calculatedProfit)
             {
-                var existedProfit = DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate == profit.Date && x.Type == "PROFIT").FirstOrDefault();
+                var existedProfit = DataProvider.Instance.DB.FinancialHistories
+                    .Where(x => x.FinDate.Date == profit.Date && x.Type == "PROFIT").FirstOrDefault();
+
                 if (existedProfit != null)
                 {
                     existedProfit.Amount = profit.Profit;
                 }
                 else
                 {
-                    var entryProfit = new FinancialHistory { Amount = profit.Profit, FinDate = profit.Date, Type = "PROFIT" };
+                    var entryProfit = new FinancialHistory
+                    {
+                        Amount = profit.Profit,
+                        FinDate = profit.Date,
+                        Type = "PROFIT"
+                    };
                     DataProvider.Instance.DB.FinancialHistories.Add(entryProfit);
                 }
             }
+
             DataProvider.Instance.DB.SaveChanges();
 
-            ProfitValues = new ChartValues<decimal>(DataProvider.Instance.DB.FinancialHistories.Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date && con.Type == "PROFIT").GroupBy(x => x.FinDate).Select(g => g.Sum(x => x.Amount)));
-            //MessageBox.Show($"Income: {IncomeValues[0]}\n Expense: {ExpenseValues[0]}\n Profit: {ProfitValues[0]} ");
+            ProfitValues = new ChartValues<decimal>(
+                DataProvider.Instance.DB.FinancialHistories
+                    .Where(con => con.FinDate.Date <= EndDate.Date && con.FinDate.Date >= StartDate.Date && con.Type == "PROFIT")
+                    .GroupBy(x => x.FinDate.Date)  
+                    .Select(g => g.Sum(x => x.Amount))
+            );
+
             UpdateLabels();
         }
+
 
         public void LoadFinancialData()
         {
@@ -508,15 +561,40 @@ namespace RestaurantManager.ViewModels
             BillToday = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == today).Count();
             BillYesterday = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == yesterday).Count();
 
+            //Stockin stockin = DataProvider.Instance.DB.Stockins.OrderByDescending(x => x.StoDate).FirstOrDefault();
+            //var newFinancial = new FinancialHistory { ReferenceType = "STOCKIN", ReferenceId = stockin.StoId,Description="Chi phí nhập kho" ,Amount = stockin.StoPrice, FinDate = stockin.StoDate, Type = "EXPENSE" };
+
             // truy dữ liệu cho nhân viên có hiệu suất làm việc cao nhất hôm nay và hôm qua
             // lấy số lượng booking và receipt của các nhân viên theo ngày
-            var todayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == today).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
+            var todayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == today && x.BkStatus == 0).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
             var todayNhanViensReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == today).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, ReceiptCount = g.Count() });
-            var yesterdayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == yesterday).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
+            var yesterdayNhanViensBooking = DataProvider.Instance.DB.Bookings.Where(x => x.BkStime.Date == yesterday && x.BkStatus == 0).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, BookingCount = g.Count() });
             var yesterdayNhanViensReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecTime.Date == yesterday).GroupBy(x => x.EmpId).Select(g => new { EmpId = g.Key, ReceiptCount = g.Count() });
+
             // cộng lại số lượng booking và receipt của mỗi nhân viên
-            var todayNhanViensPer = todayNhanViensBooking.Join(todayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
-            var yesterdayNhanViensPer = yesterdayNhanViensBooking.Join(yesterdayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
+            //var todayNhanViensPer = todayNhanViensBooking.Join(todayNhanViensReceipt, x => x.EmpId, y => y.EmpId, (x, y) => new { x.EmpId, PerformanceCount = x.BookingCount + y.ReceiptCount });
+            var todayNhanViensBookingData = todayNhanViensBooking.Select(x => new { x.EmpId, PerformanceCount = x.BookingCount });
+            var todayNhanViensReceiptData = todayNhanViensReceipt.Select(x => new { x.EmpId, PerformanceCount = x.ReceiptCount });
+            var todayNhanViensPer = todayNhanViensBookingData
+                            .Union(todayNhanViensReceiptData)
+                            .GroupBy(x => x.EmpId)  
+                            .Select(g => new
+                            {
+                                EmpId = g.Key,
+                                PerformanceCount = g.Sum(x => x.PerformanceCount)  
+                            });
+            var yesterdayNhanViensBookingData = yesterdayNhanViensBooking.Select(x => new { x.EmpId, PerformanceCount = x.BookingCount });
+            var yesterdayNhanViensReceiptData = yesterdayNhanViensReceipt.Select(x => new { x.EmpId, PerformanceCount = x.ReceiptCount });
+            var yesterdayNhanViensPer = yesterdayNhanViensBookingData
+                            .Union(yesterdayNhanViensReceiptData)
+                            .GroupBy(x => x.EmpId)
+                            .Select(g => new
+                            {
+                                EmpId = g.Key,
+                                PerformanceCount = g.Sum(x => x.PerformanceCount)
+                            });
+
+
             // tìm id của nhân viên có hiệu suất cao nhất
             int? todayPerEmpID = todayNhanViensPer.Count() > 0 ? todayNhanViensPer.OrderByDescending(x => x.PerformanceCount).FirstOrDefault().EmpId : 0;
             int? yesterdayPerEmpID = yesterdayNhanViensPer.Count() > 0 ? yesterdayNhanViensPer.OrderByDescending(x => x.PerformanceCount).FirstOrDefault().EmpId : 0;
@@ -528,7 +606,73 @@ namespace RestaurantManager.ViewModels
             NhanVienYesterday = yesterdayPerEmpID != 0 ? DataProvider.Instance.DB.Employees.Where(x => x.EmpId == yesterdayPerEmpID).Select(x => x.EmpName).FirstOrDefault() : "Không có";
         }
 
+        public ICommand RefreshChartDataCommand { get; set; }
 
+
+        // bill management
+        //--Order
+
+        private ObservableCollection<OrderViewModel> _Orderuc;
+
+        public ObservableCollection<OrderViewModel> Orderuc
+
+        {
+
+            get { return _Orderuc; }
+
+            set
+
+            {
+
+                _Orderuc = value;
+
+                OnPropertyChanged();
+
+            }
+
+        }
+
+        private OrderViewModel _selectedFoodItemBill;
+
+        public OrderViewModel SelectedFoodItemBill
+
+        {
+
+            get => _selectedFoodItemBill;
+
+            set
+
+            {
+
+                _selectedFoodItemBill = value;
+
+                OnPropertyChanged();
+
+                // Khi thay đổi SelectedFoodItem, các nút tự động cập nhật trạng thái
+
+                CommandManager.InvalidateRequerySuggested();
+
+            }
+
+        }
+
+        private bool areYouSure()
+
+        {
+
+            var result = MessageBox.Show("Bạn có chắc chắn muốn thanh toán hóa đơn?", "Thông báo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            return result == MessageBoxResult.Yes;
+
+        }
+
+
+
+        public ICommand EditOrderCommand { get; set; }
+
+        public ICommand PayBillCommand { get; set; }
+
+        //--
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
@@ -572,6 +716,7 @@ namespace RestaurantManager.ViewModels
             LoadAllFOODInstock();
             LoadAllBookingInformation();
             LoadAllTableInformation();
+            LoadOrderUC();
             
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
@@ -1160,6 +1305,202 @@ namespace RestaurantManager.ViewModels
                 LoadAllTableInformation();
                 LoadAllBookingInformation();
             });
+            RefreshChartDataCommand = new RelayCommand<object>((p) => { return true; }, (p) => { LoadFinancialData(); LoadChartData(); OnPropertyChanged(nameof(InfoIncomeVMs));
+                    InfoIncomeVMs = new ObservableCollection<InfoIncomeViewModel>
+                    {
+                        new InfoIncomeViewModel("Images/money.png")
+                        {
+                            TextToday = string.Format("Doanh thu hôm nay: {0:0,0} VNĐ", IncomeToday),
+                            TextYesterday = string.Format("Doanh thu hôm qua: {0:0,0} VNĐ", IncomeYesterday),
+                            ValueToday = IncomeToday,
+                            ValueYesterday = IncomeYesterday,
+                            MaxValue = (double)Math.Max(IncomeToday, IncomeYesterday),
+                        },
+                        new InfoIncomeViewModel("Images/receipt.png")
+                        {
+                            TextToday = $"Số hóa đơn hôm nay: {BillToday} hóa đơn",
+                            TextYesterday = $"Số hóa đơn hôm qua: {BillYesterday} hóa đơn",
+                            ValueToday = BillToday,
+                            ValueYesterday = BillYesterday,
+                            MaxValue = Math.Max(BillToday, BillYesterday),
+                        },
+                        new InfoIncomeViewModel("Images/res_worker.png")
+                        {
+                            TextToday = $"Nhân viên của hôm nay: {NhanVienToday}",
+                            TextYesterday = $"Nhân viên của hôm qua: {NhanVienYesterday}",
+                            ValueToday = NhanVienTodayPer,
+                            ValueYesterday = NhanVienYesterdayPer,
+                        }
+                    };
+            });
+
+            // order management
+            AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
+
+            {
+
+                FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
+
+                FoodLayoutViewModel foodLayoutViewModel = new FoodLayoutViewModel();
+
+                foodLayoutViewModel.Bills.Clear();
+
+                foodLayoutViewModel.SelectedEmpId = null;
+
+                foodLayoutViewModel.SelectedTabNum = null;
+
+                foodLayoutWindow.DataContext = foodLayoutViewModel;
+
+                foodLayoutWindow.ShowDialog();
+
+                LoadOrderUC();
+
+                LoadAllTableInformation();
+
+            }
+
+);
+
+            EditOrderCommand = new RelayCommand<OrderViewModel>((p) => { return true; }, (p) =>
+
+            {
+
+                FoodLayoutWindow selectedFoodLayout = new FoodLayoutWindow();
+
+                var foodLayoutVM = selectedFoodLayout.DataContext as FoodLayoutViewModel;
+
+                Receipt selectedReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecId == p.RecId).FirstOrDefault();
+
+                if (foodLayoutVM != null)
+
+                {
+
+                    foodLayoutVM.LoadOrderInformation(selectedReceipt);
+
+                    //foodLayoutVM.OrderManagementID = 1;
+
+                    foodLayoutVM.IsEditing = true;
+
+                    foodLayoutVM.InputTabNum = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == selectedReceipt.TabId).FirstOrDefault().TabNum;
+
+                    foodLayoutVM.InputReceipt = selectedReceipt;
+
+                    selectedFoodLayout.ShowDialog();
+
+                }
+
+                LoadOrderUC();
+
+                LoadAllTableInformation();
+
+            });
+
+            PayBillCommand = new RelayCommand<OrderViewModel>(
+
+            (p) => { return true; }, // CanExecute
+
+            (p) =>
+
+            {
+
+                if (areYouSure() == true)
+
+                {
+
+                    SelectedFoodItemBill = p;
+
+                    var receipt = DataProvider.Instance.DB.Receipts.FirstOrDefault(r => r.RecId == SelectedFoodItemBill.RecId);
+
+                    if (receipt != null)
+
+                    {
+
+                        receipt.RecCode = string.Empty;
+
+                        receipt.Isdeleted = true; // Cập nhật trạng thái hóaddon
+
+                        FinancialHistory financialHistory = new FinancialHistory
+                        {
+                            FinDate = receipt.RecTime,
+                            Amount = receipt.RecPay,
+                            Type = "INCOME",
+                            Description = $"Thanh toán hóa đơn {receipt.RecId}",
+                            ReferenceId = receipt.RecId,
+                            ReferenceType = "RECEIPT"
+                        };
+                        DataProvider.Instance.DB.FinancialHistories.Add(financialHistory);
+                        DiningTable table = DataProvider.Instance.DB.DiningTables.FirstOrDefault(t => t.TabId == receipt.TabId);
+                        table.TabStatus = true; // Cập nhật trạng thái bàn
+
+                        DataProvider.Instance.DB.SaveChanges();
+
+                        // Tính lại số thứ tự cho danh sách
+
+                        int index = 1;
+
+                        foreach (var order in Orderuc)
+
+                        {
+
+                            order.OrderNumber = index++;
+
+                        }
+                        OnPropertyChanged(nameof(Orderuc));
+                    }
+
+
+
+                    // Tạo file PDF hóa đơn
+
+                    try
+
+                    {
+
+                        var receiptDetails = DataProvider.Instance.DB.ReceiptDetails
+
+                            .Where(rd => rd.RecId == SelectedFoodItemBill.RecId)
+
+                            .ToList();
+
+
+
+                        ExportOrderToPDF(
+
+                            SelectedFoodItemBill.OrderNumber,
+
+                            SelectedFoodItemBill.OrderBill,
+
+                            SelectedFoodItemBill.OrderTimer,
+
+                            receiptDetails
+
+                        );
+
+                        // Xóa hóa đơn khỏi danh sách hiển thị
+
+
+
+                        //  MessageBox.Show("Hóa đơn đã được thanh toán và lưu thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    }
+
+                    catch (Exception ex)
+
+                    {
+
+                        MessageBox.Show($"Đã xảy ra lỗi khi tạo hóa đơn: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    }
+
+                }
+
+                LoadAllTableInformation();
+                LoadOrderUC();
+
+            });
+
+
+
         }
         public void LoadAllTableInformation()
         {
@@ -1225,5 +1566,227 @@ namespace RestaurantManager.ViewModels
             ExistedBooking = $"Booking hiện có ({BookingViewList.Count()})";
             //BookingViewList.Clear();
         }
-    }
+
+            public void ExportOrderToPDF(int ordernum, decimal bill, DateTime recTime, List<ReceiptDetail> receiptDetails)
+
+            {
+
+                var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+
+                {
+
+                    Title = "Chọn nơi lưu hóa đơn",
+
+                    Filter = "PDF Files (*.pdf)|*.pdf",
+
+                    DefaultExt = ".pdf",
+
+                    OverwritePrompt = true
+
+                };
+
+
+
+                if (saveFileDialog.ShowDialog() == true)
+
+                {
+
+                    string filePath = saveFileDialog.FileName;
+
+
+
+                    try
+
+                    {
+
+                        PdfDocument pdfDoc = new PdfDocument();
+
+                        pdfDoc.Info.Title = "Hóa đơn thanh toán";
+
+                        PdfPage page = pdfDoc.AddPage();
+
+                        XGraphics gfx = XGraphics.FromPdfPage(page);
+
+
+
+                        XFont titleFont = new XFont("Arial", 24, XFontStyle.Bold);
+
+                        XFont headerFont = new XFont("Arial", 12, XFontStyle.Bold);
+
+                        XFont regularFont = new XFont("Arial", 10);
+
+
+
+                        // Draw title
+
+                        gfx.DrawString("Hóa đơn thanh toán", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
+
+
+
+                        // Draw logo
+
+                        XImage logo = XImage.FromFile("C:\\Users\\Admin\\Downloads\\KTPM\\3rd Semester\\VP\\BCCK\\RestaurantManager-master\\UI\\Views\\Images\\logo.png");
+
+                        gfx.DrawImage(logo, 20, 20, 50, 50);
+
+
+
+                        // Draw general receipt information
+
+                        gfx.DrawString($"Mã hóa đơn: {ordernum}", regularFont, XBrushes.Black, new XPoint(50, 100));
+
+                        gfx.DrawString($"Ngày giờ: {recTime.ToString("dd/MM/yyyy HH:mm:ss")}", regularFont, XBrushes.Black, new XPoint(50, 120));
+
+
+
+                        // Draw table headers
+
+                        int yPosition = 150;
+
+                        gfx.DrawString("STT", headerFont, XBrushes.Black, new XPoint(50, yPosition));
+
+                        gfx.DrawString("Tên món", headerFont, XBrushes.Black, new XPoint(100, yPosition));
+
+                        gfx.DrawString("SL", headerFont, XBrushes.Black, new XPoint(250, yPosition));
+
+                        gfx.DrawString("Đơn giá", headerFont, XBrushes.Black, new XPoint(300, yPosition));
+
+                        gfx.DrawString("Thành tiền", headerFont, XBrushes.Black, new XPoint(400, yPosition));
+
+                        yPosition += 20;
+
+
+
+                        // Draw receipt details
+
+                        int index = 1;
+
+                        foreach (var detail in receiptDetails)
+
+                        {
+
+                            string itemName = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemId == detail.ItemId)?.ItemName ?? "Không tìm thấy";
+
+                            gfx.DrawString(index.ToString(), regularFont, XBrushes.Black, new XPoint(50, yPosition));
+
+                            gfx.DrawString(itemName, regularFont, XBrushes.Black, new XPoint(100, yPosition));
+
+                            gfx.DrawString(detail.Quantity.ToString(), regularFont, XBrushes.Black, new XPoint(250, yPosition));
+
+                            gfx.DrawString(detail.Price.ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(300, yPosition));
+
+                            gfx.DrawString((detail.Price * detail.Quantity).ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(400, yPosition));
+
+                            yPosition += 20;
+
+
+
+                            // Move to the next page if needed
+
+                            if (yPosition > page.Height - 50)
+
+                            {
+
+                                page = pdfDoc.AddPage();
+
+                                gfx = XGraphics.FromPdfPage(page);
+
+                                yPosition = 50; // Reset Y position for new page
+
+                            }
+
+                            index++;
+
+                        }
+
+
+
+                        // Draw total amount
+
+                        yPosition += 20;
+
+                        gfx.DrawString($"Tổng tiền: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center);
+
+
+
+                        // Save PDF
+
+                        pdfDoc.Save(filePath);
+
+
+
+                        MessageBox.Show($"Hóa đơn đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                        Orderuc.Remove(SelectedFoodItemBill);
+
+                    }
+
+                    catch (Exception ex)
+
+                    {
+
+                        MessageBox.Show($"Đã xảy ra lỗi khi lưu file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    }
+
+                }
+
+                else
+
+                {
+
+                    MessageBox.Show("Bạn đã hủy lưu hóa đơn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                }
+
+            }
+
+
+
+            public void LoadOrderUC()
+
+            {
+
+                var items = DataProvider.Instance.DB.Receipts
+
+                              .Where(receipt => receipt.Isdeleted == false) // Lọc hóa đơn chưa thanh toán
+
+                              .OrderBy(receipt => receipt.RecId)  // Sắp xếp theo RecId
+
+                              .ToList();
+
+                //byte? tableNum = DataProvider.Instance.DB.DiningTables.Where(x => x.TabStatus == true).FirstOrDefault()?.TabNum;
+
+                // Chuyển đổi danh sách hóa đơn thành ObservableCollection<OrderViewModel>
+
+                Orderuc = new ObservableCollection<OrderViewModel>(
+
+                    items.Select((item, index) => new OrderViewModel
+
+                    {
+
+                        RecId = item.RecId,
+
+                        OrderBill = item.RecPay,
+
+                        OrderTimer = item.RecTime,
+
+                        OrderNumber = index + 1, // Số thứ tự bắt đầu từ 1
+
+                        OrderEmployee = (int)item.EmpId,
+
+                        OrderTable = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == item.TabId).FirstOrDefault()?.TabNum ?? 0
+
+                    })
+
+                );
+
+
+
+                OnPropertyChanged(nameof(Orderuc)); // Thông báo cập nhật giao diện
+            }
+
+
+
+        }
 }

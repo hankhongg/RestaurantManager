@@ -1,7 +1,9 @@
 ﻿using RestaurantManager.Models.DataProvider;
+using RestaurantManager.Views.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,8 +11,8 @@ namespace RestaurantManager.ViewModels
 {
     class OrderViewModel : BaseViewModel
     {
-        private string orderNumber;
-        public string OrderNumber
+        private int orderNumber;
+        public int OrderNumber
         {
             get
             {
@@ -23,8 +25,8 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        private string orderTimer;
-        public string OrderTimer
+        private DateTime orderTimer;
+        public DateTime OrderTimer
         {
             get
             {
@@ -37,8 +39,8 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        private string orderEmployee;
-        public string OrderEmployee
+        private int orderEmployee;
+        public int OrderEmployee
         {
             get
             {
@@ -64,8 +66,8 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string orderTable;
-        public string OrderTable
+        private byte? orderTable;
+        public byte? OrderTable
         {
             get
             {
@@ -78,8 +80,8 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        private string orderBill;
-        public string OrderBill
+        private decimal orderBill;
+        public decimal OrderBill
         {
             get
             {
@@ -91,19 +93,37 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
+        private decimal orderRecid;
+        public decimal OrderRecid
+        {
+            get
+            {
+                return orderRecid;
+            }
+            set
+            {
+                orderRecid = value;
+                OnPropertyChanged();
+            }
+        }
 
+        public int RecId { get; internal set; }
+
+        public OrderViewModel()
+        {
+            LoadOrderInformation();
+        }
         void LoadOrderInformation()
         {
             // load order information from foodlayoutwindow
         }
-        public OrderViewModel()
+        public void SetorderItemData(int ordernum, decimal orderbill, int orderem, byte? ordertab, DateTime ordertimer)
         {
-            OrderBill = "1.000.000";
-            OrderCustomer = "Nguyễn Văn A";
-            OrderEmployee = "Nguyễn Văn B";
-            OrderNumber = "1";
-            OrderTimer = "00:00:00";
-            OrderTable = "1";
+            this.OrderRecid = ordernum;
+            this.OrderBill = orderbill;
+            this.OrderEmployee = orderem;
+            this.OrderTable = ordertab;
+            this.OrderTimer = ordertimer;
 
         }
     }

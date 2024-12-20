@@ -126,10 +126,18 @@
                                                 <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}" Width="200" Height="40" 
                                                             VerticalAlignment="Center" FontSize="20" Language="en-GB"/>
                                             </StackPanel>
-                                            
+
                                             
                                         </StackPanel>
-                                        
+                                        <Image Margin="15,5" VerticalAlignment="Center"
+                                                Source="Images/refresh.png" HorizontalAlignment="Right">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                    <i:InvokeCommandAction Command="{Binding RefreshChartDataCommand}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+
                                     </Grid>
 
                                     <Grid Grid.Row="1">
@@ -514,9 +522,63 @@
 
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
                     <Grid Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,592,0">
-                        <WrapPanel Margin="30" x:Name="tablePanel">
-                            <orderUC:OrderUC Height="210" Width="320"></orderUC:OrderUC>
-                        </WrapPanel>
+                        <!-- Danh sách món ăn -->
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+
+                            <ItemsControl ItemsSource="{Binding Orderuc}">
+
+                                <ItemsControl.ItemsPanel>
+
+                                    <ItemsPanelTemplate>
+
+                                        <WrapPanel Orientation="Horizontal" />
+
+                                    </ItemsPanelTemplate>
+
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+
+                                    <DataTemplate>
+
+                                        <StackPanel>
+
+                                            <orderUC:OrderUC Height="200" Width="300" Margin="10" DataContext="{Binding}">
+
+                                                <i:Interaction.Triggers>
+
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+
+                                                        <i:InvokeCommandAction Command="{Binding DataContext.EditOrderCommand , RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+
+                                                                CommandParameter="{Binding}"/>
+
+                                                    </i:EventTrigger>
+
+                                                    <i:EventTrigger EventName="MouseRightButtonDown">
+
+                                                        <i:InvokeCommandAction Command="{Binding DataContext.PayBillCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+
+                                                                               CommandParameter="{Binding}"/>
+
+                                                    </i:EventTrigger>
+
+
+
+                                                </i:Interaction.Triggers>
+
+                                            </orderUC:OrderUC>
+
+                                        </StackPanel>
+
+                                    </DataTemplate>
+
+                                </ItemsControl.ItemTemplate>
+
+                            </ItemsControl>
+
+                        </ScrollViewer>
                     </Grid>
 
                     <!--Cột 2 là nút tạo đơn mới-->
@@ -576,7 +638,7 @@
                         <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
                         <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>
                         <tableUC:TableUC Margin="38, 10" Width="190" Height="150"/>-->
-                        <WrapPanel Margin="10" x:Name="tableWrapPanel">
+                        <ScrollViewer Margin="10" x:Name="tableWrapPanel">
                             <ItemsControl ItemsSource="{Binding TableViewList}">
 
                                 <ItemsControl.ItemsPanel>
@@ -597,7 +659,7 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                        </WrapPanel>
+                        </ScrollViewer>
                     </Grid>
                     <Grid Grid.Row="1">
                         <StackPanel Margin="30,0, 30, 0"  HorizontalAlignment="Right" Orientation="Horizontal">
@@ -632,7 +694,7 @@
 
                     <!--Booking UC-->
                     <Grid Grid.Column="0">
-                        <WrapPanel Margin="10" x:Name="bookingWrapPanel">
+                        <ScrollViewer Margin="10" x:Name="bookingWrapPanel">
                             <ItemsControl ItemsSource="{Binding BookingViewList}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -653,7 +715,7 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                        </WrapPanel>
+                        </ScrollViewer>
                     </Grid>
 
                     <Grid Grid.Column="1">
