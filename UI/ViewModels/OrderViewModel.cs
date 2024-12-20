@@ -66,8 +66,8 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged();
             }
         }
-        private int orderTable;
-        public int OrderTable
+        private byte? orderTable;
+        public byte? OrderTable
         {
             get
             {
@@ -109,11 +109,15 @@ namespace RestaurantManager.ViewModels
 
         public int RecId { get; internal set; }
 
+        public OrderViewModel()
+        {
+            LoadOrderInformation();
+        }
         void LoadOrderInformation()
         {
             // load order information from foodlayoutwindow
         }
-        public void SetorderItemData(int ordernum, decimal orderbill, int orderem, int ordertab, DateTime ordertimer)
+        public void SetorderItemData(int ordernum, decimal orderbill, int orderem, byte? ordertab, DateTime ordertimer)
         {
             this.OrderRecid = ordernum;
             this.OrderBill = orderbill;
@@ -121,11 +125,6 @@ namespace RestaurantManager.ViewModels
             this.OrderTable = ordertab;
             this.OrderTimer = ordertimer;
 
-        }
-
-        public static implicit operator OrderViewModel(OrderUC v)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -62,35 +62,115 @@ namespace RestaurantManager.ViewModels
         }
 
         // Danh sách các món ăn
-        private ObservableCollection<FoodItemUCViewModel> _MenuItems;
-        public ObservableCollection<FoodItemUCViewModel> MenuItems
+        private ObservableCollection<FoodItemUCViewModel> foodItemUCViewModels;
+        public ObservableCollection<FoodItemUCViewModel> FoodItemUCViewModels
         {
-            get => _MenuItems;
+            get { return foodItemUCViewModels; }
             set
             {
-                _MenuItems = value;
-                OnPropertyChanged();
+                foodItemUCViewModels = value;
+                OnPropertyChanged(nameof(FoodItemUCViewModels));
+            }
+        }
+        private ObservableCollection<MenuItem> menuFoodItems;
+        public ObservableCollection<MenuItem> MenuFoodItems
+        {
+            get { return menuFoodItems; }
+            set
+            {
+                menuFoodItems = value;
+                OnPropertyChanged(nameof(MenuFoodItems));
             }
         }
 
+        // emp list
+        private ObservableCollection<Employee> empList;
+        public ObservableCollection<Employee> EmpList
+        {
+            get { return empList; }
+            set
+            {
+                empList = value;
+                OnPropertyChanged(nameof(EmpList));
+            }
+        }
+
+        private ObservableCollection<int> empIdList;
+        public ObservableCollection<int> EmpIdList
+        {
+            get { return empIdList; }
+            set
+            {
+                empIdList = value;
+                OnPropertyChanged(nameof(EmpIdList));
+            }
+        }
+
+        // selected
+        private int? selectedEmpId = -1;
+        public int? SelectedEmpId
+        {
+            get { return selectedEmpId; }
+            set
+            {
+                selectedEmpId = value;
+                OnPropertyChanged(nameof(SelectedEmpId));
+            }
+        }
+
+        private byte? selectedTabNum = null;
+        public byte? SelectedTabNum
+        {
+            get { return selectedTabNum; }
+            set
+            {
+                selectedTabNum = value;
+                OnPropertyChanged(nameof(SelectedTabNum));
+            }
+        }
+        private ObservableCollection<byte?> tabsNum;
+        public ObservableCollection<byte?> TabsNum
+        {
+            get { return tabsNum; }
+            set
+            {
+                tabsNum = value;
+                OnPropertyChanged(nameof(TabsNum));
+            }
+        }
+
+
+
+
+
+
         public void LoadMenuItems()
         {
-            var items = DataProvider.Instance.DB.MenuItems.ToList();
-
-            MenuItems = new ObservableCollection<FoodItemUCViewModel>(
-                items.Select(item =>
+            MenuFoodItems = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems.Where(x=> x.Isdeleted==false));
+            FoodItemUCViewModels = new ObservableCollection<FoodItemUCViewModel>(
+                MenuFoodItems.Select(item =>
                 {
                     var foodItemViewModel = new FoodItemUCViewModel();
                     foodItemViewModel.SetFoodItemData(item.ItemName, item.ItemImg, item.ItemSprice);
-                    foodItemViewModel.ItemType = item.ItemType;
+                    foodItemViewModel.FoodItemType = item.ItemType;
                     return foodItemViewModel;
                 })
             );
+            OnPropertyChanged(nameof(FoodItemUCViewModels));
+            //MenuItems = new ObservableCollection<FoodItemUCViewModel>(
+            //    items.Select(item =>
+            //    {
+            //        var foodItemViewModel = new FoodItemUCViewModel();
+            //        foodItemViewModel.SetFoodItemData(item.ItemName, item.ItemImg, item.ItemSprice);
+            //        foodItemViewModel.ItemType = item.ItemType;
+            //        return foodItemViewModel;
+            //    })
+            //);
 
             // Cập nhật FilteredMenuItems
-            FilteredMenuItems = CollectionViewSource.GetDefaultView(MenuItems);
+            FilteredMenuItems = CollectionViewSource.GetDefaultView(FoodItemUCViewModels);
 
-            MenuItems.CollectionChanged += (s, e) => OnPropertyChanged(nameof(MenuItems));
+            FoodItemUCViewModels.CollectionChanged += (s, e) => OnPropertyChanged(nameof(FoodItemUCViewModels));
         }
 
         public void AddBill(FoodItemUCViewModel selectedFoodItemBill)
@@ -102,11 +182,11 @@ namespace RestaurantManager.ViewModels
                 Bills = new ObservableCollection<BillUCViewModel>();
             }
 
-            var existingBill = Bills.FirstOrDefault(b => b.ItemName == selectedFoodItemBill.ItemName);
+            var existingBill = Bills.FirstOrDefault(b => b.ItemName == selectedFoodItemBill.FoodItemName);
             if (existingBill != null)
             {
                 // Nếu món ăn đã tồn tại, hiển thị thông báo
-                MessageBox.Show($"Đã thêm món: {selectedFoodItemBill.ItemName} vào hóa đơn");
+                MessageBox.Show($"Đã thêm món: {selectedFoodItemBill.FoodItemName} vào hóa đơn");
                 return;
             }
             else
@@ -120,10 +200,10 @@ namespace RestaurantManager.ViewModels
                 {
                     RecId = Bills.Count + 1,
                     // RecId = newRecId, // Giá trị RecId mới
-                    ItemName = selectedFoodItemBill.ItemName,
+                    ItemName = selectedFoodItemBill.FoodItemName,
                     Quantity = 1,
-                    ItemSprice = selectedFoodItemBill.ItemSprice,
-                    Price = selectedFoodItemBill.ItemSprice,
+                    ItemSprice = selectedFoodItemBill.FoodItemSprice,
+                    Price = selectedFoodItemBill.FoodItemSprice,
                     Isdeleted = 0
                 };
 
@@ -133,6 +213,37 @@ namespace RestaurantManager.ViewModels
             OnPropertyChanged(nameof(Bills));
         }
 
+        public void LoadOrderInformation(Receipt selectedReceipt)
+        {
+            // các hóa đơn
+            ObservableCollection<ReceiptDetail> receiptDetails = new ObservableCollection<ReceiptDetail>(
+                DataProvider.Instance.DB.ReceiptDetails
+                .Where(rd => rd.RecId == selectedReceipt.RecId)
+                .ToList()
+            );
+            Bills = new ObservableCollection<BillUCViewModel>(
+                receiptDetails.Select(rd =>
+                {
+                    var menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemId == rd.ItemId);
+                    return new BillUCViewModel
+                    {
+                        RecId = rd.RecId,
+                        ItemName = menuItem.ItemName,
+                        Quantity = rd.Quantity,
+                        ItemSprice = menuItem.ItemSprice,
+                        Price = rd.Quantity * menuItem.ItemSprice,
+                        Isdeleted = 0
+                    };
+                })
+            );
+
+            // load LẠI 1 bàn và 1 nhân viên ĐÃ CHỌN
+            SelectedTabNum = DataProvider.Instance.DB.DiningTables.Where(t => t.TabId == selectedReceipt.TabId).FirstOrDefault().TabNum;
+            SelectedEmpId = selectedReceipt.EmpId; 
+            TotalAmount = Bills.Sum(item => item.Price);
+
+
+        }
 
         // Món ăn được chọn
         private FoodItemUCViewModel _selectedFoodItem;
@@ -251,7 +362,7 @@ namespace RestaurantManager.ViewModels
                     bool matchesType = SelectedMenuItemType == MenuItemType.All ||
                                        menuItem.ItemTypeEnum == SelectedMenuItemType;
                     bool matchesSearch = string.IsNullOrWhiteSpace(SearchText) ||
-                                         menuItem.ItemName.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
+                                         menuItem.FoodItemName.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
 
                     return matchesType && matchesSearch;
                 }
@@ -279,6 +390,7 @@ namespace RestaurantManager.ViewModels
         {
             LoadMenuItems();
             LoadDiningTables();
+            LoadEmpList();
 
             FilterByFoodCommand = new RelayCommand<object>((p) => true, (p) => SelectedMenuItemType = MenuItemType.FOOD);
             FilterByDrinkCommand = new RelayCommand<object>((p) => true, (p) => SelectedMenuItemType = MenuItemType.DRINK);
@@ -331,7 +443,7 @@ namespace RestaurantManager.ViewModels
                (p) =>
                {
                    // Deselect tất cả các món ăn trước đó
-                   foreach (var item in MenuItems)
+                   foreach (var item in FoodItemUCViewModels)
                    {
                        item.IsSelected = false;
                    }
@@ -348,7 +460,7 @@ namespace RestaurantManager.ViewModels
                 (p) =>
                 {
                     // Logic xóa món ăn
-                    MessageBox.Show($"   Xóa thành công món ăn:   {SelectedFoodItem.ItemName}");
+                    MessageBox.Show($"   Xóa thành công món ăn:   {SelectedFoodItem.FoodItemName}");
                     // MenuItems.Remove(SelectedFoodItem);
                     SelectedFoodItem.IsSelected = false;
                     SelectedFoodItem = null; // Xóa xong thì bỏ chọn
@@ -386,18 +498,25 @@ namespace RestaurantManager.ViewModels
             SaveTemporaryInvoiceCommand = new RelayCommand<object>((p) =>
             {
                 // Điều kiện để nút "Lưu" khả dụng
-                return Bills != null && Bills.Count > 0 && !string.IsNullOrEmpty(SearchTextEm);
+                return Bills != null && Bills.Count > 0 && SelectedEmpId != -1 && SelectedTabNum != null;
             }, (p) =>
             {
 
-                // Chuyển đổi SearchText sang int
-                if (!int.TryParse(SearchTextEm, out int employeeId))
-                {
-                    MessageBox.Show("Employee ID phải là số nguyên hợp lệ!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+                //// Chuyển đổi SearchText sang int
+                //if (!int.TryParse(SearchTextEm, out int employeeId))
+                //{
+                //    MessageBox.Show("Employee ID phải là số nguyên hợp lệ!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                //    return;
+                //}
 
-                int selectedTabId = SelectedTabId;  // Lấy giá trị TabId từ ViewModel                     
+                //int selectedTabId = SelectedTabId;  // Lấy giá trị TabId từ ViewModel
+
+                //SelectedEmpId = SelectedEmp.EmpId;
+
+
+
+
+                int selectedTabId = DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabId;
                 string invoiceNumber = "HD" + (DataProvider.Instance.DB.Receipts.Count() + 1).ToString("D3");  // Tạo mã hóa đơn, như HD001, HD002, ...
                 DateTime currentTime = DateTime.Now;  // Thời gian hiện tại
                 decimal totalAmount = TotalAmount;  // Tính tổng tiền từ danh sách Bills
@@ -410,7 +529,7 @@ namespace RestaurantManager.ViewModels
                     RecPay = totalAmount,      // Tổng tiền (số tiền phải trả)
                     Isdeleted = true,     // Trạng thái xóa (đang lưu trữ)
                     TabId = selectedTabId,
-                    EmpId = employeeId,
+                    EmpId = SelectedEmpId,
 
                 };
 
@@ -458,9 +577,13 @@ namespace RestaurantManager.ViewModels
 
                 MessageBox.Show($"Hóa đơn đã lưu thành công!\nSố hóa đơn: {receipt.RecCode}",
                                 "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
+
+
+
                 // Xóa danh sách Bills và đặt lại tổng tiền
-                Bills.Clear();
-                TotalAmount = 0;
+                //Bills.Clear();
+                //TotalAmount = 0;
 
             });
 
@@ -474,38 +597,32 @@ namespace RestaurantManager.ViewModels
                 });
 
 
-            DiningTables = new ObservableCollection<DiningTable>(
-                DataProvider.Instance.DB.DiningTables
-                .Where(table => table.TabStatus) // Lọc chỉ các mục có TabStatus == true
-                .ToList()
-            );
-
-        }
-        private int _selectedTabId;
-        public int SelectedTabId
-        {
-            get { return _selectedTabId; }
-            set
-            {
-                if (_selectedTabId != value)
-                {
-                    _selectedTabId = value;
-                    OnPropertyChanged(nameof(SelectedTabId));
-                }
-            }
         }
 
-        public ObservableCollection<DiningTable> DiningTables { get; set; }
+
         public void LoadDiningTables()
         {
-            DiningTables = new ObservableCollection<DiningTable>(
+            TabsNum = new ObservableCollection<byte?>(
                 DataProvider.Instance.DB.DiningTables
-                .Where(table => table.TabStatus) // Chỉ lấy những mục có TabStatus == true
+                .Where(tab => tab.Isdeleted == false)
+                .Select(tab => tab.TabNum)
                 .ToList()
             );
-            OnPropertyChanged(nameof(DiningTables)); // Thông báo cập nhật danh sách
+            OnPropertyChanged(nameof(TabsNum));
         }
-
+        public void LoadEmpList()
+        {
+            EmpList = new ObservableCollection<Employee>(
+                DataProvider.Instance.DB.Employees
+                .Where(emp => emp.Isdeleted == false) 
+                .ToList()
+            );
+            OnPropertyChanged(nameof(EmpList));
+            EmpIdList = new ObservableCollection<int>(
+                EmpList.Select(emp => emp.EmpId)
+                .ToList()
+            );
+        }
 
 
     }

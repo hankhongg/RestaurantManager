@@ -23,6 +23,8 @@ using XAct;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
 using System.Globalization;
+using PdfDocument = PdfSharpCore.Pdf.PdfDocument;
+using PdfPage = PdfSharpCore.Pdf.PdfPage;
 
 namespace RestaurantManager.ViewModels
 {
@@ -357,7 +359,15 @@ namespace RestaurantManager.ViewModels
         }
         //--Order
         private ObservableCollection<OrderViewModel> _Orderuc;
-        public ObservableCollection<OrderViewModel> Orderuc;
+        public ObservableCollection<OrderViewModel> Orderuc
+        {
+            get { return _Orderuc; }
+            set
+            {
+                _Orderuc = value;
+                OnPropertyChanged();
+            }
+        }
         private OrderViewModel _selectedFoodItemBill;
         public OrderViewModel SelectedFoodItemBill
         {
@@ -370,8 +380,7 @@ namespace RestaurantManager.ViewModels
                 CommandManager.InvalidateRequerySuggested();
             }
         }
-        public ICommand MouseDownCommand { get; set; }
-        public ICommand RightClickCommand { get; set; }
+        public ICommand EditOrderCommand { get; set; }
         //--
 
         public void LoadFinancialData()
@@ -427,6 +436,7 @@ namespace RestaurantManager.ViewModels
             LoadAllFOODInstock();
             LoadAllBookingInformation();
             LoadAllTableInformation();
+            LoadOrderUC();
             
 
             WindowIsLoadedCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
@@ -464,7 +474,10 @@ namespace RestaurantManager.ViewModels
             AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
                 {
                     FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
+                    FoodLayoutViewModel foodLayoutViewModel = new FoodLayoutViewModel();
+                    foodLayoutWindow.DataContext = foodLayoutViewModel;
                     foodLayoutWindow.ShowDialog();
+                    LoadOrderUC();
                 }
             );
 
@@ -1003,155 +1016,171 @@ namespace RestaurantManager.ViewModels
                 LoadAllTableInformation();
                 LoadAllBookingInformation();
             });
-            MouseDownCommand = new RelayCommand<OrderViewModel>((p) => p != null,
-           (p)=>
-           {
-               // Gán hóa đơn được chọn dựa trên RecId
-               SelectedFoodItemBill = Orderuc.FirstOrDefault(o => o.RecId == p.RecId);
+            // MouseDownCommand = new RelayCommand<OrderViewModel>((p) => p != null,
+            //(p)=>
+            //{
+            //    // Gán hóa đơn được chọn dựa trên RecId
+            //    SelectedFoodItemBill = Orderuc.FirstOrDefault(o => o.RecId == p.RecId);
 
-               // Cập nhật giao diện
-               OnPropertyChanged(nameof(SelectedFoodItemBill));
-           });
-           RightClickCommand = new RelayCommand<OrderViewModel>((p) => p != null, 
-           (p) =>
-           {
+            //    // Cập nhật giao diện
+            //    OnPropertyChanged(nameof(SelectedFoodItemBill));
+            //});
+            //RightClickCommand = new RelayCommand<OrderViewModel>((p) => p != null, 
+            //(p) =>
+            //{
 
-                // Gán hóa đơn được chọn dựa trên RecId
-                SelectedFoodItemBill = Orderuc.FirstOrDefault(o => o.RecId == p.RecId);
+            //     // Gán hóa đơn được chọn dựa trên RecId
+            //     SelectedFoodItemBill = Orderuc.FirstOrDefault(o => o.RecId == p.RecId);
 
-                if (SelectedFoodItemBill == null)
-                {
-                    MessageBox.Show("Không tìm thấy hóa đơn được chọn!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                MessageBox.Show($"RecId của hóa đơn đã chọn: {SelectedFoodItemBill.RecId}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            //     if (SelectedFoodItemBill == null)
+            //     {
+            //         MessageBox.Show("Không tìm thấy hóa đơn được chọn!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            //         return;
+            //     }
+            //     //MessageBox.Show($"RecId của hóa đơn đã chọn: {SelectedFoodItemBill.RecId}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Mở cửa sổ FoodLayoutWindow
-                FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
-                var foodLayoutVM = foodLayoutWindow.DataContext as FoodLayoutViewModel;
+            //     // Mở cửa sổ FoodLayoutWindow
+            //     FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
+            //     var foodLayoutVM = foodLayoutWindow.DataContext as FoodLayoutViewModel;
 
+            //     if (foodLayoutVM != null)
+            //     {
+
+            //         // Lọc danh sách Bills chỉ lấy các bill có RecId giống với SelectedFoodItemBill.RecId
+            //         var currentBills = foodLayoutVM.Bills
+            //             .Where(b => b.RecId == SelectedFoodItemBill.RecId) // Chỉ chọn Bills có cùng RecId
+            //             .ToList();
+
+            //         // Truy cập vào ReceiptDetails từ cơ sở dữ liệu
+            //         var receiptDetails = DataProvider.Instance.DB.ReceiptDetails
+            //             .Where(rd => rd.RecId == SelectedFoodItemBill.RecId) // Lọc các ReceiptDetail có RecId giống với SelectedFoodItemBill.RecId
+            //             .ToList();
+
+            //         // Lặp qua các ReceiptDetail và tạo BillUCViewModel từ đó
+            //         foreach (var receiptDetail in receiptDetails)
+            //         {
+            //             // Tìm MenuItem tương ứng với ItemId từ ReceiptDetail
+            //             var menuItem = DataProvider.Instance.DB.MenuItems
+            //                 .FirstOrDefault(mi => mi.ItemId == receiptDetail.ItemId);
+
+            //             if (menuItem == null)
+            //             {
+            //                 // Nếu không tìm thấy MenuItem tương ứng, bỏ qua và tiếp tục
+            //                 MessageBox.Show($"Không tìm thấy món với ItemId: {receiptDetail.ItemId} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            //                 continue;
+            //             }
+
+            //             var newBill = new BillUCViewModel
+            //             {
+            //                 // Tạo RecId mới, bạn có thể tính toán giá trị RecId từ bills.Count hoặc cách khác
+            //                 RecId = currentBills.Count + 1,
+
+            //                 // Lấy các thuộc tính từ MenuItem và ReceiptDetail
+            //                 ItemName = menuItem.ItemName, // Lấy ItemName từ MenuItem
+            //                 Quantity = receiptDetail.Quantity,
+            //                 ItemSprice = menuItem.ItemSprice,  // Nếu có giá trị khác, bạn có thể thay đổi
+            //                 Price = receiptDetail.Quantity * menuItem.ItemSprice, // Tính giá tổng
+            //                 Isdeleted = 0 // Mặc định Isdeleted là 0
+            //             };
+
+            //             // Thêm Bill vào danh sách
+            //             currentBills.Add(newBill);
+            //         }
+
+            //         // Cập nhật lại Bills trong VM
+            //         foodLayoutVM.Bills = new ObservableCollection<BillUCViewModel>(currentBills);
+
+            //         // Cập nhật giao diện
+            //         foodLayoutVM.LoadBills();
+
+
+            //         // Chuyển dữ liệu vào VM
+            //         foodLayoutWindow.DataContext = foodLayoutVM;
+
+            //         // Mở cửa sổ FoodLayoutWindow
+            //         foodLayoutWindow.ShowDialog();
+
+            //         // Duyệt qua các ReceiptDetail hiện tại và cập nhật
+            //         foreach (var bill in currentBills)
+            //         {
+            //             // Tìm MenuItem tương ứng trong MenuItems
+            //             var menuItem = DataProvider.Instance.DB.MenuItems
+            //                 .FirstOrDefault(mi => mi.ItemName == bill.ItemName);
+
+            //             // Tìm ReceiptDetail trong cơ sở dữ liệu
+            //             var existingDetail = DataProvider.Instance.DB.ReceiptDetails
+            //                 .FirstOrDefault(rd => rd.RecId == SelectedFoodItemBill.RecId && rd.ItemId == menuItem.ItemId);
+
+            //             if (menuItem == null)
+            //             {
+            //                 MessageBox.Show($"Không tìm thấy món: {bill.ItemName} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            //                 continue;
+            //             }
+
+            //             if (existingDetail != null)
+            //             {
+            //                 // Cập nhật ReceiptDetail nếu đã tồn tại
+            //                 existingDetail.Quantity = bill.Quantity;
+            //                 existingDetail.Price = bill.Price;
+            //                 DataProvider.Instance.DB.ReceiptDetails.Update(existingDetail);
+            //             }
+            //             else
+            //             {
+            //                 // Thêm mới ReceiptDetail nếu chưa tồn tại
+            //                 var newDetail = new ReceiptDetail
+            //                 {
+            //                     RecId = SelectedFoodItemBill.RecId,
+            //                     ItemId = menuItem.ItemId,
+            //                     Quantity = bill.Quantity,
+            //                     Price = bill.Price
+            //                 };
+            //                 DataProvider.Instance.DB.ReceiptDetails.Add(newDetail);
+            //             }
+            //         }
+
+            //         // Tìm Receipt có RecId giống với SelectedFoodItemBill.RecId
+            //         var receiptToUpdate = DataProvider.Instance.DB.Receipts
+            //             .FirstOrDefault(r => r.RecId == SelectedFoodItemBill.RecId);
+
+            //         if (receiptToUpdate != null)
+            //         {
+
+            //             // Cập nhật các thuộc tính cần thay đổi
+            //             receiptToUpdate.EmpId = SelectedFoodItemBill.OrderEmployee;  // Cập nhật EmpId mới
+            //             receiptToUpdate.TabId = foodLayoutVM.SelectedTabId;  // Cập nhật TabId mới
+            //             receiptToUpdate.RecPay = foodLayoutVM.TotalAmount; // Cập nhật RecPay mới
+
+            //             // Không thay đổi các thuộc tính khác như RecId, RecCode, v.v.
+
+            //             // Lưu thay đổi vào cơ sở dữ liệu
+            //             DataProvider.Instance.DB.SaveChanges();
+
+            //             MessageBox.Show("Hóa đơn đã được cập nhật thành công!", "Thông báo");
+            //         }
+            //         else
+            //         {
+            //             MessageBox.Show("Không tìm thấy hóa đơn với RecId được chọn.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            //         }
+
+            //         // Tải lại giao diện OrderUC
+            //         LoadOrderUC();
+            //     }
+            // });
+
+            // order management
+            EditOrderCommand = new RelayCommand<OrderViewModel>((p) => { return true; }, (p) =>
+            {
+                FoodLayoutWindow selectedFoodLayout = new FoodLayoutWindow();
+                var foodLayoutVM = selectedFoodLayout.DataContext as FoodLayoutViewModel;
+                Receipt selectedReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecId == p.RecId).FirstOrDefault();
                 if (foodLayoutVM != null)
                 {
-
-                    // Lọc danh sách Bills chỉ lấy các bill có RecId giống với SelectedFoodItemBill.RecId
-                    var currentBills = foodLayoutVM.Bills
-                        .Where(b => b.RecId == SelectedFoodItemBill.RecId) // Chỉ chọn Bills có cùng RecId
-                        .ToList();
-
-                    // Truy cập vào ReceiptDetails từ cơ sở dữ liệu
-                    var receiptDetails = DataProvider.Instance.DB.ReceiptDetails
-                        .Where(rd => rd.RecId == SelectedFoodItemBill.RecId) // Lọc các ReceiptDetail có RecId giống với SelectedFoodItemBill.RecId
-                        .ToList();
-
-                    // Lặp qua các ReceiptDetail và tạo BillUCViewModel từ đó
-                    foreach (var receiptDetail in receiptDetails)
-                    {
-                        // Tìm MenuItem tương ứng với ItemId từ ReceiptDetail
-                        var menuItem = DataProvider.Instance.DB.MenuItems
-                            .FirstOrDefault(mi => mi.ItemId == receiptDetail.ItemId);
-
-                        if (menuItem == null)
-                        {
-                            // Nếu không tìm thấy MenuItem tương ứng, bỏ qua và tiếp tục
-                            MessageBox.Show($"Không tìm thấy món với ItemId: {receiptDetail.ItemId} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                            continue;
-                        }
-
-                        var newBill = new BillUCViewModel
-                        {
-                            // Tạo RecId mới, bạn có thể tính toán giá trị RecId từ bills.Count hoặc cách khác
-                            RecId = currentBills.Count + 1,
-
-                            // Lấy các thuộc tính từ MenuItem và ReceiptDetail
-                            ItemName = menuItem.ItemName, // Lấy ItemName từ MenuItem
-                            Quantity = receiptDetail.Quantity,
-                            ItemSprice = menuItem.ItemSprice,  // Nếu có giá trị khác, bạn có thể thay đổi
-                            Price = receiptDetail.Quantity * menuItem.ItemSprice, // Tính giá tổng
-                            Isdeleted = 0 // Mặc định Isdeleted là 0
-                        };
-
-                        // Thêm Bill vào danh sách
-                        currentBills.Add(newBill);
-                    }
-
-                    // Cập nhật lại Bills trong VM
-                    foodLayoutVM.Bills = new ObservableCollection<BillUCViewModel>(currentBills);
-
-                    // Cập nhật giao diện
-                    foodLayoutVM.LoadBills();
-
-
-                    // Chuyển dữ liệu vào VM
-                    foodLayoutWindow.DataContext = foodLayoutVM;
-
-                    // Mở cửa sổ FoodLayoutWindow
-                    foodLayoutWindow.ShowDialog();
-
-                    // Duyệt qua các ReceiptDetail hiện tại và cập nhật
-                    foreach (var bill in currentBills)
-                    {
-                        // Tìm MenuItem tương ứng trong MenuItems
-                        var menuItem = DataProvider.Instance.DB.MenuItems
-                            .FirstOrDefault(mi => mi.ItemName == bill.ItemName);
-
-                        // Tìm ReceiptDetail trong cơ sở dữ liệu
-                        var existingDetail = DataProvider.Instance.DB.ReceiptDetails
-                            .FirstOrDefault(rd => rd.RecId == SelectedFoodItemBill.RecId && rd.ItemId == menuItem.ItemId);
-
-                        if (menuItem == null)
-                        {
-                            MessageBox.Show($"Không tìm thấy món: {bill.ItemName} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                            continue;
-                        }
-
-                        if (existingDetail != null)
-                        {
-                            // Cập nhật ReceiptDetail nếu đã tồn tại
-                            existingDetail.Quantity = bill.Quantity;
-                            existingDetail.Price = bill.Price;
-                            DataProvider.Instance.DB.ReceiptDetails.Update(existingDetail);
-                        }
-                        else
-                        {
-                            // Thêm mới ReceiptDetail nếu chưa tồn tại
-                            var newDetail = new ReceiptDetail
-                            {
-                                RecId = SelectedFoodItemBill.RecId,
-                                ItemId = menuItem.ItemId,
-                                Quantity = bill.Quantity,
-                                Price = bill.Price
-                            };
-                            DataProvider.Instance.DB.ReceiptDetails.Add(newDetail);
-                        }
-                    }
-
-                    // Tìm Receipt có RecId giống với SelectedFoodItemBill.RecId
-                    var receiptToUpdate = DataProvider.Instance.DB.Receipts
-                        .FirstOrDefault(r => r.RecId == SelectedFoodItemBill.RecId);
-
-                    if (receiptToUpdate != null)
-                    {
-
-                        // Cập nhật các thuộc tính cần thay đổi
-                        receiptToUpdate.EmpId = SelectedFoodItemBill.OrderEmployee;  // Cập nhật EmpId mới
-                        receiptToUpdate.TabId = foodLayoutVM.SelectedTabId;  // Cập nhật TabId mới
-                        receiptToUpdate.RecPay = foodLayoutVM.TotalAmount; // Cập nhật RecPay mới
-
-                        // Không thay đổi các thuộc tính khác như RecId, RecCode, v.v.
-
-                        // Lưu thay đổi vào cơ sở dữ liệu
-                        DataProvider.Instance.DB.SaveChanges();
-
-                        MessageBox.Show("Hóa đơn đã được cập nhật thành công!", "Thông báo");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Không tìm thấy hóa đơn với RecId được chọn.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-
-                    // Tải lại giao diện OrderUC
-                    LoadOrderUC();
+                    foodLayoutVM.LoadOrderInformation(selectedReceipt);
+                    //foodLayoutVM.OrderManagementID = 1;
+                    
+                    selectedFoodLayout.ShowDialog();
                 }
+                LoadOrderUC();
             });
 
         }
@@ -1292,7 +1321,7 @@ namespace RestaurantManager.ViewModels
                           .Where(receipt => receipt.Isdeleted) // Lọc hóa đơn chưa thanh toán
                           .OrderBy(receipt => receipt.RecId)  // Sắp xếp theo RecId
                           .ToList();
-
+            //byte? tableNum = DataProvider.Instance.DB.DiningTables.Where(x => x.TabStatus == true).FirstOrDefault()?.TabNum;
             // Chuyển đổi danh sách hóa đơn thành ObservableCollection<OrderViewModel>
             Orderuc = new ObservableCollection<OrderViewModel>(
                 items.Select((item, index) => new OrderViewModel
@@ -1302,7 +1331,7 @@ namespace RestaurantManager.ViewModels
                     OrderTimer = item.RecTime,
                     OrderNumber = index + 1, // Số thứ tự bắt đầu từ 1
                     OrderEmployee = (int)item.EmpId,
-                    OrderTable = (int)item.TabId
+                    OrderTable = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == item.TabId).FirstOrDefault()?.TabNum ?? 0
                 })
             );
 

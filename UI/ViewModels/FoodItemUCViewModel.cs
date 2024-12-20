@@ -13,64 +13,48 @@ namespace RestaurantManager.ViewModels
 {
     class FoodItemUCViewModel : BaseViewModel
     {
+        private string foodItemName;
+        private string? foodItemImg;
+        private decimal foodItemSprice;
 
-
-        private string _itemImg;
-        private string _itemName;
-        private string _itemType;
-        private decimal _itemSprice;
-
-        public string ItemImg
+        public string FoodItemName
         {
-            get { return _itemImg; }
+            get => foodItemName;
             set
             {
-                if (_itemImg != value)
-                {
-                    _itemImg = value;
-                    OnPropertyChanged();
-                }
+                foodItemName = value;
+                OnPropertyChanged(nameof(FoodItemName));
+            }
+        }
+        public string FoodItemImg
+        {
+            get => foodItemImg;
+            set
+            {
+                foodItemImg = value;
+                OnPropertyChanged(nameof(FoodItemImg));
+            }
+        }
+        public decimal FoodItemSprice
+        {
+            get => foodItemSprice;
+            set
+            {
+                foodItemSprice = value;
+                OnPropertyChanged(nameof(FoodItemSprice));
+            }
+        }
+        private string foodItemType;
+        public string FoodItemType
+        {
+            get => foodItemType;
+            set
+            {
+                foodItemType = value;
+                OnPropertyChanged(nameof(FoodItemType));
             }
         }
 
-        public string ItemName
-        {
-            get { return _itemName; }
-            set
-            {
-                if (_itemName != value)
-                {
-                    _itemName = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public decimal ItemSprice
-        {
-            get { return _itemSprice; }
-            set
-            {
-                if (_itemSprice != value)
-                {
-                    _itemSprice = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        public string ItemType
-        {
-            get { return _itemType; }
-            set
-            {
-                if (_itemType != value)
-                {
-                    _itemType = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(ItemTypeEnum)); // Cập nhật cả giá trị enum khi chuỗi thay đổi
-                }
-            }
-        }
 
         // Thuộc tính Enum để sử dụng trong Filter
         public MenuItemType ItemTypeEnum
@@ -78,19 +62,23 @@ namespace RestaurantManager.ViewModels
             get
             {
                 // Chuyển đổi từ string sang enum, mặc định là Others nếu không khớp
-                if (Enum.TryParse(_itemType, true, out MenuItemType result))
+                if (Enum.TryParse(FoodItemType, true, out MenuItemType result))
                     return result;
 
                 return MenuItemType.OTHER;
             }
         }
 
+        public FoodItemUCViewModel()
+        {
+
+        }
 
         public void SetFoodItemData(string itemName, string itemImg, decimal itemSprice)
         {
-            this.ItemName = itemName;
-            this.ItemImg = itemImg;
-            this.ItemSprice = itemSprice;
+            this.FoodItemName = itemName;
+            this.FoodItemImg = itemImg;
+            this.FoodItemSprice = itemSprice;
 
 
         }

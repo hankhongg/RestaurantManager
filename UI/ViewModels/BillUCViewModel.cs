@@ -72,7 +72,7 @@ namespace RestaurantManager.ViewModels
 
             DecreaseQuantityCommand = new RelayCommand<object>(p => Quantity > 0, p =>
             {
-                if (Quantity > 0)
+                if (Quantity > 1)
                 {
                     Quantity--; // Giảm số lượng
                     Price -= ItemSprice; // Cập nhật giá
@@ -89,13 +89,6 @@ namespace RestaurantManager.ViewModels
                 {
                     parentVM.DeleteBillCommand.Execute(this);
                 });
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
     }

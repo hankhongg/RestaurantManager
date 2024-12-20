@@ -499,7 +499,14 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel>
-                                            <orderUC:OrderUC Height="200" Width="300" Margin="10" DataContext="{Binding}"></orderUC:OrderUC>
+                                            <orderUC:OrderUC Height="200" Width="300" Margin="10" DataContext="{Binding}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding DataContext.EditOrderCommand , RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                                CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </orderUC:OrderUC>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>

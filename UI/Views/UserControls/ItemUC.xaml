@@ -26,11 +26,11 @@
         <Grid>
 
             <!-- Food Image -->
-            <Image Source="{Binding ItemImg}" Stretch="Fill" Margin="0,0,0,1" />
+            <Image Source="{Binding FoodItemImg}" Stretch="Fill" Margin="0,0,0,1" />
 
             <!-- Price Label -->
             <Border  CornerRadius="10" Width="100" HorizontalAlignment="Left" Background="#FF00BAFF" Height="20" VerticalAlignment="Top" >
-                <TextBlock Text="{Binding ItemSprice}"
+                <TextBlock Text="{Binding FoodItemSprice}"
                  FontWeight="Bold"
                  Foreground="White"                
                  TextAlignment="Center"
@@ -53,7 +53,7 @@
                  FontSize="10" 
                  FontWeight="Bold" />-->
 
-                <TextBlock Text="{Binding ItemName}" HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="10" FontWeight="Bold" >
+                <TextBlock Text="{Binding FoodItemName}" HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="10" FontWeight="Bold" >
                     <TextBlock.Style>
                         <Style TargetType="TextBlock" >
                             <Setter Property="Foreground" Value="White" />
