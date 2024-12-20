@@ -607,66 +607,39 @@ namespace RestaurantManager.ViewModels
         }
 
         public ICommand RefreshChartDataCommand { get; set; }
-
-
         // bill management
         //--Order
-
         private ObservableCollection<OrderViewModel> _Orderuc;
 
         public ObservableCollection<OrderViewModel> Orderuc
-
         {
-
             get { return _Orderuc; }
-
             set
-
             {
-
                 _Orderuc = value;
-
                 OnPropertyChanged();
-
             }
-
         }
 
         private OrderViewModel _selectedFoodItemBill;
 
         public OrderViewModel SelectedFoodItemBill
-
         {
-
             get => _selectedFoodItemBill;
-
             set
-
             {
-
                 _selectedFoodItemBill = value;
-
                 OnPropertyChanged();
-
                 // Khi thay đổi SelectedFoodItem, các nút tự động cập nhật trạng thái
-
                 CommandManager.InvalidateRequerySuggested();
-
             }
-
         }
 
         private bool areYouSure()
-
         {
-
             var result = MessageBox.Show("Bạn có chắc chắn muốn thanh toán hóa đơn?", "Thông báo", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
             return result == MessageBoxResult.Yes;
-
         }
-
-
 
         public ICommand EditOrderCommand { get; set; }
 
@@ -749,12 +722,6 @@ namespace RestaurantManager.ViewModels
                         profileWindow.DataContext = profileVM;
                         profileWindow.ShowDialog();
                     }
-                }
-            );
-            AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
-                {
-                    FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
-                    foodLayoutWindow.ShowDialog();
                 }
             );
 
@@ -1032,6 +999,7 @@ namespace RestaurantManager.ViewModels
 
                     DataProvider.Instance.DB.SaveChanges();
 
+                    DeleteFinancialHistory();
                     StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
                 }
             });
@@ -1306,119 +1274,80 @@ namespace RestaurantManager.ViewModels
                 LoadAllBookingInformation();
             });
             RefreshChartDataCommand = new RelayCommand<object>((p) => { return true; }, (p) => { LoadFinancialData(); LoadChartData(); OnPropertyChanged(nameof(InfoIncomeVMs));
-                    InfoIncomeVMs = new ObservableCollection<InfoIncomeViewModel>
+                InfoIncomeVMs = new ObservableCollection<InfoIncomeViewModel>
+                {
+                    new InfoIncomeViewModel("Images/money.png")
                     {
-                        new InfoIncomeViewModel("Images/money.png")
-                        {
-                            TextToday = string.Format("Doanh thu hôm nay: {0:0,0} VNĐ", IncomeToday),
-                            TextYesterday = string.Format("Doanh thu hôm qua: {0:0,0} VNĐ", IncomeYesterday),
-                            ValueToday = IncomeToday,
-                            ValueYesterday = IncomeYesterday,
-                            MaxValue = (double)Math.Max(IncomeToday, IncomeYesterday),
-                        },
-                        new InfoIncomeViewModel("Images/receipt.png")
-                        {
-                            TextToday = $"Số hóa đơn hôm nay: {BillToday} hóa đơn",
-                            TextYesterday = $"Số hóa đơn hôm qua: {BillYesterday} hóa đơn",
-                            ValueToday = BillToday,
-                            ValueYesterday = BillYesterday,
-                            MaxValue = Math.Max(BillToday, BillYesterday),
-                        },
-                        new InfoIncomeViewModel("Images/res_worker.png")
-                        {
-                            TextToday = $"Nhân viên của hôm nay: {NhanVienToday}",
-                            TextYesterday = $"Nhân viên của hôm qua: {NhanVienYesterday}",
-                            ValueToday = NhanVienTodayPer,
-                            ValueYesterday = NhanVienYesterdayPer,
-                        }
-                    };
+                        TextToday = string.Format("Doanh thu hôm nay: {0:0,0} VNĐ", IncomeToday),
+                        TextYesterday = string.Format("Doanh thu hôm qua: {0:0,0} VNĐ", IncomeYesterday),
+                        ValueToday = IncomeToday,
+                        ValueYesterday = IncomeYesterday,
+                        MaxValue = (double)Math.Max(IncomeToday, IncomeYesterday),
+                    },
+                    new InfoIncomeViewModel("Images/receipt.png")
+                    {
+                        TextToday = $"Số hóa đơn hôm nay: {BillToday} hóa đơn",
+                        TextYesterday = $"Số hóa đơn hôm qua: {BillYesterday} hóa đơn",
+                        ValueToday = BillToday,
+                        ValueYesterday = BillYesterday,
+                        MaxValue = Math.Max(BillToday, BillYesterday),
+                    },
+                    new InfoIncomeViewModel("Images/res_worker.png")
+                    {
+                        TextToday = $"Nhân viên của hôm nay: {NhanVienToday}",
+                        TextYesterday = $"Nhân viên của hôm qua: {NhanVienYesterday}",
+                        ValueToday = NhanVienTodayPer,
+                        ValueYesterday = NhanVienYesterdayPer,
+                    }
+                };
             });
 
             // order management
             AddOrderCommand = new RelayCommand<object>((p) => { return true; }, (p) =>
-
             {
-
                 FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
-
                 FoodLayoutViewModel foodLayoutViewModel = new FoodLayoutViewModel();
-
                 foodLayoutViewModel.Bills.Clear();
-
-                foodLayoutViewModel.SelectedEmpId = null;
-
+                foodLayoutViewModel.SelectedEmpId = -1;
                 foodLayoutViewModel.SelectedTabNum = null;
-
                 foodLayoutWindow.DataContext = foodLayoutViewModel;
-
                 foodLayoutWindow.ShowDialog();
-
                 LoadOrderUC();
-
                 LoadAllTableInformation();
-
-            }
-
-);
+            });
 
             EditOrderCommand = new RelayCommand<OrderViewModel>((p) => { return true; }, (p) =>
-
             {
-
                 FoodLayoutWindow selectedFoodLayout = new FoodLayoutWindow();
-
                 var foodLayoutVM = selectedFoodLayout.DataContext as FoodLayoutViewModel;
-
                 Receipt selectedReceipt = DataProvider.Instance.DB.Receipts.Where(x => x.RecId == p.RecId).FirstOrDefault();
-
                 if (foodLayoutVM != null)
 
                 {
-
                     foodLayoutVM.LoadOrderInformation(selectedReceipt);
-
                     //foodLayoutVM.OrderManagementID = 1;
-
                     foodLayoutVM.IsEditing = true;
-
                     foodLayoutVM.InputTabNum = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == selectedReceipt.TabId).FirstOrDefault().TabNum;
-
                     foodLayoutVM.InputReceipt = selectedReceipt;
-
                     selectedFoodLayout.ShowDialog();
-
                 }
-
                 LoadOrderUC();
-
                 LoadAllTableInformation();
-
             });
 
             PayBillCommand = new RelayCommand<OrderViewModel>(
-
             (p) => { return true; }, // CanExecute
-
             (p) =>
-
             {
 
                 if (areYouSure() == true)
-
                 {
-
                     SelectedFoodItemBill = p;
-
                     var receipt = DataProvider.Instance.DB.Receipts.FirstOrDefault(r => r.RecId == SelectedFoodItemBill.RecId);
-
                     if (receipt != null)
-
                     {
-
                         receipt.RecCode = string.Empty;
-
                         receipt.Isdeleted = true; // Cập nhật trạng thái hóaddon
-
                         FinancialHistory financialHistory = new FinancialHistory
                         {
                             FinDate = receipt.RecTime,
@@ -1435,72 +1364,49 @@ namespace RestaurantManager.ViewModels
                         DataProvider.Instance.DB.SaveChanges();
 
                         // Tính lại số thứ tự cho danh sách
-
                         int index = 1;
 
                         foreach (var order in Orderuc)
-
                         {
-
                             order.OrderNumber = index++;
-
                         }
                         OnPropertyChanged(nameof(Orderuc));
                     }
 
-
-
                     // Tạo file PDF hóa đơn
-
                     try
-
                     {
-
                         var receiptDetails = DataProvider.Instance.DB.ReceiptDetails
-
                             .Where(rd => rd.RecId == SelectedFoodItemBill.RecId)
-
                             .ToList();
 
-
-
                         ExportOrderToPDF(
-
                             SelectedFoodItemBill.OrderNumber,
-
                             SelectedFoodItemBill.OrderBill,
-
                             SelectedFoodItemBill.OrderTimer,
-
                             receiptDetails
-
                         );
-
                         // Xóa hóa đơn khỏi danh sách hiển thị
-
-
-
                         //  MessageBox.Show("Hóa đơn đã được thanh toán và lưu thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     }
-
                     catch (Exception ex)
-
                     {
-
                         MessageBox.Show($"Đã xảy ra lỗi khi tạo hóa đơn: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-
                     }
-
                 }
-
                 LoadAllTableInformation();
                 LoadOrderUC();
-
             });
-
-
-
+        }
+        public void DeleteFinancialHistory()
+        {
+            var refFinancialHitory = DataProvider.Instance.DB.FinancialHistories.Where(x => x.ReferenceId == SelectedStockin.StoId).FirstOrDefault();
+            if (refFinancialHitory != null)
+            {
+                DataProvider.Instance.DB.FinancialHistories.Remove(refFinancialHitory);
+                DataProvider.Instance.DB.SaveChanges();
+            }
         }
         public void LoadAllTableInformation()
         {
@@ -1545,11 +1451,12 @@ namespace RestaurantManager.ViewModels
             BookingViewList = new ObservableCollection<BookingConfigurationViewModel>();
             //BookingWindow bookingWindow = new BookingWindow();
             //var bookingVM = bookingWindow.DataContext as BookingViewModel;
+            var currTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
             foreach (Booking booking in BookingList)
             {
                 if (booking.Isdeleted == false)
                 {
-                    if (booking.BkOtime < DateTime.Now.AddMinutes(5))
+                    if (currTime >= booking.BkOtime.AddMinutes(10))
                     {
                         booking.Isdeleted = true;
                         if (booking.Tab != null)
@@ -1568,225 +1475,115 @@ namespace RestaurantManager.ViewModels
         }
 
             public void ExportOrderToPDF(int ordernum, decimal bill, DateTime recTime, List<ReceiptDetail> receiptDetails)
-
             {
-
                 var saveFileDialog = new Microsoft.Win32.SaveFileDialog
-
                 {
-
                     Title = "Chọn nơi lưu hóa đơn",
-
                     Filter = "PDF Files (*.pdf)|*.pdf",
-
                     DefaultExt = ".pdf",
-
                     OverwritePrompt = true
-
                 };
 
-
-
                 if (saveFileDialog.ShowDialog() == true)
-
                 {
-
                     string filePath = saveFileDialog.FileName;
-
-
-
                     try
-
                     {
-
                         PdfDocument pdfDoc = new PdfDocument();
-
                         pdfDoc.Info.Title = "Hóa đơn thanh toán";
-
                         PdfPage page = pdfDoc.AddPage();
-
                         XGraphics gfx = XGraphics.FromPdfPage(page);
-
-
-
                         XFont titleFont = new XFont("Arial", 24, XFontStyle.Bold);
-
                         XFont headerFont = new XFont("Arial", 12, XFontStyle.Bold);
-
                         XFont regularFont = new XFont("Arial", 10);
 
-
-
                         // Draw title
-
                         gfx.DrawString("Hóa đơn thanh toán", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
 
-
-
                         // Draw logo
-
                         XImage logo = XImage.FromFile("C:\\Users\\Admin\\Downloads\\KTPM\\3rd Semester\\VP\\BCCK\\RestaurantManager-master\\UI\\Views\\Images\\logo.png");
-
                         gfx.DrawImage(logo, 20, 20, 50, 50);
 
-
-
                         // Draw general receipt information
-
                         gfx.DrawString($"Mã hóa đơn: {ordernum}", regularFont, XBrushes.Black, new XPoint(50, 100));
-
                         gfx.DrawString($"Ngày giờ: {recTime.ToString("dd/MM/yyyy HH:mm:ss")}", regularFont, XBrushes.Black, new XPoint(50, 120));
 
 
-
                         // Draw table headers
-
                         int yPosition = 150;
-
                         gfx.DrawString("STT", headerFont, XBrushes.Black, new XPoint(50, yPosition));
-
                         gfx.DrawString("Tên món", headerFont, XBrushes.Black, new XPoint(100, yPosition));
-
                         gfx.DrawString("SL", headerFont, XBrushes.Black, new XPoint(250, yPosition));
-
                         gfx.DrawString("Đơn giá", headerFont, XBrushes.Black, new XPoint(300, yPosition));
-
                         gfx.DrawString("Thành tiền", headerFont, XBrushes.Black, new XPoint(400, yPosition));
-
                         yPosition += 20;
 
-
-
                         // Draw receipt details
-
                         int index = 1;
-
                         foreach (var detail in receiptDetails)
-
                         {
-
                             string itemName = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemId == detail.ItemId)?.ItemName ?? "Không tìm thấy";
-
                             gfx.DrawString(index.ToString(), regularFont, XBrushes.Black, new XPoint(50, yPosition));
-
                             gfx.DrawString(itemName, regularFont, XBrushes.Black, new XPoint(100, yPosition));
-
                             gfx.DrawString(detail.Quantity.ToString(), regularFont, XBrushes.Black, new XPoint(250, yPosition));
-
                             gfx.DrawString(detail.Price.ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(300, yPosition));
-
                             gfx.DrawString((detail.Price * detail.Quantity).ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(400, yPosition));
-
                             yPosition += 20;
-
-
-
                             // Move to the next page if needed
-
                             if (yPosition > page.Height - 50)
-
                             {
-
                                 page = pdfDoc.AddPage();
-
                                 gfx = XGraphics.FromPdfPage(page);
-
                                 yPosition = 50; // Reset Y position for new page
-
                             }
-
                             index++;
-
                         }
-
-
-
                         // Draw total amount
-
                         yPosition += 20;
 
                         gfx.DrawString($"Tổng tiền: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center);
-
-
-
                         // Save PDF
-
                         pdfDoc.Save(filePath);
-
-
-
                         MessageBox.Show($"Hóa đơn đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-
                         Orderuc.Remove(SelectedFoodItemBill);
-
                     }
 
                     catch (Exception ex)
-
                     {
-
                         MessageBox.Show($"Đã xảy ra lỗi khi lưu file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-
                     }
-
                 }
-
                 else
-
                 {
-
                     MessageBox.Show("Bạn đã hủy lưu hóa đơn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-
                 }
-
             }
 
 
 
             public void LoadOrderUC()
-
             {
-
                 var items = DataProvider.Instance.DB.Receipts
-
                               .Where(receipt => receipt.Isdeleted == false) // Lọc hóa đơn chưa thanh toán
-
                               .OrderBy(receipt => receipt.RecId)  // Sắp xếp theo RecId
-
                               .ToList();
-
                 //byte? tableNum = DataProvider.Instance.DB.DiningTables.Where(x => x.TabStatus == true).FirstOrDefault()?.TabNum;
-
                 // Chuyển đổi danh sách hóa đơn thành ObservableCollection<OrderViewModel>
 
                 Orderuc = new ObservableCollection<OrderViewModel>(
 
                     items.Select((item, index) => new OrderViewModel
-
                     {
-
                         RecId = item.RecId,
-
                         OrderBill = item.RecPay,
-
                         OrderTimer = item.RecTime,
-
                         OrderNumber = index + 1, // Số thứ tự bắt đầu từ 1
-
                         OrderEmployee = (int)item.EmpId,
-
                         OrderTable = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == item.TabId).FirstOrDefault()?.TabNum ?? 0
-
                     })
 
                 );
-
-
-
                 OnPropertyChanged(nameof(Orderuc)); // Thông báo cập nhật giao diện
             }
-
-
-
         }
 }

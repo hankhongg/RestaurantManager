@@ -523,61 +523,32 @@
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
                     <Grid Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,592,0">
                         <!-- Danh sách món ăn -->
-
                         <ScrollViewer VerticalScrollBarVisibility="Auto" >
-
                             <ItemsControl ItemsSource="{Binding Orderuc}">
-
                                 <ItemsControl.ItemsPanel>
-
                                     <ItemsPanelTemplate>
-
                                         <WrapPanel Orientation="Horizontal" />
-
                                     </ItemsPanelTemplate>
-
                                 </ItemsControl.ItemsPanel>
-
                                 <ItemsControl.ItemTemplate>
-
                                     <DataTemplate>
-
                                         <StackPanel>
-
                                             <orderUC:OrderUC Height="200" Width="300" Margin="10" DataContext="{Binding}">
-
                                                 <i:Interaction.Triggers>
-
                                                     <i:EventTrigger EventName="MouseLeftButtonDown">
-
                                                         <i:InvokeCommandAction Command="{Binding DataContext.EditOrderCommand , RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-
                                                                 CommandParameter="{Binding}"/>
-
                                                     </i:EventTrigger>
-
                                                     <i:EventTrigger EventName="MouseRightButtonDown">
-
                                                         <i:InvokeCommandAction Command="{Binding DataContext.PayBillCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-
                                                                                CommandParameter="{Binding}"/>
-
                                                     </i:EventTrigger>
-
-
-
                                                 </i:Interaction.Triggers>
-
                                             </orderUC:OrderUC>
-
                                         </StackPanel>
-
                                     </DataTemplate>
-
                                 </ItemsControl.ItemTemplate>
-
                             </ItemsControl>
-
                         </ScrollViewer>
                     </Grid>
 
@@ -664,8 +635,8 @@
                     <Grid Grid.Row="1">
                         <StackPanel Margin="30,0, 30, 0"  HorizontalAlignment="Right" Orientation="Horizontal">
                             <Button Content="Thêm bàn mới (+)" Style="{StaticResource LoginButton}"
-                                     Padding="30,0"  Width="Auto" Height="Auto" Margin="30,0, 30, 10"
-                                     Command="{Binding AddTableCommand}">
+                                    Padding="30,0"  Width="Auto" Height="Auto" Margin="30,0, 30, 10"
+                                    Command="{Binding AddTableCommand}">
                                 <Button.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightPink" Offset="-0.5"/>
@@ -674,18 +645,14 @@
                                 </Button.Background>
                             </Button>
                         </StackPanel>
-
                     </Grid>
-
-
-
                 </Grid>
             </TabItem>
 
             <!--TabItem thứ 4 (Bookings)-->
             <TabItem x:Name="bookings" Padding="30,0" Background="GhostWhite" 
-    Style="{StaticResource TabItemStyle}" 
-     FontWeight="SemiBold" FontSize="30" Header="Bookings">
+                     Style="{StaticResource TabItemStyle}" 
+                     FontWeight="SemiBold" FontSize="30" Header="Bookings">     
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
@@ -694,7 +661,7 @@
 
                     <!--Booking UC-->
                     <Grid Grid.Column="0">
-                        <ScrollViewer Margin="10" x:Name="bookingWrapPanel">
+                        <ScrollViewer Margin="10" x:Name="bookingWrapPanel" VerticalScrollBarVisibility="Hidden">
                             <ItemsControl ItemsSource="{Binding BookingViewList}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -704,11 +671,11 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <bookingUC:BookingUC Style="{DynamicResource BookingUCStyle1}" Width="280" Height="230" 
-                             Margin="26, 8" BorderThickness="1" BorderBrush="Gray">
+                                                             Margin="26, 8" BorderThickness="1" BorderBrush="Gray">
                                             <i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="MouseLeftButtonDown">
                                                     <i:InvokeCommandAction Command="{Binding DataContext.BookingInfo, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                           CommandParameter="{Binding}"/>
+                                                                           CommandParameter="{Binding}"/>
                                                 </i:EventTrigger>
                                             </i:Interaction.Triggers>
                                         </bookingUC:BookingUC>

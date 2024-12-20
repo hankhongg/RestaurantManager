@@ -78,7 +78,7 @@
                     <Grid Grid.Column="0">
                         <!--Sau nay bind voi mo cua so addItemWindow-->
                         <Button Content="Thêm món ăn"  Style="{StaticResource btnExistFoodStyle}" BorderBrush="White" FontSize="16"
-                        Command="{Binding NewDishCommand}" BorderThickness="1"  Margin="-2,0,0,0" >
+                                Command="{Binding NewDishCommand}" BorderThickness="1"  Margin="-2,0,0,0" >
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FF3495BD" Offset="1"/>
@@ -157,7 +157,7 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
-                        <Button Content="Món ăn" FontSize="15"  Foreground="White" BorderThickness="1" BorderBrush="White"  Command="{Binding FilterByFoodCommand}">
+                        <Button Content="Món ăn" FontSize="15" FontWeight="Bold" Foreground="White" BorderThickness="1" BorderBrush="White"  Command="{Binding FilterByFoodCommand}">
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FF3495BD" Offset="1"/>
@@ -167,7 +167,7 @@
                         </Button>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <Button Content="Đồ uống" FontSize="15"   Foreground="White" BorderThickness="1" BorderBrush="White" Command="{Binding FilterByDrinkCommand}">
+                        <Button Content="Đồ uống" FontSize="15" FontWeight="Bold"  Foreground="White" BorderThickness="1" BorderBrush="White" Command="{Binding FilterByDrinkCommand}">
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.1,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FF3495BD" Offset="1"/>
@@ -177,7 +177,7 @@
                         </Button>
                     </Grid>
                     <Grid Grid.Row="2">
-                        <Button Content="Khác" FontSize="15"  Foreground="White" BorderThickness="1" BorderBrush="White"  Command="{Binding FilterByOthersCommand}" >
+                        <Button Content="Khác" FontSize="15" FontWeight="Bold" Foreground="White" BorderThickness="1" BorderBrush="White"  Command="{Binding FilterByOthersCommand}" >
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.1,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FF3495BD" Offset="1"/>
@@ -187,7 +187,7 @@
                         </Button>
                     </Grid>
                     <Grid Grid.Row="3">
-                        <Button Content="Tất cả" FontSize="15"  Foreground="White" BorderThickness="1" BorderBrush="White"  Command="{Binding FilterByAllCommand}" >
+                        <Button Content="Tất cả" FontSize="15" FontWeight="Bold"  Foreground="White" BorderThickness="1" BorderBrush="White"  Command="{Binding FilterByAllCommand}" >
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.1,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FF3495BD" Offset="1"/>
@@ -348,8 +348,8 @@
                 <Grid Grid.Row="0" >
                     <ComboBox x:Name="ComboBoxBan"
                           Style="{StaticResource cmbTableStyle}"
-                          BorderBrush="Transparent"
-                          Padding="0,5,0,0"                     
+                          BorderBrush="Transparent" FontSize="20"
+                          VerticalContentAlignment="Center"
                           ItemsSource="{Binding TabsNum}"
                           SelectedValue="{Binding SelectedTabNum, Mode=TwoWay}">
                     </ComboBox>

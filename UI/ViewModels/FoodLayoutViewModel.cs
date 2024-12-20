@@ -628,9 +628,7 @@ namespace RestaurantManager.ViewModels
                                 Quantity = bill.Quantity,
                                 Price = bill.ItemSprice,
                             };
-
                             DataProvider.Instance.DB.ReceiptDetails.Add(receiptDetail);
-
                         }
 
                         // Lưu ReceiptDetails

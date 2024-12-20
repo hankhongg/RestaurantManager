@@ -13,6 +13,7 @@
         <Setter Property="BorderBrush" Value="#FF040533"></Setter>
         <Setter Property="Background" Value="#0088FE"></Setter>
         <Setter Property="Margin" Value="-2,0,0,0"></Setter>
+        <Setter Property="FontWeight" Value="Bold"></Setter>
     </Style>
     <Style TargetType="ComboBox" x:Key="cmbTableStyle">
         <Setter Property="Padding" Value="4"></Setter>
