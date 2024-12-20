@@ -5,69 +5,108 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows;
+using static RestaurantManager.ViewModels.FoodLayoutViewModel;
 
 namespace RestaurantManager.ViewModels
 {
     class FoodItemUCViewModel : BaseViewModel
     {
-
-
-        private string _itemImg;
-        private string _itemName;
-        private decimal _itemSprice;
-
-        public string ItemImg
+        private int foodItemId;
+        public int FoodItemId
         {
-            get { return _itemImg; }
+            get => foodItemId;
             set
             {
-                if (_itemImg != value)
-                {
-                    _itemImg = value;
-                    OnPropertyChanged();
-                }
+                foodItemId = value;
+                OnPropertyChanged(nameof(FoodItemId));
             }
         }
 
-        public string ItemName
+        private string foodItemName;
+        private string? foodItemImg;
+        private decimal foodItemSprice;
+
+        public string FoodItemName
         {
-            get { return _itemName; }
+            get => foodItemName;
             set
             {
-                if (_itemName != value)
-                {
-                    _itemName = value;
-                    OnPropertyChanged();
-                }
+                foodItemName = value;
+                OnPropertyChanged(nameof(FoodItemName));
+            }
+        }
+        public string FoodItemImg
+        {
+            get => foodItemImg;
+            set
+            {
+                foodItemImg = value;
+                OnPropertyChanged(nameof(FoodItemImg));
+            }
+        }
+        public decimal FoodItemSprice
+        {
+            get => foodItemSprice;
+            set
+            {
+                foodItemSprice = value;
+                OnPropertyChanged(nameof(FoodItemSprice));
+            }
+        }
+        private string foodItemType;
+        public string FoodItemType
+        {
+            get => foodItemType;
+            set
+            {
+                foodItemType = value;
+                OnPropertyChanged(nameof(FoodItemType));
             }
         }
 
-        public decimal ItemSprice
+
+        // Thuộc tính Enum để sử dụng trong Filter
+        public MenuItemType ItemTypeEnum
         {
-            get { return _itemSprice; }
-            set
+            get
             {
-                if (_itemSprice != value)
-                {
-                    _itemSprice = value;
-                    OnPropertyChanged();
-                }
+                // Chuyển đổi từ string sang enum, mặc định là Others nếu không khớp
+                if (Enum.TryParse(FoodItemType, true, out MenuItemType result))
+                    return result;
+
+                return MenuItemType.OTHER;
             }
         }
 
-        public FoodItemUCViewModel() // Constructor mặc định
+        public FoodItemUCViewModel()
         {
-            ItemName = "DefaultName";
-            ItemImg = "DefaultImagePath";
-            ItemSprice = 0;
+
         }
 
-        public FoodItemUCViewModel(string itemName, string itemImg, decimal itemSprice) // Constructor có tham số
+        public void SetFoodItemData(int itemId, string itemName, string itemImg, decimal itemSprice)
         {
-            this.ItemName = itemName;
-            this.ItemImg = itemImg;
-            this.ItemSprice = itemSprice;
+            this.foodItemId = itemId;
+            this.FoodItemName = itemName;
+            this.FoodItemImg = itemImg;
+            this.FoodItemSprice = itemSprice;
+
+
+        }
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged(nameof(IsSelected));
+            }
         }
 
     }
+
+
 }

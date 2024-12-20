@@ -4,17 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RestaurantManager.Views.UserControls" 
-             mc:Ignorable="d" Name="itemuc" 
-             d:DesignHeight="200" d:DesignWidth="250">
+             mc:Ignorable="d"  Name="itemuc" 
+             d:DesignHeight="200" d:DesignWidth="250" >
+    <!-- Lắng nghe sự kiện chuột và gọi Command -->
+    <UserControl.InputBindings>
+        <!-- Khi nhấn chuột xuống -->
+        <!--<MouseBinding MouseAction="LeftClick" Command="{Binding MouseDownCommand}" />-->
+        <!--
+        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DoubleClickCommand}" />-->
+        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.MouseDownCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+        <!-- Sự kiện click chuột phải -->
+        <MouseBinding MouseAction="RightClick" Command="{Binding DataContext.RightClickCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+        <!--<MouseBinding MouseAction="RightClick" Command="{Binding RightClickCommand}" />-->
+        <!-- Command khi click chuột giữa -->
+        <MouseBinding MouseAction="MiddleClick"  Command="{Binding DataContext.MiddleClickCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+    </UserControl.InputBindings>
     <Border CornerRadius="10" >
         <Grid>
 
             <!-- Food Image -->
-            <Image Source="{Binding ItemImg}" Stretch="Fill" Margin="0,0,0,1" />
+            <Image Source="{Binding FoodItemImg}" Stretch="Fill" Margin="0,0,0,1" />
 
             <!-- Price Label -->
             <Border  CornerRadius="10" Width="100" HorizontalAlignment="Left" Background="#FF00BAFF" Height="20" VerticalAlignment="Top" >
-                <TextBlock Text="{Binding ItemSprice}"
+                <TextBlock Text="{Binding FoodItemSprice}"
                  FontWeight="Bold"
                  Foreground="White"                
                  TextAlignment="Center"
@@ -30,13 +43,28 @@
                 <Rectangle Fill="Black" Opacity="0.7" Height="30"/>
 
                 <!-- TextBlock hiển thị tên món ăn -->
-                <TextBlock Text="{Binding ItemName}" 
+                <!--<TextBlock Text="{Binding ItemName}" 
                  Foreground="White" 
                  HorizontalAlignment="Center" 
                  VerticalAlignment="Center" 
-                 FontSize="16" 
-                 FontWeight="Bold" />
+                 FontSize="10" 
+                 FontWeight="Bold" />-->
+
+                <TextBlock Text="{Binding FoodItemName}" HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="10" FontWeight="Bold" >
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" >
+                            <Setter Property="Foreground" Value="White" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Foreground" Value="Red" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
             </Grid>
         </Grid>
     </Border>
 </UserControl>
+

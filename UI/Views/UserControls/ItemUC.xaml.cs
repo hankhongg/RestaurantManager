@@ -24,7 +24,6 @@ namespace RestaurantManager.Views.UserControls
         public ItemUC()
         {
             InitializeComponent();
-            this.DataContext = new FoodItemUCViewModel();
         }
     }
 }
