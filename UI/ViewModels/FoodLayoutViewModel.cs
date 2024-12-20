@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using Xceed.Wpf.Toolkit.Primitives;
 
 
 namespace RestaurantManager.ViewModels
@@ -107,6 +108,19 @@ namespace RestaurantManager.ViewModels
             }
         }
 
+        private byte? inputTabNum;
+        public byte? InputTabNum
+        {
+            get { return inputTabNum; }
+            set
+            {
+                inputTabNum = value;
+                OnPropertyChanged(nameof(InputTabNum));
+            }
+        }
+
+
+
         // selected
         private int? selectedEmpId = -1;
         public int? SelectedEmpId
@@ -162,7 +176,7 @@ namespace RestaurantManager.ViewModels
                 MenuFoodItems.Select(item =>
                 {
                     var foodItemViewModel = new FoodItemUCViewModel();
-                    foodItemViewModel.SetFoodItemData(item.ItemName, item.ItemImg, item.ItemSprice);
+                    foodItemViewModel.SetFoodItemData(item.ItemId, item.ItemName, item.ItemImg, item.ItemSprice);
                     foodItemViewModel.FoodItemType = item.ItemType;
                     return foodItemViewModel;
                 })
@@ -187,6 +201,7 @@ namespace RestaurantManager.ViewModels
         public void AddBill(FoodItemUCViewModel selectedFoodItemBill)
         {
             if (selectedFoodItemBill == null) return;
+            //
 
             if (Bills == null)
             {
@@ -209,7 +224,7 @@ namespace RestaurantManager.ViewModels
                 // Nếu món ăn chưa tồn tại, thêm hóa đơn mới
                 var newBill = new BillUCViewModel
                 {
-                    RecId = Bills.Count + 1,
+                    STT = Bills.Count + 1,
                     // RecId = newRecId, // Giá trị RecId mới
                     ItemName = selectedFoodItemBill.FoodItemName,
                     Quantity = 1,
@@ -226,6 +241,7 @@ namespace RestaurantManager.ViewModels
 
         public void LoadOrderInformation(Receipt selectedReceipt)
         {
+            int count = 1;
             // các hóa đơn
             ObservableCollection<ReceiptDetail> receiptDetails = new ObservableCollection<ReceiptDetail>(
                 DataProvider.Instance.DB.ReceiptDetails
@@ -239,6 +255,7 @@ namespace RestaurantManager.ViewModels
                     return new BillUCViewModel
                     {
                         RecId = rd.RecId,
+                        STT = count++,
                         ItemName = menuItem.ItemName,
                         Quantity = rd.Quantity,
                         ItemSprice = menuItem.ItemSprice,
@@ -399,6 +416,7 @@ namespace RestaurantManager.ViewModels
                 billsFromDb.Select(bill => new BillUCViewModel
                 {
                     RecId = bill.RecId,
+                    STT = bill.STT,
                     ItemName = bill.ItemName,
                     Quantity = bill.Quantity,
                     ItemSprice = bill.ItemSprice,
@@ -420,8 +438,22 @@ namespace RestaurantManager.ViewModels
             FilterByAllCommand = new RelayCommand<object>((p) => true, (p) => SelectedMenuItemType = MenuItemType.All);
 
             NewDishCommand = new RelayCommand<object>((p) => { return true; }, (p) => {
-                NewDishWindow wd = new NewDishWindow();
-                wd.ShowDialog();
+
+                AddItemWindow addItemWindow = new AddItemWindow();
+                var itemVM = new MenuItemsManagement();
+                if (itemVM != null)
+                {
+                    itemVM.SelectedIdxType = 0;
+                    itemVM.IsNotEditing = true;
+                    itemVM.LoadBlankRecipeInformation();
+                    itemVM.LoadBlankDrinkInformation();
+                    itemVM.LoadBlankOtherInformation();
+                    itemVM.ItemID = -1;
+                    addItemWindow.DataContext = itemVM;
+                    addItemWindow.ShowDialog();
+                }
+                //ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
+                LoadMenuItems();
             });
             FoodItemCommand = new RelayCommand<object>((p) => { return true; }, (p) => {
                 FoodItemWindow wd = new FoodItemWindow();
@@ -461,6 +493,7 @@ namespace RestaurantManager.ViewModels
                     //    MessageBox.Show("Danh sách bill đã được làm mới!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
 
+            // chọn món ăn
             RightClickCommand = new RelayCommand<FoodItemUCViewModel>((p) => p != null, // CanExecute
                (p) =>
                {
@@ -481,11 +514,15 @@ namespace RestaurantManager.ViewModels
                 (p) => SelectedFoodItem != null, // CanExecute
                 (p) =>
                 {
-                    // Logic xóa món ăn
-                    MessageBox.Show($"   Xóa thành công món ăn:   {SelectedFoodItem.FoodItemName}");
-                    // MenuItems.Remove(SelectedFoodItem);
-                    SelectedFoodItem.IsSelected = false;
-                    SelectedFoodItem = null; // Xóa xong thì bỏ chọn
+                    MenuItem SelectedItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemId == SelectedFoodItem.FoodItemId);
+                    var item = DataProvider.Instance.DB.MenuItems.Where(x => x.ItemId == SelectedItem.ItemId).FirstOrDefault();
+                    var DialogResult = MessageBox.Show("Bạn có chắc chắn muốn xóa?", "Thông báo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (item != null && DialogResult == MessageBoxResult.Yes)
+                    {
+                        DataProvider.Instance.DB.MenuItems.Remove(item);
+                        DataProvider.Instance.DB.SaveChanges();
+                        LoadMenuItems();
+                    }
 
                 });
 
@@ -493,11 +530,33 @@ namespace RestaurantManager.ViewModels
                 (p) => SelectedFoodItem != null, // CanExecute
                 (p) =>
                 {
-                    // Logic sửa món ăn
-                    //MessageBox.Show($"Sửa món ăn: {SelectedFoodItem.ItemName}");
-                    // Hiển thị cửa sổ chỉnh sửa nếu cần
-                    //  EditDishWindow wd = new EditDishWindow();
-                    // wd.ShowDialog();
+                    AddItemWindow addItemWindow = new AddItemWindow();
+                    //var itemVM = addItemWindow.DataContext as MenuItemsManagement;
+                    MenuItem SelectedItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemId == SelectedFoodItem.FoodItemId);
+                    var itemVM = new MenuItemsManagement();
+                    if (itemVM != null)
+                    {
+                        if (SelectedItem.ItemType == "FOOD")
+                        {
+                            itemVM.SelectedIdxType = 0;
+                            itemVM.LoadRecipeInformation(SelectedItem.ItemId);
+                        }
+                        else if (SelectedItem.ItemType == "DRINK")
+                        {
+                            itemVM.SelectedIdxType = 1;
+                            itemVM.LoadDrinkInformation(SelectedItem.ItemId);
+                        }
+                        else
+                        {
+                            itemVM.SelectedIdxType = 2;
+                            itemVM.LoadOtherInformation(SelectedItem.ItemId);
+                        }
+                        itemVM.IsNotEditing = false;
+                        itemVM.ItemID = SelectedItem.ItemId;
+                        addItemWindow.DataContext = itemVM;
+                        addItemWindow.ShowDialog();
+                    }
+                    LoadMenuItems();
                     SelectedFoodItem.IsSelected = false;
                     SelectedFoodItem = null; // Xóa xong thì bỏ chọn
                 });
@@ -510,7 +569,7 @@ namespace RestaurantManager.ViewModels
             {
                 // Tính tổng tiền
                 TotalAmount = Bills.Sum(item => item.Price);
-
+                DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabStatus = false;
                 // Hiển thị tổng tiền
                 // MessageBox.Show($"Tổng tiền các món ăn: {TotalAmount}", "Thông báo");
             });
@@ -527,8 +586,9 @@ namespace RestaurantManager.ViewModels
                 if (isEditing == false) // thêm hóa đơn
                 {
                     int selectedTabId = DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabId;
-                    string invoiceNumber = "HD" + (DataProvider.Instance.DB.Receipts.Count() + 1).ToString("D3");  // Tạo mã hóa đơn, như HD001, HD002, ...
+                    string invoiceNumber = "HD" + (DataProvider.Instance.DB.Receipts.Where(r => r.Isdeleted == false).Count() + 1).ToString("D3");  // Tạo mã hóa đơn, như HD001, HD002, ...
                     DateTime currentTime = DateTime.Now;  // Thời gian hiện tại
+                    TotalAmount = Bills.Sum(item => item.Price);
                     decimal totalAmount = TotalAmount;  // Tính tổng tiền từ danh sách Bills
 
                     var receipt = new Receipt()
@@ -536,7 +596,7 @@ namespace RestaurantManager.ViewModels
                         RecCode = invoiceNumber,  // Mã hóa đơn                        
                         RecTime = currentTime,     // Thời gian tạo hóa đơn
                         RecPay = totalAmount,      // Tổng tiền (số tiền phải trả)
-                        Isdeleted = true,     // Trạng thái xóa (đang lưu trữ)
+                        Isdeleted = false,     // Trạng thái xóa (đang lưu trữ)
                         TabId = selectedTabId,
                         EmpId = SelectedEmpId,
 
@@ -593,6 +653,20 @@ namespace RestaurantManager.ViewModels
                     TotalAmount = Bills.Sum(item => item.Price);
                     if (inputReceipt != null)
                     {
+                        if (SelectedTabNum != InputTabNum)
+                        {
+                            DiningTable inputTable = DataProvider.Instance.DB.DiningTables.FirstOrDefault(t => t.TabNum == InputTabNum);
+                            if (inputTable != null)
+                            {
+                                inputTable.TabStatus = true;
+                            }
+                            DiningTable selectedTable = DataProvider.Instance.DB.DiningTables.FirstOrDefault(t => t.TabNum == SelectedTabNum);
+                            if (selectedTable != null)
+                            {
+                                selectedTable.TabStatus = false;
+                            }
+                            DataProvider.Instance.DB.SaveChanges();
+                        }
 
                         ObservableCollection<ReceiptDetail> existedReceiptDetails = new ObservableCollection<ReceiptDetail>(
                             DataProvider.Instance.DB.ReceiptDetails
@@ -639,8 +713,8 @@ namespace RestaurantManager.ViewModels
                 }
 
                 // Xóa danh sách Bills và đặt lại tổng tiền
-                //Bills.Clear();
-                //TotalAmount = 0;
+                Bills.Clear();
+                TotalAmount = 0;
 
             });
 
@@ -661,6 +735,9 @@ namespace RestaurantManager.ViewModels
                     }
 
                     Bills.Remove(bill); // Xóa hóa đơn khỏi danh sách
+
+                    UpdateBillOrder(); // Cập nhật lại RecId
+
                     OnPropertyChanged(nameof(Bills)); // Cập nhật giao diện
                     MessageBox.Show($"Đã xóa hóa đơn: {bill.ItemName}");
                 });
@@ -669,12 +746,20 @@ namespace RestaurantManager.ViewModels
 
         }
 
+        public void UpdateBillOrder()
+        {
+            int count = 1;
+            foreach (var bill in Bills)
+            {
+                bill.STT = count++;
+            }
+        }
 
         public void LoadDiningTables()
         {
             TabsNum = new ObservableCollection<byte?>(
                 DataProvider.Instance.DB.DiningTables
-                .Where(tab => tab.Isdeleted == false)
+                .Where(tab => tab.Isdeleted == false && tab.TabStatus == true)
                 .Select(tab => tab.TabNum)
                 .ToList()
             );

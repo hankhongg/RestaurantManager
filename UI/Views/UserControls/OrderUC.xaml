@@ -7,13 +7,7 @@
              mc:Ignorable="d" Background="Transparent" Name="orderUC"             
              d:DesignHeight="210" d:DesignWidth="320">
     <!-- Lắng nghe sự kiện chuột và gọi Command -->
-    <!--<UserControl.InputBindings>
-        --><!-- Khi nhấn chuột xuống -->
-        <!--<MouseBinding MouseAction="LeftClick" Command="{Binding MouseDownCommand}" />--><!--
-        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.MouseDownCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
-        <MouseBinding MouseAction="MiddleClick" Command="{Binding DataContext.MiddleClickCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
-        <MouseBinding MouseAction="RightClick" Command="{Binding DataContext.RightClickCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
-    </UserControl.InputBindings>-->
+
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontWeight" Value="Bold"/>
@@ -84,7 +78,7 @@
                             HorizontalAlignment="Center">
                     <TextBlock Text="Tạm tính:" FontSize="22" Foreground="#FF2B6BD2" FontWeight="ExtraBold"/>
                     <TextBlock FontWeight="UltraBold" FontSize="13" Foreground="Red"
-                               Text="{Binding OrderBill}"/>
+                               Text="{Binding OrderBill, StringFormat={}{0:N2}}"/>
                 </StackPanel>
             </Grid>
         </Grid>

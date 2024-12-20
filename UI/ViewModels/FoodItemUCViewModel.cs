@@ -13,6 +13,17 @@ namespace RestaurantManager.ViewModels
 {
     class FoodItemUCViewModel : BaseViewModel
     {
+        private int foodItemId;
+        public int FoodItemId
+        {
+            get => foodItemId;
+            set
+            {
+                foodItemId = value;
+                OnPropertyChanged(nameof(FoodItemId));
+            }
+        }
+
         private string foodItemName;
         private string? foodItemImg;
         private decimal foodItemSprice;
@@ -74,8 +85,9 @@ namespace RestaurantManager.ViewModels
 
         }
 
-        public void SetFoodItemData(string itemName, string itemImg, decimal itemSprice)
+        public void SetFoodItemData(int itemId, string itemName, string itemImg, decimal itemSprice)
         {
+            this.foodItemId = itemId;
             this.FoodItemName = itemName;
             this.FoodItemImg = itemImg;
             this.FoodItemSprice = itemSprice;

@@ -35,7 +35,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Giá thường:   " FontStyle="Italic" Foreground="White" Margin="0,0,0,10" />
-                <TextBlock Name="Sprice" Text="{Binding ItemSprice}" FontStyle="Italic" Foreground="White" Margin="0,0,0,10" />
+                <TextBlock Name="Sprice" Text="{Binding ItemSprice, StringFormat={}{0:N2}}" FontStyle="Italic" Foreground="White" Margin="0,0,0,10" />
             </StackPanel>
             <!-- Giá thường -->
             <!--<TextBlock Text="Giá thường: {Binding ItemRegularPrice}" FontStyle="Italic" Foreground="White" Margin="0,0,0,10" />-->

@@ -16,7 +16,19 @@ namespace RestaurantManager.ViewModels
         private int _quantity;
         private decimal _price;
 
-        public int RecId { get; set; }
+        private int stt;
+        public int STT
+        {
+            get => stt;
+            set
+            {
+                if (stt != value)
+                {
+                    stt = value;
+                    OnPropertyChanged(nameof(STT)); // Gửi thông báo thay đổi
+                }
+            }
+        }
         public string ItemName { get; set; }
 
         public int Quantity
@@ -45,7 +57,19 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-
+        private int recId;
+        public int RecId
+        {
+            get => recId;
+            set
+            {
+                if (recId != value)
+                {
+                    recId = value;
+                    OnPropertyChanged(nameof(RecId)); // Gửi thông báo thay đổi
+                }
+            }
+        }
 
         public decimal ItemSprice { get; set; }
 

@@ -1172,9 +1172,13 @@ namespace RestaurantManager.ViewModels
             {
                 FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
                 FoodLayoutViewModel foodLayoutViewModel = new FoodLayoutViewModel();
+                foodLayoutViewModel.Bills.Clear();
+                foodLayoutViewModel.SelectedEmpId = null;
+                foodLayoutViewModel.SelectedTabNum = null;
                 foodLayoutWindow.DataContext = foodLayoutViewModel;
                 foodLayoutWindow.ShowDialog();
                 LoadOrderUC();
+                LoadAllTableInformation();
             }
             );
             EditOrderCommand = new RelayCommand<OrderViewModel>((p) => { return true; }, (p) =>
@@ -1187,10 +1191,12 @@ namespace RestaurantManager.ViewModels
                     foodLayoutVM.LoadOrderInformation(selectedReceipt);
                     //foodLayoutVM.OrderManagementID = 1;
                     foodLayoutVM.IsEditing = true;
+                    foodLayoutVM.InputTabNum = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == selectedReceipt.TabId).FirstOrDefault().TabNum;
                     foodLayoutVM.InputReceipt = selectedReceipt;
                     selectedFoodLayout.ShowDialog();
                 }
                 LoadOrderUC();
+                LoadAllTableInformation();
             });
             PayBillCommand = new RelayCommand<OrderViewModel>(
             (p) => { return true; }, // CanExecute
@@ -1198,16 +1204,17 @@ namespace RestaurantManager.ViewModels
             {
                 if (areYouSure() == true)
                 {
-                    if (p != null)
-                    {
-                        MessageBox.Show("p not null");
                         SelectedFoodItemBill = p;
                         var receipt = DataProvider.Instance.DB.Receipts
                                              .FirstOrDefault(r => r.RecId == SelectedFoodItemBill.RecId);
                         if (receipt != null)
                         {
-                            receipt.Isdeleted = true; // Cập nhật trạng thái
-                            DataProvider.Instance.DB.SaveChanges();
+                            receipt.RecCode = string.Empty;
+                            receipt.Isdeleted = true; // Cập nhật trạng thái hóaddon
+                        DiningTable table = DataProvider.Instance.DB.DiningTables
+                            .FirstOrDefault(t => t.TabId == receipt.TabId);
+                        table.TabStatus = true; // Cập nhật trạng thái bàn
+                        DataProvider.Instance.DB.SaveChanges();
 
 
 
@@ -1241,10 +1248,10 @@ namespace RestaurantManager.ViewModels
                         catch (Exception ex)
                         {
                             MessageBox.Show($"Đã xảy ra lỗi khi tạo hóa đơn: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
-                    else MessageBox.Show("p null");
+                        }                  
                 }
+                LoadOrderUC();
+                LoadAllTableInformation();
             });
 
         }
@@ -1403,7 +1410,7 @@ namespace RestaurantManager.ViewModels
         public void LoadOrderUC()
         {
             var items = DataProvider.Instance.DB.Receipts
-                          .Where(receipt => receipt.Isdeleted) // Lọc hóa đơn chưa thanh toán
+                          .Where(receipt => receipt.Isdeleted == false) // Lọc hóa đơn chưa thanh toán
                           .OrderBy(receipt => receipt.RecId)  // Sắp xếp theo RecId
                           .ToList();
             //byte? tableNum = DataProvider.Instance.DB.DiningTables.Where(x => x.TabStatus == true).FirstOrDefault()?.TabNum;

@@ -10,9 +10,6 @@
     <UserControl.InputBindings>
         <!-- Khi nhấn chuột xuống -->
         <!--<MouseBinding MouseAction="LeftClick" Command="{Binding MouseDownCommand}" />-->
-        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.MouseDownCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
-
-        <!-- Sự kiện double-click chuột trái -->
         <!--
         <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DoubleClickCommand}" />-->
         <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.MouseDownCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
