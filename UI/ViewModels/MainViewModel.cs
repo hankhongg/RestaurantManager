@@ -1188,6 +1188,7 @@ namespace RestaurantManager.ViewModels
             {
                 
                 byte existedTableNumber = (byte)DataProvider.Instance.DB.DiningTables.Count();
+                
                 //string query = $"DBCC CHECKIDENT ('DININGTABLE', RESEED, {existedTableNumber + 1})";
                 //DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
                 DiningTable newTable = new DiningTable { TabNum = ++existedTableNumber, TabStatus = true, Isdeleted = false };
@@ -1200,13 +1201,29 @@ namespace RestaurantManager.ViewModels
             });
             EditTableCommand = new RelayCommand<TableViewModel>((p) => { return true; }, (p) =>
             {
+                bool AllEmpty = true;
+                foreach (TableViewModel table in TableViewList)
+                {
+                    if (table.BoolTabStatus == false)
+                    {
+                        AllEmpty = false;
+                        break;
+                    }
+                    
+                }
                 AddTableWindow addTableWindow = new AddTableWindow();
                 var addTableVM = addTableWindow.DataContext as AddTableViewModel;
+                
                 string numberPart = Regex.Match(p.TabNumber, @"\d+").Value;
                 byte tableFromString = byte.Parse(numberPart.ToString());
                 DiningTable SelectedTable = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == tableFromString).FirstOrDefault();
                 if (addTableVM != null)
                 {
+                    if (AllEmpty == false)
+                    {
+                        addTableVM.AllIsEmpty = false;
+                    }
+                    else addTableVM.AllIsEmpty = true;
                     addTableVM.LoadTableInformation(SelectedTable);
                     addTableWindow.DataContext = addTableVM;
                     addTableWindow.ShowDialog();

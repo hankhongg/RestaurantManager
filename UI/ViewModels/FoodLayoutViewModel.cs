@@ -629,7 +629,7 @@ namespace RestaurantManager.ViewModels
                         MessageBox.Show("Hóa đơn không thể lưu do thiếu nguyên liệu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
-
+                    DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabStatus = false;
                     int selectedTabId = DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabId;
                     string invoiceNumber = "HD" + (DataProvider.Instance.DB.Receipts.Where(r => r.Isdeleted == false).Count() + 1).ToString("D3");  // Tạo mã hóa đơn, như HD001, HD002, ...
                     DateTime currentTime = DateTime.Now;  // Thời gian hiện tại
@@ -813,33 +813,7 @@ namespace RestaurantManager.ViewModels
                             }
                         }
 
-                        
-                        //foreach (var bill in Bills)
-                        //{
-                        //    var menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemName == bill.ItemName);
-                        //    if (menuItem == null)
-                        //    {
-                        //        MessageBox.Show($"Không tìm thấy món: {bill.ItemName} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                        //        continue;
-                        //    }
-                        //    var existedReceiptDetail = existedReceiptDetails.FirstOrDefault(rd => rd.ItemId == menuItem.ItemId);
-                        //    if (existedReceiptDetail != null)
-                        //    {
-                        //        existedReceiptDetail.Quantity = bill.Quantity;
-                        //        existedReceiptDetail.Price = bill.ItemSprice;
-                        //    }
-                        //    else
-                        //    {
-                        //        var receiptDetail = new ReceiptDetail()
-                        //        {
-                        //            RecId = inputReceipt.RecId,
-                        //            ItemId = menuItem.ItemId,
-                        //            Quantity = bill.Quantity,
-                        //            Price = bill.ItemSprice,
-                        //        };
-                        //        DataProvider.Instance.DB.ReceiptDetails.Add(receiptDetail);
-                        //    }
-                        //}
+
                         if (corrupted)
                         {
                             MessageBox.Show("Hóa đơn không thể lưu do thiếu nguyên liệu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -13,6 +13,10 @@ namespace RestaurantManager.ViewModels
 {
     internal class AddTableViewModel : BaseViewModel
     {
+        private bool allIsEmpty = true;
+        public bool AllIsEmpty { get { return allIsEmpty; } set { allIsEmpty = value; OnPropertyChanged(nameof(AllIsEmpty)); } }
+
+
         private string[] tabStatuses = new string[2] { "Đang có khách", "Đang trống" };
         public string[] TabStatuses { get { return tabStatuses; } set { tabStatuses = value; OnPropertyChanged(nameof(TabStatuses)); } }
         private byte tabNumber;
@@ -27,6 +31,11 @@ namespace RestaurantManager.ViewModels
         {
             DelTableCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
+                if (AllIsEmpty == false)
+                {
+                    MessageBox.Show("Vui lòng đảm bảo các bàn trống trước khi thực hiện thao tác xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
                 DiningTable d = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == TabNumber).FirstOrDefault();
                 d.Isdeleted = true;
                 d.TabNum = null;
