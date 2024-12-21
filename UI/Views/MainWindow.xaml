@@ -523,7 +523,7 @@
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
                     <Grid Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,592,0">
                         <!-- Danh sách món ăn -->
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0" >
                             <ItemsControl ItemsSource="{Binding Orderuc}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>

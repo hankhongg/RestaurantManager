@@ -1314,6 +1314,9 @@ namespace RestaurantManager.ViewModels
                 foodLayoutWindow.ShowDialog();
                 LoadOrderUC();
                 LoadAllTableInformation();
+                LoadAllFOODInstock();
+                ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
+
             });
 
             EditOrderCommand = new RelayCommand<OrderViewModel>((p) => { return true; }, (p) =>
@@ -1334,6 +1337,8 @@ namespace RestaurantManager.ViewModels
                 }
                 LoadOrderUC();
                 LoadAllTableInformation();
+                LoadAllFOODInstock();
+                ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
             });
 
             PayBillCommand = new RelayCommand<OrderViewModel>(
@@ -1351,7 +1356,7 @@ namespace RestaurantManager.ViewModels
                         receipt.Isdeleted = true; // Cập nhật trạng thái hóaddon
                         FinancialHistory financialHistory = new FinancialHistory
                         {
-                            FinDate = receipt.RecTime,
+                            FinDate = DateTime.Now,
                             Amount = receipt.RecPay,
                             Type = "INCOME",
                             Description = $"Thanh toán hóa đơn {receipt.RecId}",
