@@ -542,6 +542,10 @@ namespace RestaurantManager.ViewModels
                             StockInDetailsIngresList.Add(NewIngreStockin);
                             DataProvider.Instance.DB.StockinDetailsIngres.Add(NewIngreStockin);
                             getIngreElement.InstockKg += NewIngreStockin.QuantityKg;
+                            if (getIngreElement.InstockKg < 0)
+                            {
+                                getIngreElement.InstockKg = 0;
+                            }
                             DataProvider.Instance.DB.Ingredients.Update(getIngreElement);
 
 
@@ -637,6 +641,10 @@ namespace RestaurantManager.ViewModels
                             };
 
                             getItemElement.Instock += NewDrinkOtherStockin.QuantityUnits;
+                            if (getItemElement.Instock < 0)
+                            {
+                                getItemElement.Instock = 0;
+                            }
                             StockInDetailsDrinkOtherList.Add(NewDrinkOtherStockin);
                             DataProvider.Instance.DB.StockinDetailsDrinkOthers.Add(NewDrinkOtherStockin);
                             DataProvider.Instance.DB.MenuItems.Update(getItemElement);

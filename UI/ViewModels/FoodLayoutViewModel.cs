@@ -15,6 +15,8 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using Xceed.Wpf.Toolkit.Primitives;
+using MenuItem = RestaurantManager.Models.MenuItem;
+using System.Windows.Controls;
 
 
 namespace RestaurantManager.ViewModels
@@ -561,7 +563,7 @@ namespace RestaurantManager.ViewModels
 
 
             SaveOrderCommand = new RelayCommand<object>(
-            (p) => Bills != null && Bills.Count > 0,
+            (p) => Bills != null && Bills.Count > 0 && SelectedEmpName != null && SelectedTabNum != null,
             (p) =>
             {
                 // Tính tổng tiền
@@ -582,135 +584,258 @@ namespace RestaurantManager.ViewModels
                 if (IsEditing == 0) // thêm hóa đơn
                 {
                     IsConfirmed = true;
-                    int selectedTabId = DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabId;
-                    int selectedEmpId = DataProvider.Instance.DB.Employees.Where(emp => emp.EmpName == SelectedEmpName).FirstOrDefault().EmpId;
-                    string invoiceNumber = "HD" + (DataProvider.Instance.DB.Receipts.Where(r => r.Isdeleted == false).Count() + 1).ToString("D3");  // Tạo mã hóa đơn, như HD001, HD002, ...
-                    DateTime currentTime = DateTime.Now;  // Thời gian hiện tại
-                    TotalAmount = Bills.Sum(item => item.Price);
-                    decimal totalAmount = TotalAmount;  // Tính tổng tiền từ danh sách Bills
-
-                    var receipt = new Receipt()
+                    if (IsEditing == 0) // thêm hóa đơn
                     {
-                        RecCode = invoiceNumber,  // Mã hóa đơn                        
-                        RecTime = currentTime,     // Thời gian tạo hóa đơn
-                        RecPay = totalAmount,      // Tổng tiền (số tiền phải trả)
-                        Isdeleted = false,     // Trạng thái xóa (đang lưu trữ)
-                        TabId = selectedTabId,
-                        EmpId = selectedEmpId,
-                    };
-
-                    try
-                    {
-                        // Lưu Receipt và lấy giá trị RecId
-                        DataProvider.Instance.DB.Receipts.Add(receipt);
-                        DataProvider.Instance.DB.SaveChanges();
-
-                        // MessageBox.Show($"RecId của Receipt: {receipt.RecId}", "Debug", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                        foreach (var bill in Bills)
+                        bool corrupted = false;
+                        var billCopy = new ObservableCollection<BillUCViewModel>(Bills);
+                        foreach (var billTest in billCopy)
                         {
-                            var menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemName == bill.ItemName);
-                            if (menuItem == null)
+                            var menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemName == billTest.ItemName);
+                            if (menuItem.ItemType == "FOOD")
                             {
-                                MessageBox.Show($"Không tìm thấy món: {bill.ItemName} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue;
+                                var recipes = DataProvider.Instance.DB.Recipes.Where(r => r.ItemId == menuItem.ItemId).ToList();
+                                if (menuItem.Instock < billTest.Quantity)
+                                {
+                                    Bills.Remove(billTest);
+                                    string announce = $"Không đủ nguyên liệu cho món: {billTest.ItemName}!\nSố lượng nguyên liệu còn lại cho món ăn là:\n";
+
+                                    foreach (var recipe in recipes)
+                                    {
+                                        var ingredient = DataProvider.Instance.DB.Ingredients.FirstOrDefault(i => i.IngreId == recipe.IngreId);
+
+                                        announce += $"\n{ingredient.IngreName}: {ingredient.InstockKg}";
+                                    }
+                                    MessageBox.Show(announce, "Thông báo!", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    corrupted = true;
+                                    continue;
+                                }
+                                else menuItem.Instock -= billTest.Quantity;
                             }
-                            var existingRecId = DataProvider.Instance.DB.Receipts
-                            .OrderByDescending(r => r.RecId)
-                            .Select(r => r.RecId)
-                            .FirstOrDefault();
-                            var receiptDetail = new ReceiptDetail()
+
+                            else // cho drink và other
                             {
-                                RecId = existingRecId, // Dùng RecId thực tế
-                                ItemId = menuItem.ItemId,
-                                // ItemName = bill.ItemName,
-                                Quantity = bill.Quantity,
-                                Price = bill.ItemSprice,
-                            };
-                            DataProvider.Instance.DB.ReceiptDetails.Add(receiptDetail);
+                                if (menuItem.Instock < billTest.Quantity)
+                                {
+                                    Bills.Remove(billTest);
+                                    MessageBox.Show($"Không đủ số lương sản phẩm cho món: {billTest.ItemName}!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    MessageBox.Show($"Số lượng sản phẩm còn lại: {menuItem.Instock}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    corrupted = true;
+                                    continue;
+                                }
+                                else menuItem.Instock -= billTest.Quantity;
+                            }
                         }
 
-                        // Lưu ReceiptDetails
-                        DataProvider.Instance.DB.SaveChanges();
-
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-
-                    MessageBox.Show($"Hóa đơn đã lưu thành công!\nSố hóa đơn: {receipt.RecCode}",
-                                    "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    p.Close();
-                }
-                else if (IsEditing == 1)// sửa hóa đơn
-                {
-                    TotalAmount = Bills.Sum(item => item.Price);
-                    if (inputReceipt != null)
-                    {
-                        if (SelectedTabNum != InputTabNum)
+                        if (corrupted)
                         {
-                            DiningTable inputTable = DataProvider.Instance.DB.DiningTables.FirstOrDefault(t => t.TabNum == InputTabNum);
-                            if (inputTable != null)
-                            {
-                                inputTable.TabStatus = true;
-                            }
-                            DiningTable selectedTable = DataProvider.Instance.DB.DiningTables.FirstOrDefault(t => t.TabNum == SelectedTabNum);
-                            if (selectedTable != null)
-                            {
-                                selectedTable.TabStatus = false;
-                            }
+                            MessageBox.Show("Hóa đơn không thể lưu do thiếu nguyên liệu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                        DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabStatus = false;
+
+                        int selectedTabId = DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabId;
+                        int selectedEmpId = DataProvider.Instance.DB.Employees.Where(emp => emp.EmpName == SelectedEmpName).FirstOrDefault().EmpId;
+                        string invoiceNumber = "HD" + (DataProvider.Instance.DB.Receipts.Where(r => r.Isdeleted == false).Count() + 1).ToString("D3");  // Tạo mã hóa đơn, như HD001, HD002, ...
+                        DateTime currentTime = DateTime.Now;  // Thời gian hiện tại
+                        TotalAmount = Bills.Sum(item => item.Price);
+                        decimal totalAmount = TotalAmount;  // Tính tổng tiền từ danh sách Bills
+
+                        var receipt = new Receipt()
+                        {
+                            RecCode = invoiceNumber,  // Mã hóa đơn                        
+                            RecTime = currentTime,     // Thời gian tạo hóa đơn
+                            RecPay = totalAmount,      // Tổng tiền (số tiền phải trả)
+                            Isdeleted = false,     // Trạng thái xóa (đang lưu trữ)
+                            TabId = selectedTabId,
+                            EmpId = selectedEmpId,
+                        };
+
+                        try
+                        {
+                            // Lưu Receipt và lấy giá trị RecId
+                            DataProvider.Instance.DB.Receipts.Add(receipt);
                             DataProvider.Instance.DB.SaveChanges();
-                        }
 
-                        ObservableCollection<ReceiptDetail> existedReceiptDetails = new ObservableCollection<ReceiptDetail>(
-                            DataProvider.Instance.DB.ReceiptDetails
-                            .Where(rd => rd.RecId == inputReceipt.RecId)
-                            .ToList()
-                        );
-                        foreach (var bill in Bills)
-                        {
-                            var menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemName == bill.ItemName);
-                            if (menuItem == null)
+                            // MessageBox.Show($"RecId của Receipt: {receipt.RecId}", "Debug", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            foreach (var bill in Bills)
                             {
-                                MessageBox.Show($"Không tìm thấy món: {bill.ItemName} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue;
-                            }
-                            var existedReceiptDetail = existedReceiptDetails.FirstOrDefault(rd => rd.ItemId == menuItem.ItemId);
-                            if (existedReceiptDetail != null)
-                            {
-                                existedReceiptDetail.Quantity = bill.Quantity;
-                                existedReceiptDetail.Price = bill.ItemSprice;
-                            }
-                            else
-                            {
+                                var menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemName == bill.ItemName);
+                                if (menuItem == null)
+                                {
+                                    MessageBox.Show($"Không tìm thấy món: {bill.ItemName} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    continue;
+                                }
+                                var existingRecId = DataProvider.Instance.DB.Receipts
+                                .OrderByDescending(r => r.RecId)
+                                .Select(r => r.RecId)
+                                .FirstOrDefault();
                                 var receiptDetail = new ReceiptDetail()
                                 {
-                                    RecId = inputReceipt.RecId,
+                                    RecId = existingRecId, // Dùng RecId thực tế
                                     ItemId = menuItem.ItemId,
+                                    // ItemName = bill.ItemName,
                                     Quantity = bill.Quantity,
                                     Price = bill.ItemSprice,
                                 };
                                 DataProvider.Instance.DB.ReceiptDetails.Add(receiptDetail);
                             }
+
+                            // Lưu ReceiptDetails
+                            DataProvider.Instance.DB.SaveChanges();
+
                         }
-                        int selectedTabId = DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabId;
-                        decimal totalAmount = TotalAmount;  // Tính tổng tiền từ danh sách Bills
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
 
-                        InputReceipt.RecPay = totalAmount;
-                        InputReceipt.TabId = selectedTabId;
-                        InputReceipt.EmpId = DataProvider.Instance.DB.Employees.Where(emp => emp.EmpName == SelectedEmpName).Select(emp => emp.EmpId).FirstOrDefault();
-
-                        DataProvider.Instance.DB.SaveChanges();
-
+                        MessageBox.Show($"Hóa đơn đã lưu thành công!\nSố hóa đơn: {receipt.RecCode}",
+                                        "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                        p.Close();
                     }
-                    IsConfirmed = false;
-                    p.Close();
-                }
+                    else if (IsEditing == 1)// sửa hóa đơn
+                    {
+                        TotalAmount = Bills.Sum(item => item.Price);
+                        if (inputReceipt != null)
+                        {
+                            bool corrupted = false;
+                            if (SelectedTabNum != InputTabNum)
+                            {
+                                DiningTable inputTable = DataProvider.Instance.DB.DiningTables.FirstOrDefault(t => t.TabNum == InputTabNum);
+                                if (inputTable != null)
+                                {
+                                    inputTable.TabStatus = true;
+                                }
+                                DiningTable selectedTable = DataProvider.Instance.DB.DiningTables.FirstOrDefault(t => t.TabNum == SelectedTabNum);
+                                if (selectedTable != null)
+                                {
+                                    selectedTable.TabStatus = false;
+                                }
+                                DataProvider.Instance.DB.SaveChanges();
+                            }
 
-                // Xóa danh sách Bills và đặt lại tổng tiền
-                Bills.Clear();
-                TotalAmount = 0;
+                            ObservableCollection<ReceiptDetail> existedReceiptDetails = new ObservableCollection<ReceiptDetail>(
+                                DataProvider.Instance.DB.ReceiptDetails
+                                .Where(rd => rd.RecId == inputReceipt.RecId)
+                                .ToList()
+                            );
+                            ObservableCollection<BillUCViewModel> existedBills = new ObservableCollection<BillUCViewModel>(
+                                Bills
+                                .Where(b => b.RecId == inputReceipt.RecId)
+                                .ToList()
+                            );
+
+
+                            foreach (var bill in Bills)
+                            {
+                                var menuItem = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemName == bill.ItemName);
+                                if (menuItem == null)
+                                {
+                                    MessageBox.Show($"Không tìm thấy món: {bill.ItemName} trong MenuItems!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    continue;
+                                }
+                                var existedReceiptDetail = existedReceiptDetails.FirstOrDefault(rd => rd.ItemId == menuItem.ItemId);
+                                if (existedReceiptDetail != null)
+                                {
+                                    //var existedReceiptDetail = existedReceiptDetails.FirstOrDefault(rd => rd.ItemId == menuItem.ItemId);
+                                    var existedBill = existedBills.FirstOrDefault(b => b.ItemName == bill.ItemName);
+
+                                    if (menuItem.ItemType == "FOOD")
+                                    {
+                                        var recipes = DataProvider.Instance.DB.Recipes.Where(r => r.ItemId == menuItem.ItemId).ToList();
+
+                                        if (menuItem.Instock < bill.Quantity)
+                                        {
+                                            string announce = $"Không đủ nguyên liệu cho món: {bill.ItemName}!\nSố lượng nguyên liệu còn lại cho món ăn là:\n";
+                                            foreach (var recipe in recipes)
+                                            {
+                                                var ingredient = DataProvider.Instance.DB.Ingredients.FirstOrDefault(i => i.IngreId == recipe.IngreId);
+                                                announce += $"\n{ingredient.IngreName}: {ingredient.InstockKg}";
+                                            }
+                                            MessageBox.Show(announce, "Thông báo!", MessageBoxButton.OK, MessageBoxImage.Information);
+                                            corrupted = true;
+                                            continue;
+                                        }
+                                        else menuItem.Instock = menuItem.Instock + existedBill.Quantity - bill.Quantity;
+                                    }
+                                    else // cho drink và other
+                                    {
+                                        if (menuItem.Instock < bill.Quantity)
+                                        {
+                                            MessageBox.Show($"Không đủ số lương sản phẩm cho món: {bill.ItemName}!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            MessageBox.Show($"Số lượng sản phẩm còn lại: {menuItem.Instock}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                                            corrupted = true;
+                                            continue;
+                                        }
+                                        else menuItem.Instock = menuItem.Instock + existedBill.Quantity - bill.Quantity;
+                                    }
+                                    existedReceiptDetail.Quantity = bill.Quantity;
+                                    existedReceiptDetail.Price = bill.ItemSprice;
+                                }
+                                else
+                                {
+                                    if (menuItem.ItemType == "FOOD")
+                                    {
+                                        var recipes = DataProvider.Instance.DB.Recipes.Where(r => r.ItemId == menuItem.ItemId).ToList();
+                                        if (menuItem.Instock < bill.Quantity)
+                                        {
+                                            string announce = $"Không đủ nguyên liệu cho món: {bill.ItemName}!\nSố lượng nguyên liệu còn lại cho món ăn là:\n";
+                                            foreach (var recipe in recipes)
+                                            {
+                                                var ingredient = DataProvider.Instance.DB.Ingredients.FirstOrDefault(i => i.IngreId == recipe.IngreId);
+                                                announce += $"\n{ingredient.IngreName}: {ingredient.InstockKg}";
+                                            }
+                                            MessageBox.Show(announce, "Thông báo!", MessageBoxButton.OK, MessageBoxImage.Information);
+                                            corrupted = true;
+                                            continue;
+                                        }
+                                        else menuItem.Instock -= bill.Quantity;
+                                    }
+                                    else // cho drink và other
+                                    {
+                                        if (menuItem.Instock < bill.Quantity)
+                                        {
+                                            MessageBox.Show($"Không đủ số lương sản phẩm cho món: {bill.ItemName}!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            MessageBox.Show($"Số lượng sản phẩm còn lại: {menuItem.Instock}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                                            corrupted = true;
+                                            continue;
+                                        }
+                                        else menuItem.Instock -= bill.Quantity;
+                                    }
+                                    var receiptDetail = new ReceiptDetail()
+                                    {
+                                        RecId = inputReceipt.RecId,
+                                        ItemId = menuItem.ItemId,
+                                        Quantity = bill.Quantity,
+                                        Price = bill.ItemSprice,
+                                    };
+                                    DataProvider.Instance.DB.ReceiptDetails.Add(receiptDetail);
+                                }
+                            }
+                            if (corrupted)
+                            {
+                                MessageBox.Show("Hóa đơn không thể lưu do thiếu nguyên liệu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                            int selectedTabId = DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabId;
+                            decimal totalAmount = TotalAmount;  // Tính tổng tiền từ danh sách Bills
+
+                            InputReceipt.RecPay = totalAmount;
+                            InputReceipt.TabId = selectedTabId;
+                            InputReceipt.EmpId = DataProvider.Instance.DB.Employees.Where(emp => emp.EmpName == SelectedEmpName).Select(emp => emp.EmpId).FirstOrDefault();
+
+                            DataProvider.Instance.DB.SaveChanges();
+
+                        }
+                        IsConfirmed = false;
+                        p.Close();
+                    }
+
+                    // Xóa danh sách Bills và đặt lại tổng tiền
+                    Bills.Clear();
+                    TotalAmount = 0;
+                }
             });
 
             // Command xóa hóa đơn

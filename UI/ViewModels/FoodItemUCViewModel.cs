@@ -91,8 +91,6 @@ namespace RestaurantManager.ViewModels
             this.FoodItemName = itemName;
             this.FoodItemImg = itemImg;
             this.FoodItemSprice = itemSprice;
-
-
         }
 
         private bool _isSelected;
@@ -105,8 +103,5 @@ namespace RestaurantManager.ViewModels
                 OnPropertyChanged(nameof(IsSelected));
             }
         }
-
     }
-
-
 }
