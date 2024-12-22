@@ -213,6 +213,7 @@ namespace RestaurantManager.ViewModels
         public ICommand AddItemCommand { get; set; }
         public ICommand DelItemCommand { get; set; }
         public ICommand EditItemCommand { get; set; }
+        public ICommand PrintFinancialHistoryReport { get; set; }
 
         //
         // --TableViewModel Management
@@ -1409,7 +1410,6 @@ namespace RestaurantManager.ViewModels
             (p) => { return true; }, // CanExecute
             (p) =>
             {
-
                 if (areYouSure() == true)
                 {
                     SelectedFoodItemBill = p;
@@ -1423,7 +1423,7 @@ namespace RestaurantManager.ViewModels
                             FinDate = DateTime.Now,
                             Amount = receipt.RecPay,
                             Type = "INCOME",
-                            Description = $"Thanh toán hóa đơn {receipt.RecId}",
+                            Description = $"Thanh toán hóa đơn số {receipt.RecId}",
                             ReferenceId = receipt.RecId,
                             ReferenceType = "RECEIPT"
                         };
@@ -1467,6 +1467,18 @@ namespace RestaurantManager.ViewModels
                 }
                 LoadAllTableInformation();
                 LoadOrderUC();
+            });
+            PrintFinancialHistoryReport = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                ObservableCollection<FinancialHistory> financialHistories = new ObservableCollection<FinancialHistory>(
+                        DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate >= StartDate && x.FinDate <= EndDate && x.Type != "PROFIT").ToList()
+                    );
+
+                ExportFianancialReportToPDF(financialHistories);
+                //for (DateTime dt = StartDate; dt <= EndDate; dt.AddDays(1))
+                //{
+
+                //}
             });
         }
         public void DeleteFinancialHistory()
@@ -1544,114 +1556,199 @@ namespace RestaurantManager.ViewModels
             //BookingViewList.Clear();
         }
 
-            public void ExportOrderToPDF(int ordernum, decimal bill, DateTime recTime, List<ReceiptDetail> receiptDetails)
+        public void ExportOrderToPDF(int ordernum, decimal bill, DateTime recTime, List<ReceiptDetail> receiptDetails)
+        {
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
             {
-                var saveFileDialog = new Microsoft.Win32.SaveFileDialog
-                {
-                    Title = "Chọn nơi lưu hóa đơn",
-                    Filter = "PDF Files (*.pdf)|*.pdf",
-                    DefaultExt = ".pdf",
-                    OverwritePrompt = true
-                };
+                Title = "Chọn nơi lưu hóa đơn",
+                Filter = "PDF Files (*.pdf)|*.pdf",
+                DefaultExt = ".pdf",
+                OverwritePrompt = true
+            };
 
-                if (saveFileDialog.ShowDialog() == true)
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string filePath = saveFileDialog.FileName;
+                try
                 {
-                    string filePath = saveFileDialog.FileName;
-                    try
+                    PdfDocument pdfDoc = new PdfDocument();
+                    pdfDoc.Info.Title = "Hóa đơn thanh toán";
+                    PdfPage page = pdfDoc.AddPage();
+                    XGraphics gfx = XGraphics.FromPdfPage(page);
+                    XFont titleFont = new XFont("Arial", 24, XFontStyle.Bold);
+                    XFont headerFont = new XFont("Arial", 12, XFontStyle.Bold);
+                    XFont regularFont = new XFont("Arial", 10);
+
+                    // Draw title
+                    gfx.DrawString("Hóa đơn thanh toán", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
+
+                    // Draw logo
+                    XImage logo = XImage.FromFile("C:\\Users\\ASUS\\source\\repos\\RestaurantManager - Main\\UI\\Views\\Images\\logo.png");
+                    gfx.DrawImage(logo, 20, 20, 50, 50);
+
+                    // Draw general receipt information
+                    gfx.DrawString($"Mã hóa đơn: {ordernum}", regularFont, XBrushes.Black, new XPoint(50, 100));
+                    gfx.DrawString($"Ngày giờ: {recTime.ToString("dd/MM/yyyy HH:mm:ss")}", regularFont, XBrushes.Black, new XPoint(50, 120));
+
+
+                    // Draw table headers
+                    int yPosition = 150;
+                    gfx.DrawString("STT", headerFont, XBrushes.Black, new XPoint(50, yPosition));
+                    gfx.DrawString("Tên món", headerFont, XBrushes.Black, new XPoint(100, yPosition));
+                    gfx.DrawString("SL", headerFont, XBrushes.Black, new XPoint(250, yPosition));
+                    gfx.DrawString("Đơn giá", headerFont, XBrushes.Black, new XPoint(300, yPosition));
+                    gfx.DrawString("Thành tiền", headerFont, XBrushes.Black, new XPoint(400, yPosition));
+                    yPosition += 20;
+
+                    // Draw receipt details
+                    int index = 1;
+                    foreach (var detail in receiptDetails)
                     {
-                        PdfDocument pdfDoc = new PdfDocument();
-                        pdfDoc.Info.Title = "Hóa đơn thanh toán";
-                        PdfPage page = pdfDoc.AddPage();
-                        XGraphics gfx = XGraphics.FromPdfPage(page);
-                        XFont titleFont = new XFont("Arial", 24, XFontStyle.Bold);
-                        XFont headerFont = new XFont("Arial", 12, XFontStyle.Bold);
-                        XFont regularFont = new XFont("Arial", 10);
-
-                        // Draw title
-                        gfx.DrawString("Hóa đơn thanh toán", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
-
-                        // Draw logo
-                        XImage logo = XImage.FromFile("C:\\Users\\Admin\\Downloads\\KTPM\\3rd Semester\\VP\\BCCK\\RestaurantManager-master\\UI\\Views\\Images\\logo.png");
-                        gfx.DrawImage(logo, 20, 20, 50, 50);
-
-                        // Draw general receipt information
-                        gfx.DrawString($"Mã hóa đơn: {ordernum}", regularFont, XBrushes.Black, new XPoint(50, 100));
-                        gfx.DrawString($"Ngày giờ: {recTime.ToString("dd/MM/yyyy HH:mm:ss")}", regularFont, XBrushes.Black, new XPoint(50, 120));
-
-
-                        // Draw table headers
-                        int yPosition = 150;
-                        gfx.DrawString("STT", headerFont, XBrushes.Black, new XPoint(50, yPosition));
-                        gfx.DrawString("Tên món", headerFont, XBrushes.Black, new XPoint(100, yPosition));
-                        gfx.DrawString("SL", headerFont, XBrushes.Black, new XPoint(250, yPosition));
-                        gfx.DrawString("Đơn giá", headerFont, XBrushes.Black, new XPoint(300, yPosition));
-                        gfx.DrawString("Thành tiền", headerFont, XBrushes.Black, new XPoint(400, yPosition));
+                        string itemName = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemId == detail.ItemId)?.ItemName ?? "Không tìm thấy";
+                        gfx.DrawString(index.ToString(), regularFont, XBrushes.Black, new XPoint(50, yPosition));
+                        gfx.DrawString(itemName, regularFont, XBrushes.Black, new XPoint(100, yPosition));
+                        gfx.DrawString(detail.Quantity.ToString(), regularFont, XBrushes.Black, new XPoint(250, yPosition));
+                        gfx.DrawString(detail.Price.ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(300, yPosition));
+                        gfx.DrawString((detail.Price * detail.Quantity).ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(400, yPosition));
                         yPosition += 20;
-
-                        // Draw receipt details
-                        int index = 1;
-                        foreach (var detail in receiptDetails)
+                        // Move to the next page if needed
+                        if (yPosition > page.Height - 50)
                         {
-                            string itemName = DataProvider.Instance.DB.MenuItems.FirstOrDefault(mi => mi.ItemId == detail.ItemId)?.ItemName ?? "Không tìm thấy";
-                            gfx.DrawString(index.ToString(), regularFont, XBrushes.Black, new XPoint(50, yPosition));
-                            gfx.DrawString(itemName, regularFont, XBrushes.Black, new XPoint(100, yPosition));
-                            gfx.DrawString(detail.Quantity.ToString(), regularFont, XBrushes.Black, new XPoint(250, yPosition));
-                            gfx.DrawString(detail.Price.ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(300, yPosition));
-                            gfx.DrawString((detail.Price * detail.Quantity).ToString("C0", new CultureInfo("vi-VN")), regularFont, XBrushes.Black, new XPoint(400, yPosition));
-                            yPosition += 20;
-                            // Move to the next page if needed
-                            if (yPosition > page.Height - 50)
-                            {
-                                page = pdfDoc.AddPage();
-                                gfx = XGraphics.FromPdfPage(page);
-                                yPosition = 50; // Reset Y position for new page
-                            }
-                            index++;
+                            page = pdfDoc.AddPage();
+                            gfx = XGraphics.FromPdfPage(page);
+                            yPosition = 50; // Reset Y position for new page
                         }
-                        // Draw total amount
-                        yPosition += 20;
-
-                        gfx.DrawString($"Tổng tiền: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center);
-                        // Save PDF
-                        pdfDoc.Save(filePath);
-                        MessageBox.Show($"Hóa đơn đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                        Orderuc.Remove(SelectedFoodItemBill);
+                        index++;
                     }
+                    // Draw total amount
+                    yPosition += 20;
 
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Đã xảy ra lỗi khi lưu file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    gfx.DrawString($"Tổng tiền: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center);
+                    // Save PDF
+                    pdfDoc.Save(filePath);
+                    MessageBox.Show($"Hóa đơn đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //Orderuc.Remove(SelectedFoodItemBill);
                 }
-                else
+
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Bạn đã hủy lưu hóa đơn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show($"Đã xảy ra lỗi khi lưu file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-
-            public void LoadOrderUC()
+            else
             {
-                var items = DataProvider.Instance.DB.Receipts
-                              .Where(receipt => receipt.Isdeleted == false) // Lọc hóa đơn chưa thanh toán
-                              .OrderBy(receipt => receipt.RecId)  // Sắp xếp theo RecId
-                              .ToList();
-                //byte? tableNum = DataProvider.Instance.DB.DiningTables.Where(x => x.TabStatus == true).FirstOrDefault()?.TabNum;
-                // Chuyển đổi danh sách hóa đơn thành ObservableCollection<OrderViewModel>
-
-                Orderuc = new ObservableCollection<OrderViewModel>(
-
-                    items.Select((item, index) => new OrderViewModel
-                    {
-                        RecId = item.RecId,
-                        OrderBill = item.RecPay,
-                        OrderTimer = item.RecTime,
-                        OrderNumber = index + 1, // Số thứ tự bắt đầu từ 1
-                        OrderEmployee = DataProvider.Instance.DB.Employees.Where(x => x.EmpId == item.EmpId).Select(x => x.EmpName).FirstOrDefault() ?? "",
-                        OrderTable = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == item.TabId).FirstOrDefault()?.TabNum ?? 0
-                    })
-
-                );
-                OnPropertyChanged(nameof(Orderuc)); // Thông báo cập nhật giao diện
+                MessageBox.Show("Bạn đã hủy lưu hóa đơn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+        public void ExportFianancialReportToPDF(ObservableCollection<FinancialHistory> financialHistories)
+        {
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = "Chọn nơi lưu báo cáo lịch sử tài chính!",
+                Filter = "PDF Files (*.pdf)|*.pdf",
+                DefaultExt = ".pdf",
+                OverwritePrompt = true
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string filePath = saveFileDialog.FileName;
+                try
+                {
+                    PdfDocument pdfDoc = new PdfDocument();
+                    pdfDoc.Info.Title = "Báo cáo lịch sử tài chính";
+                    PdfPage page = pdfDoc.AddPage();
+                    XGraphics gfx = XGraphics.FromPdfPage(page);
+                    XFont titleFont = new XFont("Arial", 24, XFontStyle.Bold);
+                    XFont headerFont = new XFont("Arial", 12, XFontStyle.Bold);
+                    XFont regularFont = new XFont("Arial", 10);
+
+                    // Draw title
+                    gfx.DrawString("Báo cáo doanh thu", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
+
+                    // Draw logo
+                    XImage logo = XImage.FromFile("C:\\Users\\ASUS\\source\\repos\\RestaurantManager - Main\\UI\\Views\\Images\\logo.png");
+                    gfx.DrawImage(logo, 20, 20, 50, 50);
+
+                    // Draw general receipt information
+                    //gfx.DrawString($"Mã doanh thu: {ordernum}", regularFont, XBrushes.Black, new XPoint(50, 100));
+                    gfx.DrawString($"Từ ngày: {StartDate.ToString("dd/MM/yyyy")} đến ngày {EndDate.ToString("dd/MM/yyyy")}", regularFont, XBrushes.Black, new XPoint(50, 100));
+
+
+                    // Draw table headers
+                    int yPosition = 150;
+                    gfx.DrawString("STT", headerFont, XBrushes.Black, new XPoint(50, yPosition));
+                    gfx.DrawString("Thời gian", headerFont, XBrushes.Black, new XPoint(100, yPosition));
+                    gfx.DrawString("Mô tả", headerFont, XBrushes.Black, new XPoint(190, yPosition));
+                    gfx.DrawString("Phân loại", headerFont, XBrushes.Black, new XPoint(310, yPosition));
+                    gfx.DrawString("Thành tiền", headerFont, XBrushes.Black, new XPoint(400, yPosition));
+                    //gfx.DrawString("Tham chiếu", headerFont, XBrushes.Black, new XPoint(400, yPosition));
+                    yPosition += 20;
+
+                    // Draw receipt details
+                    int index = 1;
+                    foreach (var finHis in financialHistories)
+                    {
+                        //string finDes = DataProvider.Instance.DB.FinancialHistories.FirstOrDefault(mi => mi.FinId == finHis.FinId)?.Description ?? "Không tìm thấy";
+                        gfx.DrawString(index.ToString(), regularFont, XBrushes.Black, new XPoint(55, yPosition));
+                        gfx.DrawString(finHis.FinDate.ToString("dd/MM/yyyy"), regularFont, XBrushes.Black, new XPoint(105, yPosition));
+                        gfx.DrawString(finHis.Description, regularFont, XBrushes.Black, new XPoint(185, yPosition));
+                        gfx.DrawString(finHis.Type == "INCOME" ? "Doanh thu" : "Chi phí", regularFont, XBrushes.Black, new XPoint(315, yPosition));
+                        gfx.DrawString($"{finHis.Amount:N2}đ", regularFont, XBrushes.Black, new XPoint(405, yPosition));
+                        //gfx.DrawString($"{finHis.Amount:D2}đ", regularFont, XBrushes.Black, new XPoint(400, yPosition));
+                        yPosition += 20;
+                        // Move to the next page if needed
+                        if (yPosition > page.Height - 50)
+                        {
+                            page = pdfDoc.AddPage();
+                            gfx = XGraphics.FromPdfPage(page);
+                            yPosition = 50; // Reset Y position for new page
+                        }
+                        index++;
+                    }
+                    // Draw total amount
+                    yPosition += 20;
+                    //gfx.DrawString($"Lợi nhuận: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center);
+                    // Save PDF
+                    pdfDoc.Save(filePath);
+                    MessageBox.Show($"Báo cáo đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Orderuc.Remove(SelectedFoodItemBill);
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Đã xảy ra lỗi khi lưu file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Bạn đã hủy lưu hóa đơn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        public void LoadOrderUC()
+        {
+            var items = DataProvider.Instance.DB.Receipts
+                            .Where(receipt => receipt.Isdeleted == false) // Lọc hóa đơn chưa thanh toán
+                            .OrderBy(receipt => receipt.RecId)  // Sắp xếp theo RecId
+                            .ToList();
+            //byte? tableNum = DataProvider.Instance.DB.DiningTables.Where(x => x.TabStatus == true).FirstOrDefault()?.TabNum;
+            // Chuyển đổi danh sách hóa đơn thành ObservableCollection<OrderViewModel>
+
+            Orderuc = new ObservableCollection<OrderViewModel>(
+
+                items.Select((item, index) => new OrderViewModel
+                {
+                    RecId = item.RecId,
+                    OrderBill = item.RecPay,
+                    OrderTimer = item.RecTime,
+                    OrderNumber = index + 1, // Số thứ tự bắt đầu từ 1
+                    OrderEmployee = DataProvider.Instance.DB.Employees.Where(x => x.EmpId == item.EmpId).Select(x => x.EmpName).FirstOrDefault() ?? "",
+                    OrderTable = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == item.TabId).FirstOrDefault()?.TabNum ?? 0
+                })
+
+            );
+            OnPropertyChanged(nameof(Orderuc)); // Thông báo cập nhật giao diện
+        }
+    }
 }

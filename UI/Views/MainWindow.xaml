@@ -126,22 +126,28 @@
                                                 <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}" Width="200" Height="40" 
                                                             VerticalAlignment="Center" FontSize="20" Language="en-GB"/>
                                             </StackPanel>
-
-                                            
-                                        </StackPanel>
-                                        <Image Margin="15,5" VerticalAlignment="Center"
+                                            <Image Margin="15,5" VerticalAlignment="Center"
                                                 Source="Images/refresh.png" HorizontalAlignment="Right">
-                                            <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="MouseLeftButtonDown">
-                                                    <i:InvokeCommandAction Command="{Binding RefreshChartDataCommand}"/>
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>
-                                        </Image>
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding RefreshChartDataCommand}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Image>
+                                            <Button Content="Xuất báo cáo doanh thu" Style="{StaticResource configureDataButton}" 
+                                                    Command="{Binding PrintFinancialHistoryReport}"  VerticalAlignment="Center" Height="76"/>
+                                        </StackPanel>
+
+
 
                                     </Grid>
 
                                     <Grid Grid.Row="1">
-                                        <inchrt:CartesianChart>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="473*"/>
+                                            <ColumnDefinition Width="345*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <inchrt:CartesianChart Grid.ColumnSpan="2">
                                             <inchrt:CartesianChart.Series>
                                                 <inchrt:LineSeries Title="Doanh thu" Values="{Binding IncomeValues}" DataLabels="True"/>
                                                 <inchrt:LineSeries Title="Chi phí" Values="{Binding ExpenseValues}" DataLabels="True"/>
@@ -652,7 +658,7 @@
             <!--TabItem thứ 4 (Bookings)-->
             <TabItem x:Name="bookings" Padding="30,0" Background="GhostWhite" 
                      Style="{StaticResource TabItemStyle}" 
-                     FontWeight="SemiBold" FontSize="30" Header="Bookings">     
+                     FontWeight="SemiBold" FontSize="30" Header="Bookings">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
