@@ -419,8 +419,8 @@ namespace RestaurantManager.ViewModels
         }
 
         public Func<double, string> YFormatter { get; set; }
-        private DateTime startDate = DateTime.Now.Date;
-        private DateTime endDate = DateTime.Now.Date.AddDays(1) ;
+        private DateTime startDate = DateTime.Now.Date.AddDays(-7);
+        private DateTime endDate = DateTime.Now.Date;
 
 
         public DateTime StartDate 
@@ -1235,6 +1235,7 @@ namespace RestaurantManager.ViewModels
             {
                 
                 byte existedTableNumber = (byte)DataProvider.Instance.DB.DiningTables.Count();
+                
                 //string query = $"DBCC CHECKIDENT ('DININGTABLE', RESEED, {existedTableNumber + 1})";
                 //DataProvider.Instance.DB.Database.ExecuteSqlRaw(query);
                 DiningTable newTable = new DiningTable { TabNum = ++existedTableNumber, TabStatus = true, Isdeleted = false };
@@ -1247,13 +1248,29 @@ namespace RestaurantManager.ViewModels
             });
             EditTableCommand = new RelayCommand<TableViewModel>((p) => { return true; }, (p) =>
             {
+                bool AllEmpty = true;
+                foreach (TableViewModel table in TableViewList)
+                {
+                    if (table.BoolTabStatus == false)
+                    {
+                        AllEmpty = false;
+                        break;
+                    }
+                    
+                }
                 AddTableWindow addTableWindow = new AddTableWindow();
                 var addTableVM = addTableWindow.DataContext as AddTableViewModel;
+                
                 string numberPart = Regex.Match(p.TabNumber, @"\d+").Value;
                 byte tableFromString = byte.Parse(numberPart.ToString());
                 DiningTable SelectedTable = DataProvider.Instance.DB.DiningTables.Where(x => x.TabNum == tableFromString).FirstOrDefault();
                 if (addTableVM != null)
                 {
+                    if (AllEmpty == false)
+                    {
+                        addTableVM.AllIsEmpty = false;
+                    }
+                    else addTableVM.AllIsEmpty = true;
                     addTableVM.LoadTableInformation(SelectedTable);
                     addTableWindow.DataContext = addTableVM;
                     addTableWindow.ShowDialog();
@@ -1361,6 +1378,9 @@ namespace RestaurantManager.ViewModels
                 foodLayoutWindow.ShowDialog();
                 LoadOrderUC();
                 LoadAllTableInformation();
+                LoadAllFOODInstock();
+                ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
+
             });
 
             EditOrderCommand = new RelayCommand<OrderViewModel>((p) => { return true; }, (p) =>
@@ -1376,10 +1396,13 @@ namespace RestaurantManager.ViewModels
                     foodLayoutVM.IsEditing = 1;
                     foodLayoutVM.InputTabNum = DataProvider.Instance.DB.DiningTables.Where(tab => tab.TabId == selectedReceipt.TabId).FirstOrDefault().TabNum;
                     foodLayoutVM.InputReceipt = selectedReceipt;
+                    foodLayoutVM.LoadMenuItems();
                     selectedFoodLayout.ShowDialog();
                 }
                 LoadOrderUC();
                 LoadAllTableInformation();
+                LoadAllFOODInstock();
+                ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems); // load lại list menu item
             });
 
             PayBillCommand = new RelayCommand<OrderViewModel>(
@@ -1397,7 +1420,7 @@ namespace RestaurantManager.ViewModels
                         receipt.Isdeleted = true; // Cập nhật trạng thái hóaddon
                         FinancialHistory financialHistory = new FinancialHistory
                         {
-                            FinDate = receipt.RecTime,
+                            FinDate = DateTime.Now,
                             Amount = receipt.RecPay,
                             Type = "INCOME",
                             Description = $"Thanh toán hóa đơn {receipt.RecId}",

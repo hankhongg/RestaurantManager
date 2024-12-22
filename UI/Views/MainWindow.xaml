@@ -523,7 +523,7 @@
                     <!--Cột 1 chứa thông tin các đơn hàng hiện đó (WrapPanel) => xử lý backend sau-->
                     <Grid Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,592,0">
                         <!-- Danh sách món ăn -->
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0" >
                             <ItemsControl ItemsSource="{Binding Orderuc}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -533,7 +533,7 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel>
-                                            <orderUC:OrderUC Height="200" Width="300" Margin="10" DataContext="{Binding}">
+                                            <orderUC:OrderUC Height="220" Width="315" Margin="26, 8" DataContext="{Binding}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="MouseLeftButtonDown">
                                                         <i:InvokeCommandAction Command="{Binding DataContext.EditOrderCommand , RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
