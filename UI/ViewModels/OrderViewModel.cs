@@ -39,8 +39,8 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        private int orderEmployee;
-        public int OrderEmployee
+        private string orderEmployee;
+        public string OrderEmployee
         {
             get
             {
@@ -117,14 +117,14 @@ namespace RestaurantManager.ViewModels
         {
             // load order information from foodlayoutwindow
         }
-        public void SetorderItemData(int ordernum, decimal orderbill, int orderem, byte? ordertab, DateTime ordertimer)
-        {
-            this.OrderRecid = ordernum;
-            this.OrderBill = orderbill;
-            this.OrderEmployee = orderem;
-            this.OrderTable = ordertab;
-            this.OrderTimer = ordertimer;
+        //public void SetorderItemData(int ordernum, decimal orderbill, int orderem, byte? ordertab, DateTime ordertimer)
+        //{
+        //    this.OrderRecid = ordernum;
+        //    this.OrderBill = orderbill;
+        //    this.OrderEmployee = orderem;
+        //    this.OrderTable = ordertab;
+        //    this.OrderTimer = ordertimer;
 
-        }
+        //}
     }
 }

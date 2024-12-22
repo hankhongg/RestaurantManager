@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using RestaurantManager.Models;
 using RestaurantManager.Models.DataProvider;
@@ -317,6 +318,7 @@ namespace RestaurantManager.ViewModels
                             .FirstOrDefault();
                     }
                     AddNewBooking(p, newBookingNumber);
+                    p.Close();
                 }
                 else if (bookingManagementID == 1)
                 {
@@ -339,12 +341,32 @@ namespace RestaurantManager.ViewModels
                     }
                     isConfigurationClicked = false;
                     isClicked = true;
+                    p.Close();
                 }
                 else
                 {
                     var booking = DataProvider.Instance.DB.Bookings.Where(x => x.BkCode == BookingCode && x.Isdeleted == false && x.BkStatus == 1).FirstOrDefault();
                     if (booking != null && mainVM != null)
                     {
+                        FoodLayoutWindow foodLayoutWindow = new FoodLayoutWindow();
+                        var foodLayoutVM = foodLayoutWindow.DataContext as FoodLayoutViewModel;
+
+                        if (foodLayoutVM != null)
+                        {
+                            foodLayoutVM.IsEditing = 0;
+                            foodLayoutVM.SelectedTabNum = byte.Parse(SelectedTable.Substring(4));
+                            foodLayoutVM.SelectedEmpName = SelectedEmpName;
+                            foodLayoutVM.TotalAmount = 0;
+                            foodLayoutVM.Bills.Clear();
+
+                            foodLayoutWindow.ShowDialog();
+                            
+                            if (foodLayoutVM.IsConfirmed == false)
+                            {
+                                return;
+                            }
+                        }
+
                         //SelectedTable = mainVM.SelectedTable;
                         RestoreStatus(mainVM.SelectedTable);
                         //booking.Isdeleted = true;
@@ -360,29 +382,38 @@ namespace RestaurantManager.ViewModels
                             }
                         }
                         DataProvider.Instance.DB.SaveChanges();
+
+                        mainVM.LoadOrderUC();
+                        p.Close();
                         //mainVM.LoadAllTableInformation();
                         //mainVM.LoadAllBookingInformation();
                     }
                     mainVM.SelectedTable = null;
                 }
                 ReloadFillIn();
-                p.Close();
             });
             AddNewCustomer = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
-                AddCusWindow addCusWindow = new AddCusWindow();
-                var customerVM = addCusWindow.DataContext as CustomerManagementViewModel;
-                if (customerVM != null)
+                try
                 {
-                    addCusWindow.ShowDialog();
-                    if (customerVM.isConfirmed)
+                    AddCusWindow addCusWindow = new AddCusWindow();
+                    var customerVM = addCusWindow.DataContext as CustomerManagementViewModel;
+                    if (customerVM != null)
                     {
-                        DataProvider.Instance.DB.Customers.Add(customerVM.NewCustomer);
-                        DataProvider.Instance.DB.SaveChanges();
-                        CustomerNameList.Add(customerVM.CustomerName);
+                        addCusWindow.ShowDialog();
+                        if (customerVM.isConfirmed)
+                        {
+                            DataProvider.Instance.DB.Customers.Add(customerVM.NewCustomer);
+                            DataProvider.Instance.DB.SaveChanges();
+                            CustomerNameList.Add(customerVM.CustomerName);
+                        }
+                        CustomerNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false).Select(x => x.CusName).ToList());
+                        customerVM.isConfirmed = false;
                     }
-                    CustomerNameList = new ObservableCollection<string>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false).Select(x => x.CusName).ToList());
-                    customerVM.isConfirmed = false;
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Số điện thoại đã tồn tại hoặc đã bị xóa tạm, vui lòng thử lại!", "Lỗi thêm khách hàng", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             );
@@ -448,7 +479,6 @@ namespace RestaurantManager.ViewModels
                     atvm.TabStatus = "Đang có khách";
                     d.TabStatus = false;
                 }
-
             }
             DataProvider.Instance.DB.SaveChanges();
         }

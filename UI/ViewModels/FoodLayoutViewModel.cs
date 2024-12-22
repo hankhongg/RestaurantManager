@@ -97,14 +97,14 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-        private ObservableCollection<int> empIdList;
-        public ObservableCollection<int> EmpIdList
+        private ObservableCollection<string> empNameList;
+        public ObservableCollection<string> EmpNameList
         {
-            get { return empIdList; }
+            get { return empNameList; }
             set
             {
-                empIdList = value;
-                OnPropertyChanged(nameof(EmpIdList));
+                empNameList = value;
+                OnPropertyChanged(nameof(EmpNameList));
             }
         }
 
@@ -122,14 +122,14 @@ namespace RestaurantManager.ViewModels
 
 
         // selected
-        private int? selectedEmpId = -1;
-        public int? SelectedEmpId
+        private string? selectedEmpName = null;
+        public string? SelectedEmpName
         {
-            get { return selectedEmpId; }
+            get { return selectedEmpName; }
             set
             {
-                selectedEmpId = value;
-                OnPropertyChanged(nameof(SelectedEmpId));
+                selectedEmpName = value;
+                OnPropertyChanged(nameof(SelectedEmpName));
             }
         }
 
@@ -165,10 +165,11 @@ namespace RestaurantManager.ViewModels
             }
         }
 
-
+        public bool IsConfirmed { get; set; }
 
         public void LoadMenuItems()
         {
+            IsConfirmed = false;
             MenuFoodItems = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems.Where(x => x.Isdeleted == false));
             FoodItemUCViewModels = new ObservableCollection<FoodItemUCViewModel>(
                 MenuFoodItems.Select(item =>
@@ -265,14 +266,14 @@ namespace RestaurantManager.ViewModels
 
             // load LẠI 1 bàn và 1 nhân viên ĐÃ CHỌN
             SelectedTabNum = DataProvider.Instance.DB.DiningTables.Where(t => t.TabId == selectedReceipt.TabId).FirstOrDefault().TabNum;
-            SelectedEmpId = selectedReceipt.EmpId;
+            SelectedEmpName = DataProvider.Instance.DB.Employees.Where(emp => emp.EmpId == selectedReceipt.EmpId).Select(emp => emp.EmpName).FirstOrDefault();
             TotalAmount = Bills.Sum(item => item.Price);
 
 
         }
 
-        private bool isEditing = false;
-        public bool IsEditing
+        private int isEditing = 0; // 0: thêm mới, 1: sửa
+        public int IsEditing
         {
             get => isEditing;
             set
@@ -384,8 +385,6 @@ namespace RestaurantManager.ViewModels
                 }
             }
         }
-
-
 
         private void FilterMenuItems()
         {
@@ -577,13 +576,14 @@ namespace RestaurantManager.ViewModels
             SaveTemporaryInvoiceCommand = new RelayCommand<Window>((p) =>
             {
                 // Điều kiện để nút "Lưu" khả dụng
-                return Bills != null && Bills.Count > 0 && SelectedEmpId != -1 && SelectedTabNum != null;
+                return Bills != null && Bills.Count > 0 && SelectedEmpName != null && SelectedTabNum != null;
             }, (p) =>
             {
-
-                if (isEditing == false) // thêm hóa đơn
+                if (IsEditing == 0) // thêm hóa đơn
                 {
+                    IsConfirmed = true;
                     int selectedTabId = DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabId;
+                    int selectedEmpId = DataProvider.Instance.DB.Employees.Where(emp => emp.EmpName == SelectedEmpName).FirstOrDefault().EmpId;
                     string invoiceNumber = "HD" + (DataProvider.Instance.DB.Receipts.Where(r => r.Isdeleted == false).Count() + 1).ToString("D3");  // Tạo mã hóa đơn, như HD001, HD002, ...
                     DateTime currentTime = DateTime.Now;  // Thời gian hiện tại
                     TotalAmount = Bills.Sum(item => item.Price);
@@ -596,8 +596,7 @@ namespace RestaurantManager.ViewModels
                         RecPay = totalAmount,      // Tổng tiền (số tiền phải trả)
                         Isdeleted = false,     // Trạng thái xóa (đang lưu trữ)
                         TabId = selectedTabId,
-                        EmpId = SelectedEmpId,
-
+                        EmpId = selectedEmpId,
                     };
 
                     try
@@ -644,7 +643,7 @@ namespace RestaurantManager.ViewModels
                                     "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     p.Close();
                 }
-                else // sửa hóa đơn
+                else if (IsEditing == 1)// sửa hóa đơn
                 {
                     TotalAmount = Bills.Sum(item => item.Price);
                     if (inputReceipt != null)
@@ -700,18 +699,18 @@ namespace RestaurantManager.ViewModels
 
                         InputReceipt.RecPay = totalAmount;
                         InputReceipt.TabId = selectedTabId;
-                        InputReceipt.EmpId = SelectedEmpId;
+                        InputReceipt.EmpId = DataProvider.Instance.DB.Employees.Where(emp => emp.EmpName == SelectedEmpName).Select(emp => emp.EmpId).FirstOrDefault();
 
                         DataProvider.Instance.DB.SaveChanges();
 
                     }
+                    IsConfirmed = false;
                     p.Close();
                 }
 
                 // Xóa danh sách Bills và đặt lại tổng tiền
                 Bills.Clear();
                 TotalAmount = 0;
-
             });
 
             // Command xóa hóa đơn
@@ -769,10 +768,15 @@ namespace RestaurantManager.ViewModels
                 .ToList()
             );
             OnPropertyChanged(nameof(EmpList));
-            EmpIdList = new ObservableCollection<int>(
-                EmpList.Select(emp => emp.EmpId)
+
+            EmpNameList = new ObservableCollection<string>(
+                EmpList.Select(x => x.EmpName)
                 .ToList()
             );
+            //EmpIdList = new ObservableCollection<int>(
+            //    EmpList.Select(emp => emp.EmpId)
+            //    .ToList()
+            //);
         }
 
 

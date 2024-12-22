@@ -8,6 +8,10 @@
         mc:Ignorable="d" WindowStyle="None" Name="StkDetails" DataContext="{StaticResource StockInManagementVM}"
         Title="Chi tiết nhập kho" Height="768" Width="1366" Background="Transparent" WindowStartupLocation="CenterScreen">
 
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding DelStockinDetailsCommand}" Key="Delete" />
+    </Window.InputBindings>
+
     <WindowChrome.WindowChrome> 
 
         <WindowChrome GlassFrameThickness="-1" CornerRadius="10" CaptionHeight="0"></WindowChrome>

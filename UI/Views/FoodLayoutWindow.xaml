@@ -286,7 +286,7 @@
                             </TextBlock>
                             <!--<TextBox VerticalAlignment="Center" FontSize="15" Foreground="#FFFD3A3A" Margin="5" FontWeight="Bold" Width="125"
                             Text="{Binding SearchTextEm, UpdateSourceTrigger=PropertyChanged}"/>-->
-                            <ComboBox Width="125" ItemsSource="{Binding EmpIdList}" SelectedItem="{Binding SelectedEmpId}"/>
+                            <ComboBox Width="125" ItemsSource="{Binding EmpNameList}" SelectedItem="{Binding SelectedEmpName}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" Foreground="DimGray">                 
