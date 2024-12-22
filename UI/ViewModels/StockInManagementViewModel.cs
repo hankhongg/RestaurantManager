@@ -562,6 +562,7 @@ namespace RestaurantManager.ViewModels
 
                             //DataProvider.Instance.DB.Database.ExecuteSqlRaw(query3);
                         }
+                    }
 
                         StockInDetailsIngresList = new ObservableCollection<StockinDetailsIngre>(
                             (from stkInDetailsIngre in DataProvider.Instance.DB.StockinDetailsIngres
@@ -579,7 +580,6 @@ namespace RestaurantManager.ViewModels
                              }).AsNoTracking().Where(x => x.Sto.StoCode == StockInCode));
 
                         RefreshStockinList(mainVM);
-                    }
 
                     //mainVM.IngredientsList = new ObservableCollection<Ingredient>(
                     //DataProvider.Instance.DB.Ingredients.AsNoTracking().ToList());
@@ -657,6 +657,7 @@ namespace RestaurantManager.ViewModels
                             //DataProvider.Instance.DB.Database.ExecuteSqlRaw(query4);
                         }
                     }
+                }
                     StockInDetailsDrinkOtherList = new ObservableCollection<StockinDetailsDrinkOther>(
                         (from stkInDetailsDrinkOther in DataProvider.Instance.DB.StockinDetailsDrinkOthers
                          join item in DataProvider.Instance.DB.MenuItems
@@ -674,7 +675,6 @@ namespace RestaurantManager.ViewModels
 
                     RefreshStockinList(mainVM);
 
-                }
             });
             DelStockinDetailsCommand = new RelayCommand<Window>((p) => SelectedStockinDetailsIngre != null || SelectedStockinDetailsDrinkOther != null, (p) =>
             {
@@ -688,6 +688,13 @@ namespace RestaurantManager.ViewModels
                     return;
                 else if (diaResult == MessageBoxResult.Yes)
                     UpdateInStockAfterDelete();
+                else
+                {
+                    foreach (var entry in DataProvider.Instance.DB.ChangeTracker.Entries())
+                    {
+                        entry.State = EntityState.Detached;
+                    }
+                }
 
                 if (SelectedIdxStockin == 0)
                 {
