@@ -1474,7 +1474,20 @@ namespace RestaurantManager.ViewModels
                         DataProvider.Instance.DB.FinancialHistories.Where(x => x.FinDate >= StartDate && x.FinDate <= EndDate && x.Type != "PROFIT").ToList()
                     );
 
-                ExportFianancialReportToPDF(financialHistories);
+                decimal profit = 0;
+                foreach (var financialHistory in financialHistories)
+                {
+                    if (financialHistory.Type == "INCOME")
+                    {
+                        profit += financialHistory.Amount;
+                    }
+                    if (financialHistory.Type == "EXPENSE")
+                    {
+                        profit -= financialHistory.Amount;
+                    }
+                }
+
+                ExportFianancialReportToPDF(financialHistories, profit);
                 //for (DateTime dt = StartDate; dt <= EndDate; dt.AddDays(1))
                 //{
 
@@ -1627,7 +1640,7 @@ namespace RestaurantManager.ViewModels
                     // Save PDF
                     pdfDoc.Save(filePath);
                     MessageBox.Show($"Hóa đơn đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    //Orderuc.Remove(SelectedFoodItemBill);
+                    Orderuc.Remove(SelectedFoodItemBill);
                 }
 
                 catch (Exception ex)
@@ -1640,7 +1653,7 @@ namespace RestaurantManager.ViewModels
                 MessageBox.Show("Bạn đã hủy lưu hóa đơn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-        public void ExportFianancialReportToPDF(ObservableCollection<FinancialHistory> financialHistories)
+        public void ExportFianancialReportToPDF(ObservableCollection<FinancialHistory> financialHistories, decimal profit)
         {
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog
             {
@@ -1664,7 +1677,7 @@ namespace RestaurantManager.ViewModels
                     XFont regularFont = new XFont("Arial", 10);
 
                     // Draw title
-                    gfx.DrawString("Báo cáo doanh thu", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
+                    gfx.DrawString("Báo cáo lịch sử tài chính", titleFont, XBrushes.Black, new XPoint(page.Width / 2, 50), XStringFormats.Center);
 
                     // Draw logo
                     XImage logo = XImage.FromFile("C:\\Users\\ASUS\\source\\repos\\RestaurantManager - Main\\UI\\Views\\Images\\logo.png");
@@ -1708,11 +1721,11 @@ namespace RestaurantManager.ViewModels
                     }
                     // Draw total amount
                     yPosition += 20;
-                    //gfx.DrawString($"Lợi nhuận: {bill.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center);
+                    gfx.DrawString($"Lợi nhuận: {profit.ToString("C0", new CultureInfo("vi-VN"))}", titleFont, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.Center);
                     // Save PDF
                     pdfDoc.Save(filePath);
                     MessageBox.Show($"Báo cáo đã được lưu thành công tại: {filePath}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    Orderuc.Remove(SelectedFoodItemBill);
+                    //Orderuc.Remove(SelectedFoodItemBill);
                 }
 
                 catch (Exception ex)
