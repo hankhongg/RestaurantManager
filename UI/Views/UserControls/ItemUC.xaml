@@ -27,7 +27,7 @@
 
             <!-- Price Label -->
             <Border  CornerRadius="10" Width="100" HorizontalAlignment="Left" Background="#FF00BAFF" Height="20" VerticalAlignment="Top" >
-                <TextBlock Text="{Binding FoodItemSprice}"
+                <TextBlock Text="{Binding FoodItemSprice, StringFormat={}{0:N2}}"
                  FontWeight="Bold"
                  Foreground="White"                
                  TextAlignment="Center"
