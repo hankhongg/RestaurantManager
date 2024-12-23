@@ -432,8 +432,8 @@ namespace RestaurantManager.ViewModels
         }
 
         public Func<double, string> YFormatter { get; set; }
-        private DateTime startDate = DateTime.Now.Date.AddDays(-7).ToUniversalTime();
-        private DateTime endDate = DateTime.Now.Date.ToUniversalTime();
+        private DateTime startDate = DateTime.Now.Date.AddDays(-7);
+        private DateTime endDate = DateTime.Now.Date;
 
         public DateTime StartDate 
         {
@@ -589,7 +589,7 @@ namespace RestaurantManager.ViewModels
                             });
             var yesterdayNhanViensBookingData = yesterdayNhanViensBooking.Select(x => new { x.EmpId, PerformanceCount = x.BookingCount });
             var yesterdayNhanViensReceiptData = yesterdayNhanViensReceipt.Select(x => new { x.EmpId, PerformanceCount = x.ReceiptCount });
-            var yesterdayNhanViensPer = yesterdayNhanViensBookingData
+            var yesterdayNhanViensPer = yesterdayNhanViensBookingData   
                             .Union(yesterdayNhanViensReceiptData)
                             .GroupBy(x => x.EmpId)
                             .Select(g => new

@@ -858,6 +858,7 @@ namespace RestaurantManager.ViewModels
                                 }
                                 existedReceiptDetail.Quantity = bill.Quantity;
                                 existedReceiptDetail.Price = bill.ItemSprice;
+                                
                             }
                             else // nếu không có món ăn đó trong hóa đơn cũ
                             {
@@ -893,8 +894,7 @@ namespace RestaurantManager.ViewModels
                                         };
                                         edit_TempForChef.Add(newMenuItem);
                                     }
-                                    // In hóa đơn tạm cho đầu bếp nấu các món ăn FOOD
-                                    ExportTemporaryOrderForChefs(edit_TempForChef, edit_tempReceipt);
+                                    
                                 }
                                 else // cho drink và other
                                 {
@@ -930,8 +930,9 @@ namespace RestaurantManager.ViewModels
                         InputReceipt.EmpId = DataProvider.Instance.DB.Employees.Where(emp => emp.EmpName == SelectedEmpName).Select(emp => emp.EmpId).FirstOrDefault();
 
                         DataProvider.Instance.DB.SaveChanges();
+                        // In hóa đơn tạm cho đầu bếp nấu các món ăn FOOD
+                        ExportTemporaryOrderForChefs(edit_TempForChef, edit_tempReceipt);
 
-                       
 
 
                     }
