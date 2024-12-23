@@ -384,6 +384,7 @@ namespace RestaurantManager.ViewModels
                         DataProvider.Instance.DB.SaveChanges();
 
                         mainVM.LoadOrderUC();
+                        foodLayoutVM.IsConfirmed = false;
                         p.Close();
                         //mainVM.LoadAllTableInformation();
                         //mainVM.LoadAllBookingInformation();

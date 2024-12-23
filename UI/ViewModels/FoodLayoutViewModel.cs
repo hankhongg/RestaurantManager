@@ -573,7 +573,7 @@ namespace RestaurantManager.ViewModels
             {
                 // Tính tổng tiền
                 TotalAmount = Bills.Sum(item => item.Price);
-                
+                //IsConfirmed = true;
                 // ---
                 // DataProvider.Instance.DB.DiningTables.Where(t => t.TabNum == SelectedTabNum).FirstOrDefault().TabStatus = false;
                 
@@ -589,8 +589,10 @@ namespace RestaurantManager.ViewModels
                 return Bills != null && Bills.Count > 0 && SelectedEmpName != null && SelectedTabNum != null;
             }, (p) =>
             {
+                
                 if (IsEditing == 0) // thêm hóa đơn
                 {
+                    IsConfirmed = true;
                     bool corrupted = false;
                     var billCopy = new ObservableCollection<BillUCViewModel>(Bills);
                     // list để đầu bếp nấu
@@ -730,8 +732,8 @@ namespace RestaurantManager.ViewModels
                         MessageBox.Show($"Hóa đơn đã lưu thành công!\nSố hóa đơn: {receipt.RecCode}",
                                         "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                       
 
+                        
                         p.Close();
                     }
 
