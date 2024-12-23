@@ -554,12 +554,6 @@ namespace RestaurantManager.ViewModels
         }
 
 
-
-
-
-
-
-
         public void LoadFinancialData()
         {
             var today = DateTime.Now.Date;
@@ -659,15 +653,6 @@ namespace RestaurantManager.ViewModels
         public MainViewModel() {
             CustomerList = new ObservableCollection<Customer>(DataProvider.Instance.DB.Customers.Where(x => x.Isdeleted == false));
             EmployeeList = new ObservableCollection<Employee>(DataProvider.Instance.DB.Employees.Where(x => x.Isdeleted == false));
-            //StockinList = new ObservableCollection<Stockin>(
-            //        (from stkIn in DataProvider.Instance.DB.Stockins
-            //         join stkInDetails in DataProvider.Instance.DB.StockinDetailsIngre
-            //         on stkIn.StoId equals stkInDetails.StoId
-            //         join ingre in DataProvider.Instance.DB.Ingredients
-            //         on stkInDetails.IngreId equals ingre.IngreId
-            //         select stkIn)
-            //        .Distinct());
-
             StockinList = new ObservableCollection<Stockin>(DataProvider.Instance.DB.Stockins);
             IngredientsList = new ObservableCollection<Ingredient>(DataProvider.Instance.DB.Ingredients);
             ItemsList = new ObservableCollection<MenuItem>(DataProvider.Instance.DB.MenuItems);
