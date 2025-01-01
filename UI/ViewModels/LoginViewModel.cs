@@ -14,7 +14,7 @@ namespace RestaurantManager.ViewModels
 {
     class LoginViewModel : BaseViewModel
     {
-    public bool isLogin {  get; set; }
+        public bool isLogin {  get; set; }
 
         private string username;
         public string Username
@@ -46,6 +46,51 @@ namespace RestaurantManager.ViewModels
         public ICommand PasswordChangedCommand { get; set; }
         public ICommand ForgotPasswordCommand { get; set; }
         public ICommand LoginCommand { get; set; }
+
+        // update password image vis
+        private string passwordBoxImagePath = "pack://application:,,,/Views/Images/visibility.png";
+        public string PasswordBoxImagePath
+        {
+            get
+            {
+                return passwordBoxImagePath;
+            }
+            set
+            {
+                passwordBoxImagePath = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool isPasswordVisible = true;
+        public bool IsPasswordVisible
+        {
+            get
+            {
+                return isPasswordVisible;
+            }
+            set
+            {
+                isPasswordVisible = value;
+                
+                OnPropertyChanged();
+                
+            }
+        }
+        private bool isNotPasswordVisible = false;
+        public bool IsNotPasswordVisible
+        {
+            get
+            {
+                return isNotPasswordVisible;
+            }
+            set
+            {
+                isNotPasswordVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand PasswordVisibleCommand { get; set; }
         public LoginViewModel()
         {
             isLogin = false;
@@ -63,6 +108,19 @@ namespace RestaurantManager.ViewModels
             PasswordChangedCommand = new RelayCommand<PasswordBox>((p) => { return true; }, (p) =>
             {
                 Password = p.Password;
+            });
+            PasswordVisibleCommand = new RelayCommand<PasswordBox>((p) => { return true; }, (p) =>
+            {
+                IsPasswordVisible = !IsPasswordVisible;
+                IsNotPasswordVisible = !IsNotPasswordVisible;
+                if (IsPasswordVisible)
+                {
+                    PasswordBoxImagePath = "pack://application:,,,/Views/Images/visibility.png";
+                }
+                else
+                {
+                    PasswordBoxImagePath = "pack://application:,,,/Views/Images/visibility_off.png";
+                }
             });
         }
 

@@ -7,6 +7,7 @@
         xmlns:controlbar="clr-namespace:RestaurantManager.Views.UserControls"
         mc:Ignorable="d"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        
         Name="loginWindow" WindowStartupLocation="CenterScreen"
         Title="Màn hình đăng nhập" Height="450" Width="800" WindowStyle="None" Background="Transparent"
         DataContext="{StaticResource LoginVM}"
@@ -25,6 +26,8 @@
     
     <!--Thêm vài style default đơn giản-->
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
         <Style TargetType="Label" BasedOn="{StaticResource TextControl}">
             <Setter Property="FontWeight" Value="DemiBold"></Setter>
         </Style>
@@ -95,16 +98,29 @@
                 <StackPanel Orientation="Horizontal">
                     <Image  Source="Images\key.png"
                            Width="35"></Image>
-                    <PasswordBox x:Name="passwordBox" Margin="10,0,0,0" Height="30" Width="250">
+
+                    <PasswordBox x:Name="passwordBox" Height="30" Width="250" Margin="10,0,0,0"
+                     Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PasswordChanged">
-                                <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding ElementName=passwordBox}"/>
+                                <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding ElementName=passwordBox}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </PasswordBox>
+
+                    <TextBox Height="30" Width="250" Text="{Binding Password}" Margin="10,0,0,0"
+                 Visibility="{Binding IsNotPasswordVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                    <Image Source="{Binding PasswordBoxImagePath}" Height="25" Margin="5,0,0,0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding PasswordVisibleCommand}" CommandParameter="{Binding ElementName=passwordBox}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Image>
                 </StackPanel>
 
-                <TextBlock Text="Quên mật khẩu" FontSize="12" Cursor="Hand" x:Name="forgotPwdTextBlock"
+                <TextBlock Text="Quên mật khẩu" FontSize="12" Cursor="Hand" x:Name="forgotPwdTextBlock" Margin="0,0,35,0"
                            TextDecorations="Underline" Foreground="DimGray" HorizontalAlignment="Right">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -114,7 +130,7 @@
                 </TextBlock>
                 <Button x:Name="loginButton" Style="{StaticResource LoginButton}" IsDefault="true" 
                         Content="Đăng nhập" Foreground="White" HorizontalAlignment="Right" 
-                        Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=loginWindow}" Margin="10"></Button>
+                        Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=loginWindow}" Margin="0,10,35,0" ></Button>
 
             </StackPanel>
         </Grid>
