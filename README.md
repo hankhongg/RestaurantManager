@@ -9,3 +9,5 @@ Change the connection string in RestaurantManager/Models/Database/QlnhContext.cs
         => optionsBuilder.UseSqlServer("Server=hankhongg-LAPTOP;Database=QLNH;Trusted_Connection=True;TrustServerCertificate=true;");
 
 Server=hankhongg-LAPTOP;Database=QLNH;Trusted_Connection=True;TrustServerCertificate=true; => your connection string.
+
+Watch demo at https://youtu.be/LKLc6m0k8PU
